@@ -9,11 +9,16 @@
 /* Begin PBXBuildFile section */
 		6B7DF00E1CC2C21400AE4096 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF00D1CC2C21400AE4096 /* main.m */; };
 		6B7DF0111CC2C21400AE4096 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0101CC2C21400AE4096 /* AppDelegate.m */; };
-		6B7DF0141CC2C21400AE4096 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0131CC2C21400AE4096 /* ViewController.m */; };
+		6B7DF0141CC2C21400AE4096 /* HUSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0131CC2C21400AE4096 /* HUSplashViewController.m */; };
 		6B7DF0171CC2C21400AE4096 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B7DF0151CC2C21400AE4096 /* Main.storyboard */; };
 		6B7DF0191CC2C21400AE4096 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B7DF0181CC2C21400AE4096 /* Assets.xcassets */; };
 		6B7DF01C1CC2C21400AE4096 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B7DF01A1CC2C21400AE4096 /* LaunchScreen.storyboard */; };
 		6B7DF0271CC2C21500AE4096 /* TwirlRssReadingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0261CC2C21500AE4096 /* TwirlRssReadingTests.m */; };
+		6B7DF0331CC2C2C300AE4096 /* HURSSFeedsPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0321CC2C2C300AE4096 /* HURSSFeedsPresenter.m */; };
+		6B7DF0361CC2C2DF00AE4096 /* HURSSItemPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0351CC2C2DF00AE4096 /* HURSSItemPresenter.m */; };
+		6B7DF0391CC2C2FD00AE4096 /* HURSSFeedsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0381CC2C2FD00AE4096 /* HURSSFeedsTableView.m */; };
+		6B7DF03C1CC2C31700AE4096 /* HURSSFeedsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF03B1CC2C31700AE4096 /* HURSSFeedsCell.m */; };
+		6B7DF03F1CC2C33C00AE4096 /* HURSSItemDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF03E1CC2C33C00AE4096 /* HURSSItemDetailView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,8 +36,8 @@
 		6B7DF00D1CC2C21400AE4096 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6B7DF00F1CC2C21400AE4096 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6B7DF0101CC2C21400AE4096 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		6B7DF0121CC2C21400AE4096 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		6B7DF0131CC2C21400AE4096 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		6B7DF0121CC2C21400AE4096 /* HUSplashViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HUSplashViewController.h; sourceTree = "<group>"; };
+		6B7DF0131CC2C21400AE4096 /* HUSplashViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HUSplashViewController.m; sourceTree = "<group>"; };
 		6B7DF0161CC2C21400AE4096 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6B7DF0181CC2C21400AE4096 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6B7DF01B1CC2C21400AE4096 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -40,6 +45,16 @@
 		6B7DF0221CC2C21500AE4096 /* TwirlRssReadingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwirlRssReadingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B7DF0261CC2C21500AE4096 /* TwirlRssReadingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TwirlRssReadingTests.m; sourceTree = "<group>"; };
 		6B7DF0281CC2C21500AE4096 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6B7DF0311CC2C2C300AE4096 /* HURSSFeedsPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSFeedsPresenter.h; sourceTree = "<group>"; };
+		6B7DF0321CC2C2C300AE4096 /* HURSSFeedsPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSFeedsPresenter.m; sourceTree = "<group>"; };
+		6B7DF0341CC2C2DF00AE4096 /* HURSSItemPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSItemPresenter.h; sourceTree = "<group>"; };
+		6B7DF0351CC2C2DF00AE4096 /* HURSSItemPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSItemPresenter.m; sourceTree = "<group>"; };
+		6B7DF0371CC2C2FD00AE4096 /* HURSSFeedsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSFeedsTableView.h; sourceTree = "<group>"; };
+		6B7DF0381CC2C2FD00AE4096 /* HURSSFeedsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSFeedsTableView.m; sourceTree = "<group>"; };
+		6B7DF03A1CC2C31700AE4096 /* HURSSFeedsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSFeedsCell.h; sourceTree = "<group>"; };
+		6B7DF03B1CC2C31700AE4096 /* HURSSFeedsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSFeedsCell.m; sourceTree = "<group>"; };
+		6B7DF03D1CC2C33C00AE4096 /* HURSSItemDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSItemDetailView.h; sourceTree = "<group>"; };
+		6B7DF03E1CC2C33C00AE4096 /* HURSSItemDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSItemDetailView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,8 +98,18 @@
 			children = (
 				6B7DF00F1CC2C21400AE4096 /* AppDelegate.h */,
 				6B7DF0101CC2C21400AE4096 /* AppDelegate.m */,
-				6B7DF0121CC2C21400AE4096 /* ViewController.h */,
-				6B7DF0131CC2C21400AE4096 /* ViewController.m */,
+				6B7DF0121CC2C21400AE4096 /* HUSplashViewController.h */,
+				6B7DF0131CC2C21400AE4096 /* HUSplashViewController.m */,
+				6B7DF0311CC2C2C300AE4096 /* HURSSFeedsPresenter.h */,
+				6B7DF0321CC2C2C300AE4096 /* HURSSFeedsPresenter.m */,
+				6B7DF0371CC2C2FD00AE4096 /* HURSSFeedsTableView.h */,
+				6B7DF0381CC2C2FD00AE4096 /* HURSSFeedsTableView.m */,
+				6B7DF03A1CC2C31700AE4096 /* HURSSFeedsCell.h */,
+				6B7DF03B1CC2C31700AE4096 /* HURSSFeedsCell.m */,
+				6B7DF0341CC2C2DF00AE4096 /* HURSSItemPresenter.h */,
+				6B7DF0351CC2C2DF00AE4096 /* HURSSItemPresenter.m */,
+				6B7DF03D1CC2C33C00AE4096 /* HURSSItemDetailView.h */,
+				6B7DF03E1CC2C33C00AE4096 /* HURSSItemDetailView.m */,
 				6B7DF0151CC2C21400AE4096 /* Main.storyboard */,
 				6B7DF0181CC2C21400AE4096 /* Assets.xcassets */,
 				6B7DF01A1CC2C21400AE4096 /* LaunchScreen.storyboard */,
@@ -213,7 +238,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B7DF0141CC2C21400AE4096 /* ViewController.m in Sources */,
+				6B7DF0331CC2C2C300AE4096 /* HURSSFeedsPresenter.m in Sources */,
+				6B7DF0141CC2C21400AE4096 /* HUSplashViewController.m in Sources */,
+				6B7DF03F1CC2C33C00AE4096 /* HURSSItemDetailView.m in Sources */,
+				6B7DF03C1CC2C31700AE4096 /* HURSSFeedsCell.m in Sources */,
+				6B7DF0361CC2C2DF00AE4096 /* HURSSItemPresenter.m in Sources */,
+				6B7DF0391CC2C2FD00AE4096 /* HURSSFeedsTableView.m in Sources */,
 				6B7DF0111CC2C21400AE4096 /* AppDelegate.m in Sources */,
 				6B7DF00E1CC2C21400AE4096 /* main.m in Sources */,
 			);

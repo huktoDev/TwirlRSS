@@ -6,13 +6,13 @@
 //  Copyright © 2016 Alexandr Babenko. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "HUSplashViewController.h"
 
-@interface ViewController ()
+@interface HUSplashViewController ()
 
 @end
 
-@implementation ViewController
+@implementation HUSplashViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
