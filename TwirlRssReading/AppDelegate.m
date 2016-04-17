@@ -7,17 +7,32 @@
 //
 
 #import "AppDelegate.h"
+#import "HURSSTwirlRouter.h"
 
 @interface AppDelegate ()
 
 @end
 
-@implementation AppDelegate
+@implementation AppDelegate{
+    
+    HURSSTwirlRouter *_userStoryRouter;
+}
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    // Инжектировать сервисы
+    [self injectDependencies];
+    
+    // Перегрузить стандартное создание  (заменить собственным стартовым окном и контроллером)
+    [_userStoryRouter overrideInitialScreenCreationByAppDelegate:self];
+    
     return YES;
+}
+
+- (void)injectDependencies{
+    
+    _userStoryRouter = [HURSSTwirlRouter sharedRouter];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

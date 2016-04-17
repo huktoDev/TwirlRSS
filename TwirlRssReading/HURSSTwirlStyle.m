@@ -31,4 +31,8 @@
     return CGSizeMake(168.f, 40.f);
 }
 
+- (UIImage*)splashLogoImage{
+    return [UIImage imageNamed:@"improveDigitalLogo.png"];
+}
+
 @end

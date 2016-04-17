@@ -13,6 +13,7 @@
 
 - (UIColor*)splashScreenColor;
 - (CGSize)splashLogoSize;
+- (UIImage*)splashLogoImage;
 
 @end
 

@@ -7,6 +7,8 @@
 //
 
 #import "HUSplashViewController.h"
+
+#import "HURSSTwirlRouter.h"
 #import "HURSSTwirlStyle.h"
 #import "Masonry.h"
 
@@ -16,38 +18,79 @@
 
 @end
 
+
 @implementation HUSplashViewController{
     
-    id<HURSSStyleProtocol> presentStyle;
+    // Используемые сервисы
+    id<HURSSStyleProtocol> _presentStyle;
+    id<HUBaseRouterProtocol> _userStoryRouter;
 }
+
+#pragma mark - UIViewController LifeCycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    presentStyle = [HURSSTwirlStyle sharedStyle];
+    // Инъекция сервисов
+    [self injectDependencies];
     
-    
-    UIColor *backColor = [presentStyle splashScreenColor];
+    // Установить бэкграунд
+    UIColor *backColor = [_presentStyle splashScreenColor];
     [self.view setBackgroundColor:backColor];
     
+    // Получить, сконфигурировать и добавить вьюшку логотипа
+    UIImageView *logoImageView = [self createLogoView];
+    self.logoImageView = logoImageView;
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     
-    const CGSize logoImageDefinedSize = [presentStyle splashLogoSize];
-    UIImage *logoImage = [UIImage imageNamed:@"improveDigitalLogo.png"];
+    // После того, как будет полностью показан Splash-экран - запустить к выполнению переход дальше
+    [_userStoryRouter performTransitionSegue:HURSSTwirlBaseNavigationSegue forScreen:self];
+}
+
+
+#pragma mark - Dependencies
+
+/**
+    @abstract Инъекция требуемых объектов 
+    @discussion
+    Выполняет инъекцию :
+    - Объекта, задающего стили
+    - Роутер текущей юзер-стори
+ */
+- (void)injectDependencies{
+    
+    _presentStyle = [HURSSTwirlStyle sharedStyle];
+    _userStoryRouter = [HURSSTwirlRouter sharedRouter];
+}
+
+
+#pragma mark - Config Views
+
+/**
+    @abstract Создает и конфигурирует вьюшку логотипа
+    @discussion
+    Ту картинку, которую вы скинули по имейлу вместе с тестовым - здесь использовал.
+    Выполняется задание констрейнтов (по центру, и ровно по размеру пикчи), хотя и использовал UIViewContentModeCenter
+    @return Готовая вьюшка логотипа
+ */
+- (UIImageView*)createLogoView{
+    
+    const CGSize logoImageDefinedSize = [_presentStyle splashLogoSize];
+    UIImage *logoImage = [_presentStyle splashLogoImage];
     UIImageView *logoImageView = [[UIImageView alloc] initWithImage:logoImage];
     logoImageView.contentMode = UIViewContentModeCenter;
     
     [self.view addSubview:logoImageView];
-    self.logoImageView = logoImageView;
     
     [logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(logoImageDefinedSize);
         make.center.equalTo(self.view);
     }];
+    return logoImageView;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 @end
