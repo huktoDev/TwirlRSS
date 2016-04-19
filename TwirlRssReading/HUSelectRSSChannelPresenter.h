@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class HUSelectRSSChannelView;
+
 @interface HUSelectRSSChannelPresenter : UIViewController
 
 @end
