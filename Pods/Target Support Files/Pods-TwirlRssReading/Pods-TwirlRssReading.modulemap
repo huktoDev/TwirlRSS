@@ -1,0 +1,6 @@
+framework module Pods_TwirlRssReading {
+  umbrella header "Pods-TwirlRssReading-umbrella.h"
+
+  export *
+  module * { export * }
+}

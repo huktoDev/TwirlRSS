@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C0EE441A9D0006B034FEABF /* Pods_TwirlRssReading.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F022BB85D5CB5B5903F44F /* Pods_TwirlRssReading.framework */; };
 		6B1A44DE1CC350E1002BC53A /* HUSelectRSSChannelPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44DD1CC350E1002BC53A /* HUSelectRSSChannelPresenter.m */; };
 		6B1A44E11CC350F8002BC53A /* HUSelectRSSChannelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44E01CC350F8002BC53A /* HUSelectRSSChannelView.m */; };
 		6B1A44E41CC402F2002BC53A /* HURSSTwirlRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44E31CC402F2002BC53A /* HURSSTwirlRouter.m */; };
 		6B1A44E71CC40DFD002BC53A /* HURSSTwirlRouter+CustomSegues.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44E61CC40DFD002BC53A /* HURSSTwirlRouter+CustomSegues.m */; };
 		6B1A44EA1CC54B3D002BC53A /* HURSSChannelTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44E91CC54B3D002BC53A /* HURSSChannelTextField.m */; };
 		6B1A44F21CC67899002BC53A /* HURSSChannelButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44F11CC67899002BC53A /* HURSSChannelButton.m */; };
+		6B1A44F51CC683D3002BC53A /* HURSSChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44F41CC683D3002BC53A /* HURSSChannel.m */; };
+		6B1A44F81CC683EE002BC53A /* HURSSChannelStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44F71CC683EE002BC53A /* HURSSChannelStore.m */; };
 		6B7DF00E1CC2C21400AE4096 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF00D1CC2C21400AE4096 /* main.m */; };
 		6B7DF0111CC2C21400AE4096 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0101CC2C21400AE4096 /* AppDelegate.m */; };
 		6B7DF0141CC2C21400AE4096 /* HUSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0131CC2C21400AE4096 /* HUSplashViewController.m */; };
@@ -27,7 +30,6 @@
 		6B7DF0421CC2CB8D00AE4096 /* HURSSTwirlStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0411CC2CB8D00AE4096 /* HURSSTwirlStyle.m */; };
 		6B7DF0451CC2D1E600AE4096 /* HUSplashTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0441CC2D1E600AE4096 /* HUSplashTransitionAnimator.m */; };
 		6B7DF0481CC2D3DD00AE4096 /* HURSSNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0471CC2D3DD00AE4096 /* HURSSNavigationController.m */; };
-		FB09BD7F28B2C3CA48859792 /* libPods-TwirlRssReading.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 07EAE126F17427395634F38C /* libPods-TwirlRssReading.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,7 +43,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		07EAE126F17427395634F38C /* libPods-TwirlRssReading.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TwirlRssReading.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BDBBD39828BF905546467BF /* Pods-TwirlRssReading.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwirlRssReading.release.xcconfig"; path = "Pods/Target Support Files/Pods-TwirlRssReading/Pods-TwirlRssReading.release.xcconfig"; sourceTree = "<group>"; };
 		6B1A44DC1CC350E1002BC53A /* HUSelectRSSChannelPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUSelectRSSChannelPresenter.h; sourceTree = "<group>"; };
 		6B1A44DD1CC350E1002BC53A /* HUSelectRSSChannelPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HUSelectRSSChannelPresenter.m; sourceTree = "<group>"; };
@@ -55,6 +56,10 @@
 		6B1A44E91CC54B3D002BC53A /* HURSSChannelTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSChannelTextField.m; sourceTree = "<group>"; };
 		6B1A44F01CC67899002BC53A /* HURSSChannelButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSChannelButton.h; sourceTree = "<group>"; };
 		6B1A44F11CC67899002BC53A /* HURSSChannelButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSChannelButton.m; sourceTree = "<group>"; };
+		6B1A44F31CC683D3002BC53A /* HURSSChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSChannel.h; sourceTree = "<group>"; };
+		6B1A44F41CC683D3002BC53A /* HURSSChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSChannel.m; sourceTree = "<group>"; };
+		6B1A44F61CC683EE002BC53A /* HURSSChannelStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSChannelStore.h; sourceTree = "<group>"; };
+		6B1A44F71CC683EE002BC53A /* HURSSChannelStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSChannelStore.m; sourceTree = "<group>"; };
 		6B7DF0091CC2C21400AE4096 /* TwirlRssReading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwirlRssReading.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B7DF00D1CC2C21400AE4096 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6B7DF00F1CC2C21400AE4096 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -83,6 +88,7 @@
 		6B7DF0441CC2D1E600AE4096 /* HUSplashTransitionAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HUSplashTransitionAnimator.m; sourceTree = "<group>"; };
 		6B7DF0461CC2D3DD00AE4096 /* HURSSNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSNavigationController.h; sourceTree = "<group>"; };
 		6B7DF0471CC2D3DD00AE4096 /* HURSSNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSNavigationController.m; sourceTree = "<group>"; };
+		C1F022BB85D5CB5B5903F44F /* Pods_TwirlRssReading.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TwirlRssReading.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D186BE21BDB8C05D39B050DE /* Pods-TwirlRssReading.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwirlRssReading.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwirlRssReading/Pods-TwirlRssReading.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -91,7 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB09BD7F28B2C3CA48859792 /* libPods-TwirlRssReading.a in Frameworks */,
+				4C0EE441A9D0006B034FEABF /* Pods_TwirlRssReading.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,6 +201,10 @@
 				6B7DF0471CC2D3DD00AE4096 /* HURSSNavigationController.m */,
 				6B7DF0401CC2CB8D00AE4096 /* HURSSTwirlStyle.h */,
 				6B7DF0411CC2CB8D00AE4096 /* HURSSTwirlStyle.m */,
+				6B1A44F31CC683D3002BC53A /* HURSSChannel.h */,
+				6B1A44F41CC683D3002BC53A /* HURSSChannel.m */,
+				6B1A44F61CC683EE002BC53A /* HURSSChannelStore.h */,
+				6B1A44F71CC683EE002BC53A /* HURSSChannelStore.m */,
 				6B1A44EC1CC5D8E0002BC53A /* Splash Screen */,
 				6B1A44EF1CC5D923002BC53A /* SelectChannel Screen */,
 				6B1A44ED1CC5D8F5002BC53A /* Feeds Screen */,
@@ -228,7 +238,7 @@
 		9154EB1BABA4B852583AB439 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				07EAE126F17427395634F38C /* libPods-TwirlRssReading.a */,
+				C1F022BB85D5CB5B5903F44F /* Pods_TwirlRssReading.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -397,9 +407,11 @@
 				6B1A44E71CC40DFD002BC53A /* HURSSTwirlRouter+CustomSegues.m in Sources */,
 				6B7DF0331CC2C2C300AE4096 /* HURSSFeedsPresenter.m in Sources */,
 				6B1A44E11CC350F8002BC53A /* HUSelectRSSChannelView.m in Sources */,
+				6B1A44F51CC683D3002BC53A /* HURSSChannel.m in Sources */,
 				6B7DF0141CC2C21400AE4096 /* HUSplashViewController.m in Sources */,
 				6B7DF0421CC2CB8D00AE4096 /* HURSSTwirlStyle.m in Sources */,
 				6B7DF03F1CC2C33C00AE4096 /* HURSSItemDetailView.m in Sources */,
+				6B1A44F81CC683EE002BC53A /* HURSSChannelStore.m in Sources */,
 				6B7DF03C1CC2C31700AE4096 /* HURSSFeedsCell.m in Sources */,
 				6B7DF0361CC2C2DF00AE4096 /* HURSSItemPresenter.m in Sources */,
 				6B1A44DE1CC350E1002BC53A /* HUSelectRSSChannelPresenter.m in Sources */,
@@ -532,6 +544,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = TwirlRssReading/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "-11.TwirlRssReading";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -544,6 +557,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = TwirlRssReading/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "-11.TwirlRssReading";
 				PRODUCT_NAME = "$(TARGET_NAME)";

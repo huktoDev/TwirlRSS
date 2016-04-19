@@ -8,24 +8,43 @@
 
 #import "HUSelectRSSChannelPresenter.h"
 #import "HUSelectRSSChannelView.h"
+#import "HURSSChannelTextField.h"
+#import "HURSSChannelButton.h"
 
+#import "HURSSTwirlStyle.h"
 
-@interface HUSelectRSSChannelPresenter ()
+#import "HURSSChannel.h"
+#import "HURSSChannelStore.h"
+
+#import "CZPicker.h"
+#import "URBNAlert.h"
+
+//TODO: Исправить ошибки с NSNumber (там transform.scale убрать)
+
+@interface HUSelectRSSChannelPresenter () 
 
 @end
 
-@implementation HUSelectRSSChannelPresenter
+@implementation HUSelectRSSChannelPresenter{
+    
+    NSArray <HURSSChannel*> *_preservedChannels;
+    NSArray <NSString*> *_preservedChannelNames;
+}
+
+
+#pragma mark - UIView LifeCycle
 
 - (void)loadView{
     
     HUSelectRSSChannelView *rootChannelsView = [HUSelectRSSChannelView createChannelView];
     
-    [rootChannelsView configEnterChannelLabel];
-    [rootChannelsView configChannelTextField];
-    [rootChannelsView configSelectSuggestedLabel];
-    [rootChannelsView configShowChannelButton];
-    [rootChannelsView configGetFeedsButton];
+    self.enterChannelLabel = [rootChannelsView configEnterChannelLabel];
+    self.channelTextField = [rootChannelsView configChannelTextField];
+    self.selectSuggestedLabel = [rootChannelsView configSelectSuggestedLabel];
+    self.showChannelButton = [rootChannelsView configShowChannelButton];
+    self.feedsButton = [rootChannelsView configGetFeedsButton];
     
+    self.selectChannelView = rootChannelsView;
     self.view = rootChannelsView;
 }
 
@@ -34,8 +53,44 @@
     
     [self.navigationController.navigationBar setHidden:YES];
     
-    
+    [self.selectChannelView setShowChannelHandler:@selector(obtainChannelsButtonPressed:) withTarget:self];
+    [self.selectChannelView setGetFeedsHandler:@selector(recieveFeedsButtonPressed:) withTarget:self];
 }
 
 
+#pragma mark - Button Handlers
+
+- (void)obtainChannelsButtonPressed:(UIButton*)channelsButton{
+    
+    _preservedChannels = [HURSSChannelStore getPreservedChannels];
+    _preservedChannelNames = [HURSSChannelStore getPreservedChannelsNames];
+    
+    [self.selectChannelView showChannelWithNames:_preservedChannelNames withSelectionDelegate:self];
+}
+
+- (void)recieveFeedsButtonPressed:(UIButton*)feedsButton{
+    printf("");
+}
+
+
+#pragma mark - HURSSChannelSelectionDelegate IMP
+
+- (void)didSelectedChannelWithIndex:(NSUInteger)indexChannel{
+    
+    HURSSChannel *selectedChannel = _preservedChannels[indexChannel];
+    NSURL *selectedChannelURL = selectedChannel.channelURL;
+    [self.selectChannelView showChannelURLLink:selectedChannelURL];
+    
+    NSString *channelName = selectedChannel.channelAlias;
+    
+    [self.selectChannelView showObtainingFeedsAlertForChannelName:channelName];
+    [self.selectChannelView setObtainingFeedsAlertHandler:@selector(recieveFeedsButtonPressed:) withTarget:self];
+}
+
+
+
+
+
 @end
+
+

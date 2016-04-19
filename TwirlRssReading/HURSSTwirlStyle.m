@@ -43,6 +43,10 @@
     return HU_RGB_COLOR(118.f, 189.f, 68.f);
 }
 
+- (UIColor*)secondUseLightColor{
+    return HU_RGB_COLOR(177.f , 255.f, 102.f);
+}
+
 - (UIColor*)selectChannelScreenColor{
     return [[self firstUseColor] colorWithAlphaComponent:0.6f];
 }

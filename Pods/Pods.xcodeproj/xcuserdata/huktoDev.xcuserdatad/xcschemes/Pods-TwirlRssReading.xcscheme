@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '0E9A2EFD990B8D1D1FD7AAF8'
+               BlueprintIdentifier = '5874FE0511D55A488EBE8916'
                BlueprintName = 'Pods-TwirlRssReading'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'libPods-TwirlRssReading.a'>
+               BuildableName = 'Pods_TwirlRssReading.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

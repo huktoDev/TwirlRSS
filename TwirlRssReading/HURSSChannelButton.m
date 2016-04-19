@@ -13,9 +13,12 @@
     id<HURSSStyleProtocol> _presentStyle;
 }
 
+#pragma mark - Initialization
+
 - (instancetype)init{
     if(self = [super init]){
         
+        // Init Root
         [self injectDependencies];
         [self configUI];
         [self addBaseTouchHandlers];
@@ -23,10 +26,17 @@
     return self;
 }
 
+#pragma mark - Dependencies
+
+/// Инъекция зависимостей (в данном случае - стиля)
 - (void)injectDependencies{
     _presentStyle = [HURSSTwirlStyle sharedStyle];
 }
 
+
+#pragma mark - Configuration
+
+/// Установка различных параметров, присущих данному классу кнопок
 - (void)configUI{
     
     // Задать фон
@@ -53,6 +63,20 @@
     [channelButtonLayer setCornerRadius:buttonCornerRadius];
 }
 
+
+- (void)setTouchHandler:(SEL)actionHandler toTarget:(id)actionTarget{
+    
+    [self addTarget:actionTarget action:actionHandler forControlEvents:UIControlEventTouchUpInside];
+}
+
+
+#pragma mark - Touch handlers
+
+/**
+    @abstract Добавить обработчики для анимирования нажатия
+    @discussion
+    У этих кнопок должна быть схожая реакция на нажатия. Поэтому подписываюсь на обработку событий тачей, и выполняю соответствующие анимации сжатия/разжатия
+ */
 - (void)addBaseTouchHandlers{
     
     [self addTarget:self action:@selector(channelButtonTouchDown:) forControlEvents:UIControlEventTouchDown];
@@ -61,21 +85,28 @@
     [self addTarget:self action:@selector(channelButtonTouchUpOutside:) forControlEvents:UIControlEventTouchCancel];
 }
 
+/// Событие тач-дауна (сжать кнопку)
 - (void)channelButtonTouchDown:(UIButton*)channelButton{
     
     [self performDirectCompresionAnimation];
 }
 
+/// Событие тач аута внутри кнопки (разжать кнопку)
 - (void)channelButtonTouchUpInside:(UIButton*)channelButton{
     
     [self performReverseCompressionAnimation];
 }
 
+/// Событие тач аута изнутри кнопки, либо touch cancel (разжать кнопку)
 - (void)channelButtonTouchUpOutside:(UIButton*)channelButton{
     
     [self performReverseCompressionAnimation];
 }
 
+
+#pragma mark - COMPRESS Anim
+
+/// Запустить анимацию сжатия кнопки
 - (void)performDirectCompresionAnimation{
     
     const NSTimeInterval compressAnimDuration = 0.2f;
@@ -88,6 +119,7 @@
     }];
 }
 
+/// Запустить анимацию разжатия кнопки (дольше, чем анимация сжатия)
 - (void)performReverseCompressionAnimation{
     
     const NSTimeInterval compressAnimDuration = 0.5f;

@@ -7,9 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HUSelectRSSChannelView.h"
 
 @class HUSelectRSSChannelView;
+@class HURSSChannelTextField, HURSSChannelButton;
 
-@interface HUSelectRSSChannelPresenter : UIViewController
+@interface HUSelectRSSChannelPresenter : UIViewController <HURSSChannelSelectionDelegate>
+
+@property (strong, nonatomic) HUSelectRSSChannelView *selectChannelView;
+
+@property (strong, nonatomic) UILabel *enterChannelLabel;
+@property (strong, nonatomic) UILabel *selectSuggestedLabel;
+
+@property (strong, nonatomic) HURSSChannelTextField *channelTextField;
+@property (strong, nonatomic) HURSSChannelButton *showChannelButton;
+@property (strong, nonatomic) HURSSChannelButton *feedsButton;
 
 @end

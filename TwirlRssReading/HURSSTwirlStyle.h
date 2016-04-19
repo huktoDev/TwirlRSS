@@ -19,6 +19,7 @@
 
 - (UIColor*)firstUseColor;
 - (UIColor*)secondUseColor;
+- (UIColor*)secondUseLightColor;
 
 - (UIColor*)selectChannelScreenColor;
 

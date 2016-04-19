@@ -82,3 +82,20 @@ strip_invalid_archs() {
   fi
 }
 
+
+if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "Pods-TwirlRssReading/CZPicker.framework"
+  install_framework "Pods-TwirlRssReading/MBProgressHUD.framework"
+  install_framework "Pods-TwirlRssReading/MWFeedParser.framework"
+  install_framework "Pods-TwirlRssReading/Masonry.framework"
+  install_framework "Pods-TwirlRssReading/URBNAlert.framework"
+  install_framework "Pods-TwirlRssReading/URBNConvenience.framework"
+fi
+if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "Pods-TwirlRssReading/CZPicker.framework"
+  install_framework "Pods-TwirlRssReading/MBProgressHUD.framework"
+  install_framework "Pods-TwirlRssReading/MWFeedParser.framework"
+  install_framework "Pods-TwirlRssReading/Masonry.framework"
+  install_framework "Pods-TwirlRssReading/URBNAlert.framework"
+  install_framework "Pods-TwirlRssReading/URBNConvenience.framework"
+fi

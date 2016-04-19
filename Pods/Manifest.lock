@@ -1,4 +1,5 @@
 PODS:
+  - CZPicker (0.3.5)
   - Masonry (1.0.0)
   - MBProgressHUD (0.9.2)
   - MWFeedParser (1.0.1):
@@ -10,15 +11,23 @@ PODS:
     - MWFeedParser/NSString+HTML
   - MWFeedParser/NSDate+InternetDateTime (1.0.1)
   - MWFeedParser/NSString+HTML (1.0.1)
+  - URBNAlert (1.9.2):
+    - URBNConvenience (> 0.8.2)
+  - URBNConvenience (0.9.0)
 
 DEPENDENCIES:
+  - CZPicker
   - Masonry
   - MBProgressHUD (~> 0.9.2)
   - MWFeedParser
+  - URBNAlert
 
 SPEC CHECKSUMS:
+  CZPicker: ce4f352d65ef5ccb8d7378afe3ee4e5bdbead15a
   Masonry: b529bb169217897b6354d4b56b1fada6d475b13d
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
+  URBNAlert: fdae28490518be3bdd841691daa74cb062aef682
+  URBNConvenience: 4964495aae68e096ceaa927704117ac1313010c9
 
 COCOAPODS: 0.39.0
