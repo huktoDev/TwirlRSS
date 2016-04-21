@@ -10,4 +10,6 @@
 
 @interface HURSSChannelTextField : UITextField
 
+- (void)setImage:(UIImage*)innerImage;
+
 @end

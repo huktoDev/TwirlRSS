@@ -16,6 +16,9 @@
 		6B1A44F21CC67899002BC53A /* HURSSChannelButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44F11CC67899002BC53A /* HURSSChannelButton.m */; };
 		6B1A44F51CC683D3002BC53A /* HURSSChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44F41CC683D3002BC53A /* HURSSChannel.m */; };
 		6B1A44F81CC683EE002BC53A /* HURSSChannelStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44F71CC683EE002BC53A /* HURSSChannelStore.m */; };
+		6B1A44FB1CC91F9C002BC53A /* HURSSChannelTextFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44FA1CC91F9C002BC53A /* HURSSChannelTextFieldManager.m */; };
+		6B1A44FE1CC9388A002BC53A /* HURSSChannelViewConfigurator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A44FD1CC9388A002BC53A /* HURSSChannelViewConfigurator.m */; };
+		6B1A45011CC9691B002BC53A /* HURSSChannelViewAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45001CC9691B002BC53A /* HURSSChannelViewAnimator.m */; };
 		6B7DF00E1CC2C21400AE4096 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF00D1CC2C21400AE4096 /* main.m */; };
 		6B7DF0111CC2C21400AE4096 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0101CC2C21400AE4096 /* AppDelegate.m */; };
 		6B7DF0141CC2C21400AE4096 /* HUSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0131CC2C21400AE4096 /* HUSplashViewController.m */; };
@@ -60,6 +63,12 @@
 		6B1A44F41CC683D3002BC53A /* HURSSChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSChannel.m; sourceTree = "<group>"; };
 		6B1A44F61CC683EE002BC53A /* HURSSChannelStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSChannelStore.h; sourceTree = "<group>"; };
 		6B1A44F71CC683EE002BC53A /* HURSSChannelStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSChannelStore.m; sourceTree = "<group>"; };
+		6B1A44F91CC91F9C002BC53A /* HURSSChannelTextFieldManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSChannelTextFieldManager.h; sourceTree = "<group>"; };
+		6B1A44FA1CC91F9C002BC53A /* HURSSChannelTextFieldManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSChannelTextFieldManager.m; sourceTree = "<group>"; };
+		6B1A44FC1CC9388A002BC53A /* HURSSChannelViewConfigurator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSChannelViewConfigurator.h; sourceTree = "<group>"; };
+		6B1A44FD1CC9388A002BC53A /* HURSSChannelViewConfigurator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSChannelViewConfigurator.m; sourceTree = "<group>"; };
+		6B1A44FF1CC9691B002BC53A /* HURSSChannelViewAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSChannelViewAnimator.h; sourceTree = "<group>"; };
+		6B1A45001CC9691B002BC53A /* HURSSChannelViewAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSChannelViewAnimator.m; sourceTree = "<group>"; };
 		6B7DF0091CC2C21400AE4096 /* TwirlRssReading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwirlRssReading.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B7DF00D1CC2C21400AE4096 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6B7DF00F1CC2C21400AE4096 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -168,6 +177,12 @@
 				6B1A44E91CC54B3D002BC53A /* HURSSChannelTextField.m */,
 				6B1A44F01CC67899002BC53A /* HURSSChannelButton.h */,
 				6B1A44F11CC67899002BC53A /* HURSSChannelButton.m */,
+				6B1A44F91CC91F9C002BC53A /* HURSSChannelTextFieldManager.h */,
+				6B1A44FA1CC91F9C002BC53A /* HURSSChannelTextFieldManager.m */,
+				6B1A44FC1CC9388A002BC53A /* HURSSChannelViewConfigurator.h */,
+				6B1A44FD1CC9388A002BC53A /* HURSSChannelViewConfigurator.m */,
+				6B1A44FF1CC9691B002BC53A /* HURSSChannelViewAnimator.h */,
+				6B1A45001CC9691B002BC53A /* HURSSChannelViewAnimator.m */,
 			);
 			name = "SelectChannel Screen";
 			sourceTree = "<group>";
@@ -415,10 +430,13 @@
 				6B7DF03C1CC2C31700AE4096 /* HURSSFeedsCell.m in Sources */,
 				6B7DF0361CC2C2DF00AE4096 /* HURSSItemPresenter.m in Sources */,
 				6B1A44DE1CC350E1002BC53A /* HUSelectRSSChannelPresenter.m in Sources */,
+				6B1A45011CC9691B002BC53A /* HURSSChannelViewAnimator.m in Sources */,
 				6B1A44EA1CC54B3D002BC53A /* HURSSChannelTextField.m in Sources */,
 				6B1A44F21CC67899002BC53A /* HURSSChannelButton.m in Sources */,
+				6B1A44FE1CC9388A002BC53A /* HURSSChannelViewConfigurator.m in Sources */,
 				6B7DF0391CC2C2FD00AE4096 /* HURSSFeedsTableView.m in Sources */,
 				6B7DF0111CC2C21400AE4096 /* AppDelegate.m in Sources */,
+				6B1A44FB1CC91F9C002BC53A /* HURSSChannelTextFieldManager.m in Sources */,
 				6B7DF0481CC2D3DD00AE4096 /* HURSSNavigationController.m in Sources */,
 				6B7DF00E1CC2C21400AE4096 /* main.m in Sources */,
 				6B7DF0451CC2D1E600AE4096 /* HUSplashTransitionAnimator.m in Sources */,

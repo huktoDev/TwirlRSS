@@ -10,6 +10,9 @@
 #import "HURSSTwirlStyle.h"
 
 @implementation HURSSChannelTextField{
+    
+    UIImageView *_iconImageView;
+    
     id<HURSSStyleProtocol> _presentStyle;
 }
 
@@ -50,6 +53,37 @@
     // Задать цвет
     UIColor *channelTextColor = [_presentStyle channelTextFieldTextColor];
     [self setTextColor:channelTextColor];
+    
+    // Задать цвет курсора
+    UIColor *cursorChannelFieldColor = [_presentStyle selectChannelScreenColor];
+    [self setTintColor:cursorChannelFieldColor];
+    
+    
+    // Создать ImageView для иконки (пока не заполняя ее конкретной картинкой)
+    const CGFloat SIDE_SIZE_TEXTFIELD_ICON = 25.f;
+    const CGRect baseTextFieldIconBounds = CGRectMake(0.f, 0.f, SIDE_SIZE_TEXTFIELD_ICON, SIDE_SIZE_TEXTFIELD_ICON);
+    const CGRect wrapperImageBounds = CGRectMake(0.f, 0.f, 2.f * SIDE_SIZE_TEXTFIELD_ICON, SIDE_SIZE_TEXTFIELD_ICON);
+    
+    UIImageView *textFieldImageView = [[UIImageView alloc] initWithFrame:baseTextFieldIconBounds];
+    textFieldImageView.contentMode = UIViewContentModeScaleToFill;
+    textFieldImageView.alpha = 0.6f;
+    
+    UIView *offsetWrapperView = [[UIView alloc] initWithFrame:wrapperImageBounds];
+    [textFieldImageView setCenter:CGPointMake(SIDE_SIZE_TEXTFIELD_ICON, SIDE_SIZE_TEXTFIELD_ICON / 2.f)];
+    [offsetWrapperView addSubview:textFieldImageView];
+    
+    self.leftView = offsetWrapperView;
+    self.leftViewMode = UITextFieldViewModeAlways;
+    _iconImageView = textFieldImageView;
+}
+
+- (void)setImage:(UIImage *)innerImage{
+    [_iconImageView setImage:innerImage];
+}
+
+- (void)setText:(NSString *)text{
+    [super setText:text];
+    [[NSNotificationCenter defaultCenter]  postNotificationName:UITextFieldTextDidChangeNotification object:self];
 }
 
 @end

@@ -13,6 +13,13 @@
 #import "URBNAlert.h"
 
 
+typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
+    HURSSChannelUnrecognizedFieldType = 0,
+    HURSSChannelEnterURLFieldType,
+    HURSSChannelAliasFieldType
+};
+
+
 /**
     @protocol HURSSChannelSelectionDelegate
     @author HuktoDev
@@ -52,10 +59,14 @@
 #pragma mark - SelectChannel Subviews
 // Сабвьюшки HUSelectRSSChannelView
 
+@property (strong, nonatomic) UIScrollView *channelContentView;
+
 @property (strong, nonatomic) UILabel *enterChannelLabel;
 @property (strong, nonatomic) UILabel *selectSuggestedLabel;
 
 @property (strong, nonatomic) HURSSChannelTextField *channelTextField;
+@property (strong, nonatomic) HURSSChannelTextField *channelAliasTextField;
+@property (strong, nonatomic) HURSSChannelButton *addChannelButton;
 @property (strong, nonatomic) HURSSChannelButton *showChannelButton;
 @property (strong, nonatomic) HURSSChannelButton *feedsButton;
 
@@ -74,17 +85,15 @@
 #pragma mark - Config UI Elements
 // Конфигурировать UI
 
-- (UILabel*)configEnterChannelLabel;
-- (HURSSChannelTextField*)configChannelTextField;
-- (UILabel*)configSelectSuggestedLabel;
-- (HURSSChannelButton*)configShowChannelButton;
-- (HURSSChannelButton*)configGetFeedsButton;
+
+- (void)configurationAllStartedViews;
 
 
 #pragma mark - Setters
 // Установить URL канала на интерфейс
 
 - (void)showChannelURLLink:(NSURL*)channelURL;
+- (void)showChannelAlias:(NSString*)channelAlias;
 
 
 #pragma mark - SET BUTTONs HANDLER's
@@ -106,6 +115,30 @@
 
 - (void)showObtainingFeedsAlertForChannelName:(NSString*)channelName;
 - (void)setObtainingFeedsAlertHandler:(SEL)actionHandler withTarget:(id)actionTarget;
+
+
+- (void)updateUIWhenEnteredChannelURLValidate:(BOOL)passValidate;
+- (void)updateUIWhenEnteredChannelAliasValidate:(BOOL)passValidate;
+
+- (void)updateContentSizeWithLayout:(BOOL)needLayout;
+
+
+- (HURSSChannelTextFieldType)getChannelTextFieldType:(HURSSChannelTextField*)channelTextField;
+
+- (void)showKeyboardActionsWithDuration:(NSTimeInterval)animationDuration withKeyboardSize:(CGSize)keyboardSize withChannelFieldType:(HURSSChannelTextFieldType)channelFieldType withCompletionBlock:(dispatch_block_t)keyboardActionCompletion;
+
+- (void)hideKeyboardActionsWithDuration:(NSTimeInterval)animationDuration  withChannelFieldType:(HURSSChannelTextFieldType)channelFieldType withCompletionBlock:(dispatch_block_t)keyboardActionCompletion;
+
+- (void)hideKeyboard;
+
+
+
+- (void)createChannelAliasTextField;
+- (void)createChannelAddButton;
+
+- (void)destroyChannelAliasTextField;
+- (void)destroyChannelAddButton;
+
 
 
 @end

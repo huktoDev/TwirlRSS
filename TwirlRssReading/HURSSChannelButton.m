@@ -39,9 +39,8 @@
 /// Установка различных параметров, присущих данному классу кнопок
 - (void)configUI{
     
-    // Задать фон
-    UIColor *normalColorChannelButton = [_presentStyle channelButtonBackColor];
-    [self setBackgroundColor:normalColorChannelButton];
+    // Задать фон (автоматически задает фон)
+    self.enabled = YES;
     
     // Задать шрифт
     UIFont *channelButtonTitleFont = [_presentStyle channelButtonTextFont];
@@ -83,6 +82,17 @@
     [self addTarget:self action:@selector(channelButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
     [self addTarget:self action:@selector(channelButtonTouchUpOutside:) forControlEvents:UIControlEventTouchUpOutside];
     [self addTarget:self action:@selector(channelButtonTouchUpOutside:) forControlEvents:UIControlEventTouchCancel];
+}
+
+
+- (void)setEnabled:(BOOL)enabled{
+    
+    [super setEnabled:enabled];
+    
+    UIColor *buttonBackgroundColor =  [_presentStyle channelButtonBackColor];
+    UIColor *buttonDisabledBackgroundColor = [buttonBackgroundColor colorWithAlphaComponent:0.5f];
+    
+    self.backgroundColor = enabled ? buttonBackgroundColor : buttonDisabledBackgroundColor;
 }
 
 /// Событие тач-дауна (сжать кнопку)

@@ -11,6 +11,12 @@
 #import "HURSSTwirlStyle.h"
 #import "Masonry.h"
 
+#import "HURSSChannelTextFieldManager.h"
+#import "HURSSChannelViewConfigurator.h"
+#import "HURSSChannelViewAnimator.h"
+
+//TODO: Запилить кэширование названия канала
+
 
 @implementation HUSelectRSSChannelView{
     
@@ -21,8 +27,16 @@
     // Названия каналов для пикера
     NSArray <NSString*> *_pickerChannelNames;
     
+    UITapGestureRecognizer *_keyboardHideGesture;
+    NSTimer *_keyboardHideTimer;
+    
+    CGFloat _maxYShowChannelButtonPosition;
+    
     // Стили
-    id<HURSSStyleProtocol> _presentStyle;
+    id <HURSSStyleProtocol> _presentStyle;
+    id <HURSSTextFieldManagerInterface> _textFieldManager;
+    id <HURSSChannelViewConfiguratorInterface> _presentConfigurator;
+    HURSSChannelViewAnimator *_presentAnimator;
 }
 
 #pragma mark - Initialization
@@ -52,119 +66,22 @@
 /// Инжектировать зависимости
 - (void)injectDependencies{
     _presentStyle = [HURSSTwirlStyle sharedStyle];
+    _textFieldManager = [HURSSChannelTextFieldManager createManagerForRootView:self];
+    _presentConfigurator = [HURSSChannelViewConfigurator createConfiguratorForRootView:self withStyler:_presentStyle];
+    _presentAnimator = [HURSSChannelViewAnimator createAnimatorForRootView:self withStyler:_presentStyle withConfigurer:_presentConfigurator];
 }
 
 
 #pragma mark - Config UI Elements
 
-/// Конфигурирует верхний лейбл ("введите URL")
-- (UILabel*)configEnterChannelLabel{
+- (void)configurationAllStartedViews{
     
-    UILabel *enterChannelLabel = [UILabel new];
-    enterChannelLabel.numberOfLines = 2;
-    enterChannelLabel.font = [UIFont systemFontOfSize:24.f];
-    enterChannelLabel.text = @"Введите URL вашего\nканала :";
-    enterChannelLabel.textAlignment = NSTextAlignmentCenter;
-    
-    [self addSubview:enterChannelLabel];
-    
-    [enterChannelLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self);
-        make.leading.equalTo(self.mas_leading).with.offset(20.f);
-        make.top.equalTo(self.mas_top).with.offset(60.f);
-        make.height.mas_equalTo(60.f);
-        
-    }];
-    
-    self.enterChannelLabel = enterChannelLabel;
-    return enterChannelLabel;
-}
-
-/// Конфигурирует текст филд для ввода  канала
-- (HURSSChannelTextField*)configChannelTextField{
-    
-    const CGFloat textFieldSize = [_presentStyle channelUIElementHeight];
-    
-    HURSSChannelTextField *channelTextField = [HURSSChannelTextField new];
-    
-    // Плейсхолдер текста
-    channelTextField.placeholder = @"http://";
-    
-    [self addSubview:channelTextField];
-    
-    [channelTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self);
-        make.top.equalTo(self.enterChannelLabel.mas_bottom).with.offset(20.f);
-        make.width.equalTo(self.enterChannelLabel.mas_width);
-        make.height.mas_equalTo(textFieldSize);
-    }];
-    
-    self.channelTextField = channelTextField;
-    return channelTextField;
-}
-
-/// Конфигурирует лейбл "Выберите из предложенных"
-- (UILabel*)configSelectSuggestedLabel{
-    
-    UILabel *selectSuggestedLabel = [UILabel new];
-    selectSuggestedLabel.numberOfLines = 3;
-    selectSuggestedLabel.font = [UIFont systemFontOfSize:24.f];
-    selectSuggestedLabel.text = @"или\nвыберите из\nпредложенных :";
-    selectSuggestedLabel.textAlignment = NSTextAlignmentCenter;
-    
-    [self addSubview:selectSuggestedLabel];
-    
-    [selectSuggestedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self);
-        make.width.equalTo(self.enterChannelLabel.mas_width);
-        make.top.equalTo(self.channelTextField.mas_bottom).with.offset(20.f);
-        make.height.mas_equalTo(90.f);
-    }];
-    
-    self.selectSuggestedLabel = selectSuggestedLabel;
-    return selectSuggestedLabel;
-}
-
-/// Конфигурирует кнопку "СМОТРЕТЬ" (выбор  предпочитаемых каналов)
-- (HURSSChannelButton*)configShowChannelButton{
-    
-    const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
-    
-    HURSSChannelButton *showChannelButton = [HURSSChannelButton new];
-    [showChannelButton setTitle:@"СМОТРЕТЬ" forState:UIControlStateNormal];
-    
-    [self addSubview:showChannelButton];
-    
-    [showChannelButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self);
-        make.top.equalTo(self.selectSuggestedLabel.mas_bottom).with.offset(20.f);
-        make.width.equalTo(self.channelTextField.mas_width);
-        make.height.mas_equalTo(channelButtonSize);
-    }];
-    
-    self.showChannelButton = showChannelButton;
-    return showChannelButton;
-}
-
-/// Конфигурирует кнопку "ПОЛУЧИТЬ" (получить новости выбранного канала)
-- (HURSSChannelButton*)configGetFeedsButton{
-    
-    const CGFloat feedsButtonSize = [_presentStyle channelUIElementHeight];
-    
-    HURSSChannelButton *feedsButton = [HURSSChannelButton new];
-    [feedsButton setTitle:@"ПОЛУЧИТЬ" forState:UIControlStateNormal];
-    
-    [self addSubview:feedsButton];
-    
-    [feedsButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self);
-        make.bottom.equalTo(self.mas_bottom).with.offset(-20.f);
-        make.width.equalTo(self.showChannelButton.mas_width);
-        make.height.mas_equalTo(feedsButtonSize);
-    }];
-    
-    self.feedsButton = feedsButton;
-    return feedsButton;
+    self.channelContentView = [_presentConfigurator createContentScrollView];
+    self.enterChannelLabel = [_presentConfigurator createEnterChannelLabel];
+    self.channelTextField = [_presentConfigurator createChannelTextField];
+    self.selectSuggestedLabel = [_presentConfigurator createSelectSuggestedLabel];
+    self.showChannelButton = [_presentConfigurator createShowChannelButton];
+    self.feedsButton = [_presentConfigurator createGetFeedsButton];
 }
 
 
@@ -175,6 +92,10 @@
     
     NSString *channelLinkString = channelURL.absoluteString;
     [self.channelTextField setText:channelLinkString];
+}
+
+- (void)showChannelAlias:(NSString*)channelAlias{
+    [self.channelAliasTextField setText:channelAlias];
 }
 
 
@@ -211,16 +132,7 @@
     self.selectionDelegate = selDelegate;
     
     // Создает пикер
-    CZPickerView *channelPickerView = [[CZPickerView alloc] initWithHeaderTitle:@"Зарезервированные каналы"
-        cancelButtonTitle:@"Отмена"
-        confirmButtonTitle:@"Выбрать"];
-    
-    // Конфигурировать пикер
-    channelPickerView.needFooterView = YES;
-    channelPickerView.headerBackgroundColor = [[HURSSTwirlStyle sharedStyle] secondUseLightColor];
-    channelPickerView.headerTitleColor = [UIColor brownColor];
-    channelPickerView.confirmButtonBackgroundColor = [[HURSSTwirlStyle sharedStyle] secondUseLightColor];
-    channelPickerView.confirmButtonNormalColor = [UIColor brownColor];
+    CZPickerView *channelPickerView = [_presentConfigurator createChannelsPickerView];
     
     // Установить источник данных и делегат
     channelPickerView.dataSource = self;
@@ -288,31 +200,8 @@
  */
 - (void)showObtainingFeedsAlertForChannelName:(NSString*)channelName{
     
-    // Получить тексты
-    NSString *obtainFeedsAlertTitle = @"Получить новости?";
-    NSString *obtainFeedsAlertDescription = [NSString stringWithFormat:@"Вами был выбран канал %@. Применить его и получить новости этого RSS-канала?", channelName];
-    
-    // Инициализировать Alert Controller
-    URBNAlertViewController *obtainFeedsAlertVC = [[URBNAlertViewController alloc] initWithTitle:obtainFeedsAlertTitle message:obtainFeedsAlertDescription];
-    
-    // Установить стили
-    URBNAlertStyle *alertStyler = obtainFeedsAlertVC.alertStyler;
-    
-    alertStyler.blurTintColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
-    alertStyler.backgroundColor = [_presentStyle selectChannelScreenColor];
-    alertStyler.titleFont = [UIFont systemFontOfSize:24.f];
-    alertStyler.messageFont = [UIFont systemFontOfSize:18.f];
-    alertStyler.buttonCornerRadius = @([alertStyler.buttonHeight unsignedIntegerValue] / 2.f);
-    alertStyler.buttonBackgroundColor = [_presentStyle  channelButtonBackColor];
-    alertStyler.buttonTitleColor = [UIColor brownColor];
-    
-    // Сделать, чтобы по нажатию вне алерта - вьюшка отменялась
-    URBNAlertConfig *alertConfig = obtainFeedsAlertVC.alertConfig;
-    alertConfig.touchOutsideViewToDismiss = YES;
-    
-    // Добавить пустые экшены
-    [obtainFeedsAlertVC addAction:[URBNAlertAction actionWithTitle:@"Нет" actionType:URBNAlertActionTypeCancel actionCompleted:nil]];
-    [obtainFeedsAlertVC addAction:[URBNAlertAction actionWithTitle:@"Да" actionType:URBNAlertActionTypeNormal actionCompleted:nil]];
+    // Создать алерт-контроллер
+    URBNAlertViewController *obtainFeedsAlertVC = [_presentConfigurator createObtainingFeedsAlertWithChannelName:channelName];
     
     // Показать алерт
     [obtainFeedsAlertVC show];
@@ -335,6 +224,160 @@
     }];
 }
 
+- (void)updateUIWhenEnteredChannelURLValidate:(BOOL)passValidate{
+    
+    if(passValidate){
+        self.channelTextField.textColor = [UIColor darkGrayColor];
+        self.feedsButton.enabled = YES;
+        
+        [_presentAnimator performCreationAliasTextField];
+        
+    }else{
+        self.channelTextField.textColor = [_presentStyle channelTextFieldTextColor];
+        self.feedsButton.enabled = NO;
+        
+        [_presentAnimator performDestroyAliasTextField];
+    }
+}
+
+- (void)createChannelAliasTextField{
+    
+    HURSSChannelTextField *channelAliasTextField = [_presentConfigurator createChannelAliasTextField];
+    self.channelAliasTextField = channelAliasTextField;
+    
+    [_textFieldManager refreshObserving];
+    
+    [_presentConfigurator configSecondLocationSuggestedLabel];
+
+    [self layoutIfNeeded];
+    
+    [_presentAnimator performAnimateFallAliasTextFieldWithCompletion:nil];
+}
+
+- (void)destroyChannelAliasTextField{
+    
+    if(self.addChannelButton){
+        [self destroyChannelAddButton];
+    }
+    
+    [_presentAnimator performAnimateMoveAwayAliasTextFieldWithCompletion:^{
+        
+        [self.channelAliasTextField removeFromSuperview];
+        self.channelAliasTextField = nil;
+    }];
+    
+}
+
+
+- (void)updateUIWhenEnteredChannelAliasValidate:(BOOL)passValidate{
+    
+    if(passValidate){
+        
+        [_presentAnimator performCreationChannelAddButton];
+        
+    }else{
+        
+        [_presentAnimator performDestroyChannelAddButton];
+    }
+}
+
+- (void)createChannelAddButton{
+    
+    HURSSChannelButton *addChannelButton = [_presentConfigurator createChannelAddButton];
+    self.addChannelButton = addChannelButton;
+    
+    [_presentConfigurator configThirdLocationSuggestedLabel];
+    [self layoutIfNeeded];
+    
+    [_presentAnimator performAnimateFallChannelAddButtonWithCompletion:nil];
+}
+
+- (void)destroyChannelAddButton{
+    
+    [_presentAnimator performAnimateMoveAwayChannelAddButtonWithCompletion:^{
+        
+        [self.addChannelButton removeFromSuperview];
+        self.addChannelButton = nil;
+    }];
+}
+
+- (void)updateContentSizeWithLayout:(BOOL)needLayout{
+    
+    CGFloat maxYContentPosition = CGRectGetMaxY(self.showChannelButton.frame);
+    CGFloat minYBottomButtonPosition = CGRectGetMinY(self.feedsButton.frame);
+    CGFloat screenSizeheight = [UIScreen mainScreen].bounds.size.height;
+    
+    CGFloat newContentHeight = 0.f;
+    if((maxYContentPosition + 20.f) >= minYBottomButtonPosition){
+        // увеличить контент сайз
+        
+        CGFloat diffContentPositions = (maxYContentPosition + 20.f) - minYBottomButtonPosition;
+        newContentHeight = screenSizeheight + diffContentPositions + 2.f;
+    }else{
+        newContentHeight = screenSizeheight + 2.f;
+    }
+    
+    CGSize newContentSize = CGSizeMake(self.channelContentView.contentSize.width, newContentHeight);
+    [self.channelContentView setContentSize:newContentSize];
+    
+    
+    [_presentConfigurator configPresentLocationFeedsButton];
+    
+    if(needLayout){
+        [self layoutIfNeeded];
+    }
+}
+
+
+- (HURSSChannelTextFieldType)getChannelTextFieldType:(HURSSChannelTextField*)channelTextField{
+    
+    HURSSChannelTextFieldType channelTextFieldType = HURSSChannelUnrecognizedFieldType;
+    
+    BOOL isEnterURLTextField = [self.channelTextField isEqual:channelTextField];
+    BOOL isAliasTextField = [self.channelAliasTextField isEqual:channelTextField];
+    
+    if(isEnterURLTextField){
+        channelTextFieldType = HURSSChannelEnterURLFieldType;
+    }else if(isAliasTextField){
+        channelTextFieldType = HURSSChannelAliasFieldType;
+    }
+    
+    return channelTextFieldType;
+}
+
+- (void)showKeyboardActionsWithDuration:(NSTimeInterval)animationDuration withKeyboardSize:(CGSize)keyboardSize withChannelFieldType:(HURSSChannelTextFieldType)channelFieldType withCompletionBlock:(dispatch_block_t)keyboardActionCompletion{
+    
+    [UIView animateWithDuration:animationDuration animations:^{
+        
+        UIEdgeInsets channelViewContentInset = UIEdgeInsetsMake(0.f, 0.f, keyboardSize.height, 0.f);
+        [self.channelContentView setContentInset:channelViewContentInset];
+        [self.channelContentView setScrollIndicatorInsets:channelViewContentInset];
+        
+    } completion:^(BOOL finished) {
+        // Добавить тап и таймер
+        keyboardActionCompletion();
+    }];
+}
+
+- (void)hideKeyboardActionsWithDuration:(NSTimeInterval)animationDuration  withChannelFieldType:(HURSSChannelTextFieldType)channelFieldType withCompletionBlock:(dispatch_block_t)keyboardActionCompletion{
+    
+    [UIView animateWithDuration:animationDuration animations:^{
+        
+        UIEdgeInsets channelViewContentInset = UIEdgeInsetsZero;
+        [self.channelContentView setContentInset:channelViewContentInset];
+        [self.channelContentView setScrollIndicatorInsets:channelViewContentInset];
+        
+    } completion:^(BOOL finished) {
+        // Убрать тап и таймер
+        keyboardActionCompletion();
+    }];
+}
+
+
+- (void)hideKeyboard{
+    
+    [_textFieldManager hideKeyboard];
+}
 
 
 @end

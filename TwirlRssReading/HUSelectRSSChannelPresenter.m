@@ -37,12 +37,8 @@
 - (void)loadView{
     
     HUSelectRSSChannelView *rootChannelsView = [HUSelectRSSChannelView createChannelView];
+    [rootChannelsView configurationAllStartedViews];
     
-    self.enterChannelLabel = [rootChannelsView configEnterChannelLabel];
-    self.channelTextField = [rootChannelsView configChannelTextField];
-    self.selectSuggestedLabel = [rootChannelsView configSelectSuggestedLabel];
-    self.showChannelButton = [rootChannelsView configShowChannelButton];
-    self.feedsButton = [rootChannelsView configGetFeedsButton];
     
     self.selectChannelView = rootChannelsView;
     self.view = rootChannelsView;
@@ -55,8 +51,41 @@
     
     [self.selectChannelView setShowChannelHandler:@selector(obtainChannelsButtonPressed:) withTarget:self];
     [self.selectChannelView setGetFeedsHandler:@selector(recieveFeedsButtonPressed:) withTarget:self];
+    
+    [self.selectChannelView updateUIWhenEnteredChannelURLValidate:NO];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(channelTextChangedNotification:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+}
+
+- (void)channelTextChangedNotification:(NSNotification*)channelTextNotification{
+    
+    HURSSChannelTextField *channelTextField = (HURSSChannelTextField*)channelTextNotification.object;
+    HURSSChannelTextFieldType channelFieldType = [self.selectChannelView getChannelTextFieldType:channelTextField];
+    
+    if(channelFieldType == HURSSChannelEnterURLFieldType){
+        
+        NSString *channelTextURLString = channelTextField.text;
+        NSURL *enteredChannelURL = [NSURL URLWithString:channelTextURLString];
+        
+        BOOL isValidRSSChannel = enteredChannelURL && [HURSSChannel isValidChannelURL:enteredChannelURL];
+        [self.selectChannelView updateUIWhenEnteredChannelURLValidate:isValidRSSChannel];
+        
+    }else if(channelFieldType == HURSSChannelAliasFieldType){
+        
+        NSString *channelTextAliasString = channelTextField.text;
+        BOOL isNameEnoughLength = channelTextAliasString && (channelTextAliasString.length >= 4);
+        [self.selectChannelView updateUIWhenEnteredChannelAliasValidate:isNameEnoughLength];
+        
+        // updateUI
+    }
+}
 
 #pragma mark - Button Handlers
 
@@ -65,6 +94,7 @@
     _preservedChannels = [HURSSChannelStore getPreservedChannels];
     _preservedChannelNames = [HURSSChannelStore getPreservedChannelsNames];
     
+    [self.selectChannelView hideKeyboard];
     [self.selectChannelView showChannelWithNames:_preservedChannelNames withSelectionDelegate:self];
 }
 
@@ -80,14 +110,13 @@
     HURSSChannel *selectedChannel = _preservedChannels[indexChannel];
     NSURL *selectedChannelURL = selectedChannel.channelURL;
     [self.selectChannelView showChannelURLLink:selectedChannelURL];
+    [self.selectChannelView showChannelAlias:selectedChannel.channelAlias];
     
     NSString *channelName = selectedChannel.channelAlias;
     
     [self.selectChannelView showObtainingFeedsAlertForChannelName:channelName];
     [self.selectChannelView setObtainingFeedsAlertHandler:@selector(recieveFeedsButtonPressed:) withTarget:self];
 }
-
-
 
 
 
