@@ -58,4 +58,36 @@
     return channelRSSRegExp;
 }
 
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder{
+    if(self = [super init]){
+        self.channelURL = [aDecoder decodeObjectForKey:@"kChannelURL"];
+        self.channelAlias = [aDecoder decodeObjectForKey:@"kChannelAlias"];
+        self.channelType = [aDecoder decodeIntegerForKey:@"kChannelType"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder{
+    
+    [aCoder encodeObject:self.channelURL forKey:@"kChannelURL"];
+    [aCoder encodeObject:self.channelAlias forKey:@"kChannelAlias"];
+    [aCoder encodeInteger:self.channelType forKey:@"kChannelType"];
+}
+
+- (id)copyWithZone:(NSZone *)zone{
+    
+    HURSSChannel *copiedObject = [[HURSSChannel allocWithZone:zone] init];
+    
+    copiedObject.channelURL = self.channelURL;
+    copiedObject.channelAlias = self.channelAlias;
+    copiedObject.channelType = self.channelType;
+    
+    return copiedObject;
+    
+}
+
+
+
+
 @end

@@ -8,23 +8,37 @@
 
 #import <Foundation/Foundation.h>
 #import "HUSelectRSSChannelView.h"
-#import "HURSSTwirlStyle.h"
+#import "HURSSChannelViewStyler.h"
 #import "HURSSChannelViewConfigurator.h"
 
-@interface HURSSChannelViewAnimator : NSObject
+@protocol HURSSChannelViewAnimatorInterface <NSObject>
 
-+ (instancetype)createAnimatorForRootView:(HUSelectRSSChannelView*)channelRootView withStyler:(id<HURSSStyleProtocol>)viewStyler withConfigurer:(id<HURSSChannelViewConfiguratorInterface>)viewConfigurer;
+@end
+
+
+@interface HURSSChannelViewAnimator : NSObject <HURSSChannelViewAnimatorInterface>
+
++ (instancetype)createAnimatorForRootView:(HUSelectRSSChannelView*)channelRootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler withConfigurer:(id<HURSSChannelViewConfiguratorInterface>)viewConfigurer;
 
 - (void)performAnimateFallAliasTextFieldWithCompletion:(dispatch_block_t)animCompletion;
 - (void)performAnimateFallChannelAddButtonWithCompletion:(dispatch_block_t)animCompletion;
+- (void)performAnimateFallChannelRemoveButtonWithCompletion:(dispatch_block_t)animCompletion;
 
 - (void)performAnimateMoveAwayAliasTextFieldWithCompletion:(dispatch_block_t)animCompletion;
 - (void)performAnimateMoveAwayChannelAddButtonWithCompletion:(dispatch_block_t)animCompletion;
+- (void)performAnimateMoveAwayChannelRemoveButtonWithCompletion:(dispatch_block_t)animCompletion;
+
 
 - (void)performCreationAliasTextField;
 - (void)performDestroyAliasTextField;
 - (void)performCreationChannelAddButton;
 - (void)performDestroyChannelAddButton;
 
+- (void)performCreationChannelRemoveButton;
+- (void)performDestroyChannelRemoveButton;
+
+
+- (void)performAnimateShowKeyboardWithDuration:(NSTimeInterval)animDuration withKeyboardSize:(CGSize)keyboardSize withCopletionBlock:(dispatch_block_t)keyboardCompletion;
+- (void)performAnimateHideKeyboardWithDuration:(NSTimeInterval)animDuration withKeyboardSize:(CGSize)keyboardSize withCopletionBlock:(dispatch_block_t)keyboardCompletion;
 
 @end

@@ -7,13 +7,14 @@
 //
 
 #import "HURSSChannelTextField.h"
-#import "HURSSTwirlStyle.h"
+#import "HURSSChannelViewStyler.h"
+#import "HURSSChannelViewAssembly.h"
 
 @implementation HURSSChannelTextField{
     
     UIImageView *_iconImageView;
     
-    id<HURSSStyleProtocol> _presentStyle;
+    id<HURSSChannelViewStylizationInterface> _presentStyler;
 }
 
 - (instancetype)init{
@@ -26,17 +27,19 @@
 }
 
 - (void)injectDependencies{
-    _presentStyle = [HURSSTwirlStyle sharedStyle];
+    
+    HURSSChannelViewAssembly *channelViewAssembly = [HURSSChannelViewAssembly defaultAssemblyForChannelView];
+    _presentStyler = [channelViewAssembly getViewStyler];
 }
 
 - (void)configUI{
     
     // Установить фон
-    UIColor *channelTextFieldColor = [_presentStyle channelTextFieldBackColor];
+    UIColor *channelTextFieldColor = [_presentStyler channelTextFieldBackColor];
     [self setBackgroundColor:channelTextFieldColor];
     
     // Получить предпочитаемую высоту
-    const CGFloat textFieldSize = [_presentStyle channelUIElementHeight];
+    const CGFloat textFieldSize = [_presentStyler channelUIElementHeight];
     const CGFloat textFieldCornerRadius = (textFieldSize / 2.f);
     
     // Добавить границы и скругленные углы
@@ -47,15 +50,15 @@
     [channelFieldLayer setCornerRadius:textFieldCornerRadius];
     
     // Задать шрифт
-    UIFont *channelTextFont = [_presentStyle channelTextFieldFont];
+    UIFont *channelTextFont = [_presentStyler channelTextFieldFont];
     [self setFont:channelTextFont];
     
     // Задать цвет
-    UIColor *channelTextColor = [_presentStyle channelTextFieldTextColor];
+    UIColor *channelTextColor = [_presentStyler channelTextFieldTextColor];
     [self setTextColor:channelTextColor];
     
     // Задать цвет курсора
-    UIColor *cursorChannelFieldColor = [_presentStyle selectChannelScreenColor];
+    UIColor *cursorChannelFieldColor = [_presentStyler selectChannelScreenColor];
     [self setTintColor:cursorChannelFieldColor];
     
     

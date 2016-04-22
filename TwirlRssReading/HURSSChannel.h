@@ -8,12 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+//TODO: реализовать протоколы NSCoding / NSCopying
+
 typedef NS_ENUM(NSUInteger, HURSSChannelRecievingType) {
     HURSSChannelReserved,
     HURSSChannelUserCreated
 };
 
-@interface HURSSChannel : NSObject
+@interface HURSSChannel : NSObject <NSCopying, NSCoding>
 
 @property (copy, nonatomic) NSString *channelAlias;
 @property (copy, nonatomic) NSURL *channelURL;

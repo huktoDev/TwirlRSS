@@ -13,6 +13,34 @@
 #import "URBNAlert.h"
 
 
+
+
+typedef NS_ENUM(NSUInteger, HURSSChannelActionType) {
+    HURSSChannelActionAdd = 1,
+    HURSSChannelActionModify,
+    HURSSChannelActionDelete
+};
+
+
+
+typedef NS_ENUM(NSUInteger, HURSSChannelState) {
+    HURSSChannelStateImpossible = 0,
+    HURSSChannelStatePossibleAdd,
+    HURSSChannelStatePossibleModifyDel
+};
+
+
+/**
+    @enum HURSSChannelTextFieldType
+    @abstract Тип SelectChannel текстового поля
+ 
+    @constant HURSSChannelUnrecognizedFieldType
+        Нераспознанное для данного экрана текстовое поле
+    @constant HURSSChannelEnterURLFieldType
+        Текстовое поле для ввода URL-адреса
+    @constant HURSSChannelAliasFieldType
+        Текстовое поле для ввода названия канала
+ */
 typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
     HURSSChannelUnrecognizedFieldType = 0,
     HURSSChannelEnterURLFieldType,
@@ -67,6 +95,7 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 @property (strong, nonatomic) HURSSChannelTextField *channelTextField;
 @property (strong, nonatomic) HURSSChannelTextField *channelAliasTextField;
 @property (strong, nonatomic) HURSSChannelButton *addChannelButton;
+@property (strong, nonatomic) HURSSChannelButton *deleteChannelButton;
 @property (strong, nonatomic) HURSSChannelButton *showChannelButton;
 @property (strong, nonatomic) HURSSChannelButton *feedsButton;
 
@@ -89,11 +118,20 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 - (void)configurationAllStartedViews;
 
 
-#pragma mark - Setters
+#pragma mark - Type TextFields
+// Получить  тип текстового поля
+
+- (HURSSChannelTextFieldType)getChannelTextFieldType:(HURSSChannelTextField*)channelTextField;
+
+
+#pragma mark - Accessors & Mutators
 // Установить URL канала на интерфейс
 
 - (void)showChannelURLLink:(NSURL*)channelURL;
 - (void)showChannelAlias:(NSString*)channelAlias;
+
+- (NSURL*)getChannelURLLink;
+- (NSString*)getChannelAlias;
 
 
 #pragma mark - SET BUTTONs HANDLER's
@@ -101,7 +139,8 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 
 - (void)setShowChannelHandler:(SEL)actionHandler withTarget:(id)actionTarget;
 - (void)setGetFeedsHandler:(SEL)actionHandler withTarget:(id)actionTarget;
-
+- (void)setAddChannelHandler:(SEL)actionHandler withTarget:(id)actionTarget;
+- (void)setDeleteChannelHandler:(SEL)actionHandler withTarget:(id)actionTarget;
 
 #pragma mark - SELECT CHANNEL Dialog
 // Диалог выбора канала
@@ -116,20 +155,17 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 - (void)showObtainingFeedsAlertForChannelName:(NSString*)channelName;
 - (void)setObtainingFeedsAlertHandler:(SEL)actionHandler withTarget:(id)actionTarget;
 
+// Добавлен
+// Удален
+// Изменен
+- (void)showAlertPostAction:(HURSSChannelActionType)channelActionType ForChannelName:(NSString*)channelName withURL:(NSURL*)channelURl;
+
+
+#pragma mark - UPDATE UI To States
+// Обновить UI при разных состояниях
 
 - (void)updateUIWhenEnteredChannelURLValidate:(BOOL)passValidate;
-- (void)updateUIWhenEnteredChannelAliasValidate:(BOOL)passValidate;
-
-- (void)updateContentSizeWithLayout:(BOOL)needLayout;
-
-
-- (HURSSChannelTextFieldType)getChannelTextFieldType:(HURSSChannelTextField*)channelTextField;
-
-- (void)showKeyboardActionsWithDuration:(NSTimeInterval)animationDuration withKeyboardSize:(CGSize)keyboardSize withChannelFieldType:(HURSSChannelTextFieldType)channelFieldType withCompletionBlock:(dispatch_block_t)keyboardActionCompletion;
-
-- (void)hideKeyboardActionsWithDuration:(NSTimeInterval)animationDuration  withChannelFieldType:(HURSSChannelTextFieldType)channelFieldType withCompletionBlock:(dispatch_block_t)keyboardActionCompletion;
-
-- (void)hideKeyboard;
+- (void)updateUIWhenChannelChangeState:(HURSSChannelState)channelState;
 
 
 
@@ -140,5 +176,30 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 - (void)destroyChannelAddButton;
 
 
+- (void)createChannelDeleteButton;
+- (void)destroyChannelDeleteButton;
+
+
+
+#pragma mark - UPDATE Content Size
+// Обновить размер контента
+
+- (void)updateContentSizeWithLayout:(BOOL)needLayout;
+
+
+
+#pragma mark - Keyboard SHOW/HIDE
+// Работа с клавиатурой
+
+- (void)showKeyboardActionsWithDuration:(NSTimeInterval)animationDuration withKeyboardSize:(CGSize)keyboardSize withChannelFieldType:(HURSSChannelTextFieldType)channelFieldType withCompletionBlock:(dispatch_block_t)keyboardActionCompletion;
+
+- (void)hideKeyboardActionsWithDuration:(NSTimeInterval)animationDuration withKeyboardSize:(CGSize)keyboardSize withChannelFieldType:(HURSSChannelTextFieldType)channelFieldType withCompletionBlock:(dispatch_block_t)keyboardActionCompletion;
+
+- (void)hideKeyboard;
+
+
 
 @end
+
+
+

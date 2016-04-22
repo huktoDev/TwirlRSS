@@ -1,37 +1,15 @@
 //
-//  HUBaseHelper.m
+//  HURSSChannelViewStyler.m
 //  TwirlRssReading
 //
-//  Created by Alexandr Babenko on 17.04.16.
+//  Created by Alexandr Babenko on 22.04.16.
 //  Copyright © 2016 Alexandr Babenko. All rights reserved.
 //
 
+#import "HURSSChannelViewStyler.h"
 #import "HURSSTwirlStyle.h"
 
-@implementation HURSSTwirlStyle
-
-+ (instancetype)sharedStyle{
-    
-    static HURSSTwirlStyle * sharedStyle = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedStyle = [HURSSTwirlStyle new];
-    });
-    return  sharedStyle;
-}
-
-
-- (UIColor*)splashScreenColor{
-    return HU_RGB_COLOR(192.f, 194.f, 211.f);
-}
-
-- (CGSize)splashLogoSize{
-    return CGSizeMake(168.f, 40.f);
-}
-
-- (UIImage*)splashLogoImage{
-    return [UIImage imageNamed:@"improveDigitalLogo.png"];
-}
+@implementation HURSSChannelViewStyler
 
 - (UIColor*)firstUseColor{
     return HU_RGB_COLOR(42.f, 36.f, 107.f);
@@ -77,5 +55,6 @@
 - (UIFont*)channelButtonTextFont{
     return [UIFont boldSystemFontOfSize:24.f];
 }
+
 
 @end

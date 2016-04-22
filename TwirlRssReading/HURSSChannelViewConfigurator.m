@@ -23,34 +23,45 @@
     HURSSChannelTextField   *_channelTextField;
     HURSSChannelTextField   *_channelAliasTextField;
     HURSSChannelButton      *_addChannelButton;
+    HURSSChannelButton      *_deleteChannelButton;
     HURSSChannelButton      *_showChannelButton;
     HURSSChannelButton      *_feedsButton;
     
     CZPickerView            *_channelPickerView;
     URBNAlertViewController *_obtainFeedsAlertVC;
     
+    URBNAlertViewController *_channelAlertVC;
     
-    id <HURSSStyleProtocol> _presentStyle;
+    
+    id <HURSSChannelViewStylizationInterface> _presentStyle;
+    id <HURSSChannelViewPositionRulesInterface> _constraintsFactory;
 }
 
 
 #pragma mark - Construction & Destroying
 
-- (instancetype)initWithRootView:(HUSelectRSSChannelView*)channelRootView withStyler:(id<HURSSStyleProtocol>)viewStyler{
+- (instancetype)initWithRootView:(HUSelectRSSChannelView*)channelRootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler withConstraintsFactory:(id<HURSSChannelViewPositionRulesInterface>)viewRules{
     if(self = [super init]){
         _configurationChannelView = channelRootView;
         _presentStyle = viewStyler;
+        _constraintsFactory = viewRules;
     }
     return self;
 }
 
 /// Конструктор для конфигуратора
-+ (instancetype)createConfiguratorForRootView:(HUSelectRSSChannelView*)channelRootView withStyler:(id<HURSSStyleProtocol>)viewStyler{
++ (instancetype)createConfiguratorForRootView:(HUSelectRSSChannelView*)channelRootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler withConstraintsFactory:(id<HURSSChannelViewPositionRulesInterface>)viewRules{
     
-    HURSSChannelViewConfigurator *newManager = [[HURSSChannelViewConfigurator alloc] initWithRootView:channelRootView withStyler:viewStyler];
+    HURSSChannelViewConfigurator *newManager = [[HURSSChannelViewConfigurator alloc] initWithRootView:channelRootView withStyler:viewStyler withConstraintsFactory:viewRules];
     return newManager;
 }
 
+
+- (void)configBackground{
+    
+    UIColor *selectChannelBackColor = [_presentStyle selectChannelScreenColor];
+    [_configurationChannelView setBackgroundColor:selectChannelBackColor];
+}
 
 #pragma mark - Config UI Elements
 
@@ -211,17 +222,10 @@
     return channelPickerView;
 }
 
-- (URBNAlertViewController*)createObtainingFeedsAlertWithChannelName:(NSString*)channelName{
-    
-    // Получить тексты
-    NSString *obtainFeedsAlertTitle = @"Получить новости?";
-    NSString *obtainFeedsAlertDescription = [NSString stringWithFormat:@"Вами был выбран канал %@. Применить его и получить новости этого RSS-канала?", channelName];
-    
-    // Инициализировать Alert Controller
-    URBNAlertViewController *obtainFeedsAlertVC = [[URBNAlertViewController alloc] initWithTitle:obtainFeedsAlertTitle message:obtainFeedsAlertDescription];
+- (void)configBaseStyleURBNViewController:(URBNAlertViewController*)configureAlertVC{
     
     // Установить стили
-    URBNAlertStyle *alertStyler = obtainFeedsAlertVC.alertStyler;
+    URBNAlertStyle *alertStyler = configureAlertVC.alertStyler;
     
     alertStyler.blurTintColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
     alertStyler.backgroundColor = [_presentStyle selectChannelScreenColor];
@@ -232,8 +236,20 @@
     alertStyler.buttonTitleColor = [UIColor brownColor];
     
     // Сделать, чтобы по нажатию вне алерта - вьюшка отменялась
-    URBNAlertConfig *alertConfig = obtainFeedsAlertVC.alertConfig;
+    URBNAlertConfig *alertConfig = configureAlertVC.alertConfig;
     alertConfig.touchOutsideViewToDismiss = YES;
+}
+
+- (URBNAlertViewController*)createObtainingFeedsAlertWithChannelName:(NSString*)channelName{
+    
+    // Получить тексты
+    NSString *obtainFeedsAlertTitle = @"Получить новости?";
+    NSString *obtainFeedsAlertDescription = [NSString stringWithFormat:@"Вами был выбран канал %@. Применить его и получить новости этого RSS-канала?", channelName];
+    
+    // Инициализировать Alert Controller
+    URBNAlertViewController *obtainFeedsAlertVC = [[URBNAlertViewController alloc] initWithTitle:obtainFeedsAlertTitle message:obtainFeedsAlertDescription];
+    
+    [self configBaseStyleURBNViewController:obtainFeedsAlertVC];
     
     // Добавить пустые экшены
     [obtainFeedsAlertVC addAction:[URBNAlertAction actionWithTitle:@"Нет" actionType:URBNAlertActionTypeCancel actionCompleted:nil]];
@@ -243,6 +259,32 @@
     return obtainFeedsAlertVC;
 }
 
+- (URBNAlertViewController*)createChannelAlertWithPostAction:(HURSSChannelActionType)channelActionType WithChannelName:(NSString*)channelName andWithURL:(NSURL*)channelURL{
+    
+    NSString *actionString = nil;
+    if(channelActionType == HURSSChannelActionAdd){
+        actionString = @"добавлен";
+    }else if(channelActionType == HURSSChannelActionModify){
+        actionString = @"изменен";
+    }else if(channelActionType == HURSSChannelActionDelete){
+        actionString = @"удален";
+    }
+    
+    // Получить тексты
+    NSString *channelAlertTitle = [NSString stringWithFormat:@"Канал успешно %@!", actionString];
+    NSString *channelAlertDescription = [NSString stringWithFormat:@"Был успешно %@ RSS-канал %@ с адресом \n%@", actionString, channelName, channelURL];
+    
+    // Инициализировать Alert Controller
+    URBNAlertViewController *channelAlertVC = [[URBNAlertViewController alloc] initWithTitle:channelAlertTitle message:channelAlertDescription];
+    
+    [self configBaseStyleURBNViewController:channelAlertVC];
+    
+    // Добавить пустые экшены
+    [channelAlertVC addAction:[URBNAlertAction actionWithTitle:@"ОК" actionType:URBNAlertActionTypeNormal actionCompleted:nil]];
+    
+    _channelAlertVC = channelAlertVC;
+    return channelAlertVC;
+}
 
 - (HURSSChannelTextField*)createChannelAliasTextField{
     
@@ -280,16 +322,21 @@
     _addChannelButton = addChannelButton;
     
     [self configCreatedLocationChannelAddButton];
-    /*
-    [addChannelButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_channelContentView);
-        make.centerY.equalTo(_channelAliasTextField.mas_centerY);
-        make.width.equalTo(_channelAliasTextField.mas_width);
-        make.height.mas_equalTo(channelButtonSize);
-    }];
-     */
     
     return addChannelButton;
+}\
+
+- (HURSSChannelButton*)createChannelRemoveButton{
+    
+    HURSSChannelButton *deleteChannelButton = [HURSSChannelButton new];
+    [deleteChannelButton setTitle:@"УДАЛИТЬ" forState:UIControlStateNormal];
+    
+    [_channelContentView insertSubview:deleteChannelButton belowSubview:_addChannelButton];
+    _deleteChannelButton = deleteChannelButton;
+    
+    [self configCreatedLocationChannelRemoveButton];
+    
+    return deleteChannelButton;
 }
 
 - (void)configPresentLocationAliasTextField{
@@ -308,7 +355,7 @@
     
     const CGFloat textFieldSize = [_presentStyle channelUIElementHeight];
     
-    [_channelAliasTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_channelAliasTextField mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(_channelContentView);
         make.centerY.equalTo(_channelTextField.mas_centerY);
         make.width.equalTo(_enterChannelLabel.mas_width);
@@ -345,7 +392,7 @@
     
     const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
     
-    [_addChannelButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_addChannelButton mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(_channelContentView);
         make.centerY.equalTo(_channelAliasTextField.mas_centerY);
         make.width.equalTo(_channelAliasTextField.mas_width);
@@ -362,6 +409,42 @@
         make.top.equalTo(_channelAliasTextField.mas_bottom).with.offset(20.f);
         make.width.equalTo(_enterChannelLabel.mas_width);
         make.height.mas_equalTo(textFieldSize);
+    }];
+}
+
+- (void)configPresentLocationChannelRemoveButton{
+    
+    const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
+    
+    [_deleteChannelButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_channelContentView);
+        make.top.equalTo(_addChannelButton.mas_bottom).with.offset(20.f);
+        make.width.equalTo(_channelTextField.mas_width);
+        make.height.mas_equalTo(channelButtonSize);
+    }];
+}
+
+- (void)configCreatedLocationChannelRemoveButton{
+    
+    const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
+    
+    [_deleteChannelButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_channelContentView);
+        make.centerY.equalTo(_addChannelButton.mas_centerY);
+        make.width.equalTo(_addChannelButton.mas_width);
+        make.height.mas_equalTo(channelButtonSize);
+    }];
+}
+
+- (void)configDestoyedLocationChannelRemoveButton{
+    
+    const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
+    
+    [_deleteChannelButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_channelContentView).with.offset(- CGRectGetWidth(_configurationChannelView.frame));
+        make.top.equalTo(_addChannelButton.mas_bottom).with.offset(20.f);
+        make.width.equalTo(_enterChannelLabel.mas_width);
+        make.height.mas_equalTo(channelButtonSize);
     }];
 }
 
@@ -395,6 +478,16 @@
     }];
 }
 
+- (void)configFourLocationSuggestedLabel{
+    
+    [_selectSuggestedLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_channelContentView);
+        make.width.equalTo(_enterChannelLabel.mas_width);
+        make.top.equalTo(_deleteChannelButton.mas_bottom).with.offset(20.f);
+        make.height.mas_equalTo(90.f);
+    }];
+}
+
 - (void)configPresentLocationFeedsButton{
     
     const CGFloat feedsButtonSize = [_presentStyle channelUIElementHeight];
@@ -409,8 +502,25 @@
     }];
 }
 
+- (void)configGetFeedsDisable{
+    
+    _channelTextField.textColor = [_presentStyle channelTextFieldTextColor];
+    _feedsButton.enabled = NO;
+}
 
+- (void)configGetFeedsEnable{
+    
+    _channelTextField.textColor = [UIColor darkGrayColor];
+    _feedsButton.enabled = YES;
+}
 
+- (void)configKeyboardWithInsets:(UIEdgeInsets)contentInset{
+    
+    [_channelContentView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(contentInset);
+    }];
+    [_configurationChannelView layoutIfNeeded];
+}
 
 
 

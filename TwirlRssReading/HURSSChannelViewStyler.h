@@ -1,26 +1,15 @@
 //
-//  HUBaseHelper.h
+//  HURSSChannelViewStyler.h
 //  TwirlRssReading
 //
-//  Created by Alexandr Babenko on 17.04.16.
+//  Created by Alexandr Babenko on 22.04.16.
 //  Copyright © 2016 Alexandr Babenko. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 @import UIKit;
 
-//TODO: Разделить на несколько протоколов (базовые стили, стили Splash, стили SelectChannel)
-
-
-#define HU_RGB_COLOR(redComp,greenComp,blueComp) [UIColor colorWithRed:(redComp/255.f) green:(greenComp/255.f) blue:(blueComp/255.f) alpha:1.f]
-
-
-
-@protocol HURSSStyleProtocol <NSObject>
-
-- (UIColor*)splashScreenColor;
-- (CGSize)splashLogoSize;
-- (UIImage*)splashLogoImage;
+@protocol HURSSChannelViewStylizationInterface <NSObject>
 
 - (UIColor*)firstUseColor;
 - (UIColor*)secondUseColor;
@@ -41,8 +30,6 @@
 @end
 
 
-@interface HURSSTwirlStyle : NSObject <HURSSStyleProtocol>
-
-+ (instancetype)sharedStyle;
+@interface HURSSChannelViewStyler : NSObject <HURSSChannelViewStylizationInterface>
 
 @end

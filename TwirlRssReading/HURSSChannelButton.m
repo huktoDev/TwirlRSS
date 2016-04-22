@@ -7,10 +7,11 @@
 //
 
 #import "HURSSChannelButton.h"
-#import "HURSSTwirlStyle.h"
+#import "HURSSChannelViewStyler.h"
+#import "HURSSChannelViewAssembly.h"
 
 @implementation HURSSChannelButton{
-    id<HURSSStyleProtocol> _presentStyle;
+    id<HURSSChannelViewStylizationInterface> _presentStyler;
 }
 
 #pragma mark - Initialization
@@ -30,7 +31,10 @@
 
 /// Инъекция зависимостей (в данном случае - стиля)
 - (void)injectDependencies{
-    _presentStyle = [HURSSTwirlStyle sharedStyle];
+    
+    HURSSChannelViewAssembly *viewAssembly = [HURSSChannelViewAssembly defaultAssemblyForChannelView];
+    
+    _presentStyler = [viewAssembly getViewStyler];
 }
 
 
@@ -43,15 +47,15 @@
     self.enabled = YES;
     
     // Задать шрифт
-    UIFont *channelButtonTitleFont = [_presentStyle channelButtonTextFont];
+    UIFont *channelButtonTitleFont = [_presentStyler channelButtonTextFont];
     [self.titleLabel setFont:channelButtonTitleFont];
     
     // Задать цвет текста кнопки и тайтл
-    UIColor *channelButtonTextColor = [_presentStyle channelButtonTextColor];
+    UIColor *channelButtonTextColor = [_presentStyler channelButtonTextColor];
     [self setTitleColor:channelButtonTextColor forState:UIControlStateNormal];
     
     // Получить предпочитаемую высоту
-    const CGFloat buttonSize = [_presentStyle channelUIElementHeight];
+    const CGFloat buttonSize = [_presentStyler channelUIElementHeight];
     const CGFloat buttonCornerRadius = (buttonSize / 2.f);
     
     // Добавить границы и скругленные углы
@@ -89,7 +93,7 @@
     
     [super setEnabled:enabled];
     
-    UIColor *buttonBackgroundColor =  [_presentStyle channelButtonBackColor];
+    UIColor *buttonBackgroundColor =  [_presentStyler channelButtonBackColor];
     UIColor *buttonDisabledBackgroundColor = [buttonBackgroundColor colorWithAlphaComponent:0.5f];
     
     self.backgroundColor = enabled ? buttonBackgroundColor : buttonDisabledBackgroundColor;
@@ -120,7 +124,7 @@
 - (void)performDirectCompresionAnimation{
     
     const NSTimeInterval compressAnimDuration = 0.2f;
-    UIColor *highlightedColorChannelButton = [_presentStyle channelButtonHighlightedBackColor];
+    UIColor *highlightedColorChannelButton = [_presentStyler channelButtonHighlightedBackColor];
     
     [UIView animateWithDuration:compressAnimDuration animations:^{
         
@@ -133,7 +137,7 @@
 - (void)performReverseCompressionAnimation{
     
     const NSTimeInterval compressAnimDuration = 0.5f;
-    UIColor *normalColorChannelButton = [_presentStyle channelButtonBackColor];
+    UIColor *normalColorChannelButton = [_presentStyler channelButtonBackColor];
     
     [UIView animateWithDuration:compressAnimDuration delay:0.f usingSpringWithDamping:0.18f initialSpringVelocity:0.f options:0 animations:^{
         

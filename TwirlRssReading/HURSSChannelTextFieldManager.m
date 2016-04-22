@@ -186,10 +186,11 @@ const NSTimeInterval HURSS_CHANNEL_TEXT_FIELD_WAITING = 8.f;
     
     // Получить информацию о клавиатуре
     NSDictionary *keyboardUserInfo = [keyboardNotification userInfo];
+    CGSize keyboardSize = [[keyboardUserInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     NSTimeInterval keyboardAnimationDuration = [[keyboardUserInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
     // Передать управление анимацией сокрытия клавиатуры HUSelectRSSChannelView
-    [_managedChannelRootView hideKeyboardActionsWithDuration:keyboardAnimationDuration withChannelFieldType:channelFieldType withCompletionBlock:^{
+    [_managedChannelRootView hideKeyboardActionsWithDuration:keyboardAnimationDuration withKeyboardSize:keyboardSize withChannelFieldType:channelFieldType withCompletionBlock:^{
         
         // Убрать тап и таймер, прекратить следить за событиями
         [self endObserving];
