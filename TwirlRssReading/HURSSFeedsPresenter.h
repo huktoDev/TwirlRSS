@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HURSSFeedsPresenter : UIViewController
+@protocol HURSSFeedsTransferProtocol <NSObject>
+
+@property (strong, nonatomic) NSArray <HURSSFeedItem*> *feeds;
+@property (strong, nonatomic) HURSSFeedInfo *feedInfo;
+
+@end
+
+
+@interface HURSSFeedsPresenter : UIViewController <HURSSFeedsTransferProtocol>
 
 @end

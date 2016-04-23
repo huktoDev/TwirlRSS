@@ -202,7 +202,7 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 
 
 - (void)startFeedsWaiting;
-- (void)endFeedsWaiting;
+- (void)endFeedsWaitingWithCompletion:(dispatch_block_t)waitingCompletion;
 
 
 @end

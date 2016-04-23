@@ -9,18 +9,25 @@
 #import "HUSelectRSSChannelPresenter.h"
 
 
+
 @implementation HUSelectRSSChannelPresenter{
+    
+    BOOL _isFeedsSuccessRecieved;
+    
+    HURSSFeedInfo *_recievedHeaderFeedInfo;
+    NSArray <HURSSFeedItem*> *_recievedFeedsItems;
     
     // Презентер сам хранит каналы, и их названия (используется при выборе канала)
     NSArray <HURSSChannel*> *_reservedChannels;
     NSArray <NSString*> *_reservedChannelNames;
     
     // Канал, для которого сервис пытается выполнить получение новостей
-    HURSSChannel *_recievingFeedsChannel;
+    //HURSSChannel *_recievingFeedsChannel;
     
     // Используемые сервисы
-    MWFeedParser *_feedParser;
+    //MWFeedParser *_feedParser;
     id <HURSSChannelStoreProtocol> _channelStore;
+    id <HURSSFeedsRecievingProtocol> _feedsReciever;
 }
 
 
@@ -71,6 +78,7 @@
 - (void)injectDependencies{
     
     _channelStore = [HURSSChannelStore sharedStore];
+    _feedsReciever = [HURSSFeedsReciever sharedReciever];
 }
 
 - (void)channelTextChangedNotification:(NSNotification*)channelTextNotification{
@@ -203,79 +211,56 @@
     HURSSChannelRecievingType channelType = HURSSChannelUserCreated;
     
     HURSSChannel *currentChannel = [HURSSChannel channelWithAlias:currentChannelAlias withURL:currentChannelURL withType:channelType];
-    _recievingFeedsChannel = currentChannel;
     
-    // Инициализировать парсер и загрузчик RSS URL-ом текущего канала
-    _feedParser = [[MWFeedParser alloc] initWithFeedURL:currentChannel.channelURL];
-    _feedParser.delegate = self;
-    _feedParser.feedParseType = ParseTypeFull;
-    _feedParser.connectionType = ConnectionTypeSynchronously;
-    
-    // Запустить парсинг
-    [_feedParser parse];
+    _feedsReciever.feedsDelegate = self;
+    [_feedsReciever loadFeedsForChannel:currentChannel];
     
     // Повесить на интерфейс ожидание
     [self.selectChannelView startFeedsWaiting];
 }
 
-- (void)feedParserDidStart:(MWFeedParser *)parser{
-    NSLog(@"PARSER START");
-    printf("");
-}
 
-- (void)feedParser:(MWFeedParser *)parser didParseFeedInfo:(MWFeedInfo *)info{
-    printf("");
-}
-
-- (void)feedParser:(MWFeedParser *)parser didParseFeedItem:(MWFeedItem *)item{
-    printf("");
-}
-- (void)feedParserDidFinish:(MWFeedParser *)parser{
+- (NSArray<HURSSFeedItem*>*)getRecievedFeeds{
     
-#if HU_RSS_NEED_FEEDS_FAIL == 1
-    
-    NSUInteger errorCode = 0;
-    int randNumb = arc4random() % 2;
-    if(randNumb == 0){
-        errorCode = MWErrorCodeConnectionFailed;
-    }else{
-        errorCode = MWErrorCodeFeedParsingError;
+    if(! _isFeedsSuccessRecieved){
+        @throw [NSException exceptionWithName:@"getFeedsException" reason:@"Protocol HURSSChannelSelectRecievedFeedsProtocol Incorrect Implement. While Feeds don't recieved - Segue impossible" userInfo:nil];
     }
-    NSError *testError = [NSError errorWithDomain:@"testDomain" code:errorCode userInfo:nil];
-    [self feedParser:parser didFailWithError:testError];
-    return;
-#else
-    
-    
-    [self.selectChannelView endFeedsWaiting];
-    // Здесь запустить переход, и передать параметрами полученные новости
-    
-#endif
+    return [NSArray arrayWithArray:_recievedFeedsItems];
 }
 
-- (void)feedParser:(MWFeedParser *)parser didFailWithError:(NSError *)error{
+- (HURSSFeedInfo*)getFeedInfo{
     
-    NSString *channelName = _recievingFeedsChannel.channelAlias;
-    
-    NSString *feedsErrorDescription = nil;
-    NSUInteger feedsErrorCode = MWErrorCodeConnectionFailed;
-    switch (feedsErrorCode) {
-        case MWErrorCodeConnectionFailed:
-            feedsErrorDescription = @"Соединение с сервером установить не удалось";
-            break;
-        case MWErrorCodeFeedParsingError:
-        case MWErrorCodeFeedValidationError:
-            feedsErrorDescription = @"С сервера была присланы неправильно форматированные данные";
-            break;
-        default:
-            feedsErrorDescription = @"Неизвестная ошибка";
-            break;
+    if(! _isFeedsSuccessRecieved){
+        @throw [NSException exceptionWithName:@"getFeedsException" reason:@"Protocol HURSSChannelSelectRecievedFeedsProtocol Incorrect Implement. While Feeds don't recieved - Segue impossible" userInfo:nil];
     }
+    return _recievedHeaderFeedInfo;
+}
+
+
+- (void)didSuccessRecievedFeeds:(NSArray<HURSSFeedItem*>*)recievedFeeds withFeedInfo:(HURSSFeedInfo*)recievedFeedInfo forChannel:(HURSSChannel*)feedsChannel{
     
-    [self.selectChannelView endFeedsWaiting];
-    [self.selectChannelView showFeedsFailRecivingAlertForChannelName:channelName withErrorDescription:feedsErrorDescription];
+    NSLog(@"SUCCESS FEEDS , %lu feeds\nFeedInfo : %@\nChannel %@", (unsigned long)recievedFeeds.count, recievedFeedInfo, feedsChannel.channelAlias);
+    
+    _recievedFeedsItems = recievedFeeds;
+    _recievedHeaderFeedInfo = recievedFeedInfo;
+    
+    _isFeedsSuccessRecieved = YES;
+    [self.selectChannelView endFeedsWaitingWithCompletion:^{
+        
+        [[HURSSTwirlRouter sharedRouter] performTransitionSegue:HURSSTwirlChannelSelectedSegue forScreen:self];
+    }];
+}
+
+- (void)didFailureRecievingFeedsWithErrorDescription:(NSString*)errorDescription forChannel:(HURSSChannel*)feedsChannel{
+    
+    NSLog(@"FAILURE FEEDS , ERROR : %@\nChannel : %@", errorDescription, feedsChannel.channelAlias);
+    
+    NSString *channelName = feedsChannel.channelAlias;
+    [self.selectChannelView endFeedsWaitingWithCompletion:nil];
+    [self.selectChannelView showFeedsFailRecivingAlertForChannelName:channelName withErrorDescription:errorDescription];
     [self.selectChannelView setFeedsRepeatAlertHandler:@selector(recieveFeedsButtonPressed:) withTarget:self];
 }
+
 
 #pragma mark - HURSSChannelSelectionDelegate IMP
 
@@ -299,7 +284,6 @@
     [self.selectChannelView showObtainingFeedsAlertForChannelName:channelName];
     [self.selectChannelView setObtainingFeedsAlertHandler:@selector(recieveFeedsButtonPressed:) withTarget:self];
 }
-
 
 
 @end

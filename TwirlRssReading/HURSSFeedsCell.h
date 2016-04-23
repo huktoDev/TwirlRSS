@@ -10,4 +10,12 @@
 
 @interface HURSSFeedsCell : UITableViewCell
 
+
+@property (strong, nonatomic) UILabel *feedTitleLabel;
+@property (strong, nonatomic) UILabel *feedDescriptionLabel;
+
+
+
+- (void)configWithFeedItem:(HURSSFeedItem*)feedItem;
+
 @end

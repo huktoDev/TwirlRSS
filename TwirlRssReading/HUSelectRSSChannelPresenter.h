@@ -7,9 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HURSSFeedsReciever.h"
 
 @class HUSelectRSSChannelView;
 @class HURSSChannelTextField, HURSSChannelButton;
+
+
+@protocol HURSSChannelSelectRecievedFeedsProtocol <NSObject>
+
+- (NSArray<HURSSFeedItem*>*)getRecievedFeeds;
+- (HURSSFeedInfo*)getFeedInfo;
+
+@end
 
 
 /**
@@ -50,10 +59,11 @@
     MWFeedParserDelegate \n
     HUSelectRSSChannelView \n
  */
-@interface HUSelectRSSChannelPresenter : UIViewController <HURSSChannelSelectionDelegate, MWFeedParserDelegate>
+@interface HUSelectRSSChannelPresenter : UIViewController <HURSSChannelSelectionDelegate, MWFeedParserDelegate, HURSSChannelSelectRecievedFeedsProtocol, HURSSFeedsRecieverDelegate>
 
 /// Корневая вьюшка экрана
 @property (strong, nonatomic) HUSelectRSSChannelView *selectChannelView;
+
 
 
 @end

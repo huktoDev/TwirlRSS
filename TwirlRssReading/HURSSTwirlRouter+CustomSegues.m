@@ -60,7 +60,7 @@
     UINavigationController *modalNavController = [[_baseNavController alloc] initWithRootViewController:selectChannelViewController];
     
     BOOL hasImplementTransitioning = [modalNavController conformsToProtocol:@protocol(UIViewControllerTransitioningDelegate)];
-    NSAssert(hasImplementTransitioning, @"ROOT Navigation Controlle do not implement UIViewControllerTransitioningDelegate protocol");
+    NSAssert(hasImplementTransitioning, @"ROOT Navigation Controller do not implement UIViewControllerTransitioningDelegate protocol");
     
     modalNavController.transitioningDelegate = (id<UIViewControllerTransitioningDelegate>)modalNavController;
     modalNavController.modalTransitionStyle = UIModalPresentationCustom;
@@ -70,6 +70,30 @@
 
 - (void)performChannelSelectedSegueFromScreen:(UIViewController*)sourceVC{
     
+    UIViewController *feedsViewController = [_feedsController new];
+    
+    // Реализованы ли соответствующие интерфейсы
+    BOOL hasImplementFeedsRecieving = [sourceVC conformsToProtocol:@protocol(HURSSChannelSelectRecievedFeedsProtocol)];
+    NSAssert(hasImplementFeedsRecieving, @"SelectChannel Controller do not implement HURSSChannelSelectRecievedFeedsProtocol protocol for FEEDS INFO Recieving");
+    
+    BOOL hasImplementFeedsTransfer = [feedsViewController conformsToProtocol:@protocol(HURSSFeedsTransferProtocol)];
+    NSAssert(hasImplementFeedsTransfer, @"Feeds Controller do not implement HURSSFeedsTransferProtocol protocol for FEEDS INFO Transfer");
+    
+    // Получить данные
+    id <HURSSChannelSelectRecievedFeedsProtocol> feedsReciever = (id<HURSSChannelSelectRecievedFeedsProtocol>)sourceVC;
+    
+    NSArray <HURSSFeedItem*> *recievedFeeds = [feedsReciever getRecievedFeeds];
+    HURSSFeedInfo *recievedFeedInfo = [feedsReciever getFeedInfo];
+    
+    // Передать данные
+    id <HURSSFeedsTransferProtocol> waitingFeedsObject = (id<HURSSFeedsTransferProtocol>)feedsViewController;
+    
+    [waitingFeedsObject setFeeds:recievedFeeds];
+    [waitingFeedsObject setFeedInfo:recievedFeedInfo];
+    
+    
+    // Выполнить переход
+    [sourceVC presentViewController:feedsViewController animated:YES completion:nil];
 }
 
 - (void)performFeedDetailsSegueFromScreen:(UIViewController*)sourceVC{

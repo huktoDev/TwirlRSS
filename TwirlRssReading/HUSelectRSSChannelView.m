@@ -674,8 +674,9 @@
         <li> Вернуть кнопке  feedsButton нормальный размер </li>
         <li> По окончанию анимаций - раздизейблить UI </li>
     </ol>
+    @param waitingCompletion      Коллбэк окончания анимации
  */
-- (void)endFeedsWaiting{
+- (void)endFeedsWaitingWithCompletion:(dispatch_block_t)waitingCompletion{
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
@@ -690,6 +691,10 @@
             [self layoutIfNeeded];
         }completion:^(BOOL finished) {
             self.userInteractionEnabled = YES;
+            
+            if(waitingCompletion){
+                waitingCompletion();
+            }
         }];
     });
 }

@@ -24,7 +24,7 @@
         Использовать для хранения сериализованные данные в файле в Documents
  */
 
-#define HU_RSS_NEED_CLEAR_STORED_CHANNELS 1
+#define HU_RSS_NEED_CLEAR_STORED_CHANNELS 0
 
 #define HU_RSS_USE_LOCAL_PREFERENCES 1
 #define HU_RSS_USE_FILE_SERIALIZATION 0
@@ -35,7 +35,7 @@
         Эмулировать неудачное получение новостей в SelectChannel экране
  */
 
-#define HU_RSS_NEED_FEEDS_FAIL 1
+#define HU_RSS_NEED_FEEDS_FAIL 0
 
 //TODO: Исправить ошибки с NSNumber (там transform.scale убрать)
 
