@@ -10,7 +10,12 @@
 #import "HURSSChannelViewStyler.h"
 #import "HURSSChannelViewAssembly.h"
 
+#import "BLMultiColorLoader.h"
+
 @implementation HURSSChannelButton{
+    
+    BLMultiColorLoader *_loaderIndicator;
+    
     id<HURSSChannelViewStylizationInterface> _presentStyler;
 }
 
@@ -146,6 +151,33 @@
         
     } completion:nil];
 }
+
+- (void)startWaitingIndicator{
+    
+    _loaderIndicator = [[BLMultiColorLoader alloc] initWithFrame:CGRectMake(0.f, 0.f, 32.f, 32.f)];
+    _loaderIndicator.center = CGPointMake(CGRectGetWidth(self.frame) / 2.f, CGRectGetHeight(self.frame) / 2.f);
+    [self addSubview:_loaderIndicator];
+    
+    _loaderIndicator.backgroundColor = [UIColor clearColor];
+    
+    _loaderIndicator.lineWidth = 4.0;
+    
+    UIColor *firstColor = [[UIColor redColor] colorWithAlphaComponent:0.6f];
+    UIColor *secondColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.6f];
+    UIColor *thirdColor = [[UIColor yellowColor] colorWithAlphaComponent:0.6f];
+    
+    _loaderIndicator.colorArray = @[firstColor, secondColor, thirdColor];
+    [_loaderIndicator startAnimation];
+
+}
+
+- (void)endWaitingIndicator{
+    
+    [_loaderIndicator stopAnimation];
+    [_loaderIndicator removeFromSuperview];
+    _loaderIndicator = nil;
+}
+
 
 @end
 

@@ -7,7 +7,6 @@
 //
 
 #import "HURSSChannelViewStyler.h"
-#import "HURSSTwirlStyle.h"
 
 @implementation HURSSChannelViewStyler
 

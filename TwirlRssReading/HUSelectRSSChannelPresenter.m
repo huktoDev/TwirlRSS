@@ -7,38 +7,30 @@
 //
 
 #import "HUSelectRSSChannelPresenter.h"
-#import "HUSelectRSSChannelView.h"
-#import "HURSSChannelTextField.h"
-#import "HURSSChannelButton.h"
 
-#import "HURSSTwirlStyle.h"
-
-#import "HURSSChannel.h"
-#import "HURSSChannelStore.h"
-
-#import "CZPicker.h"
-#import "URBNAlert.h"
-
-//TODO: Исправить ошибки с NSNumber (там transform.scale убрать)
-
-@interface HUSelectRSSChannelPresenter () 
-
-@end
 
 @implementation HUSelectRSSChannelPresenter{
     
+    // Презентер сам хранит каналы, и их названия (используется при выборе канала)
     NSArray <HURSSChannel*> *_reservedChannels;
     NSArray <NSString*> *_reservedChannelNames;
+    
+    // Канал, для которого сервис пытается выполнить получение новостей
+    HURSSChannel *_recievingFeedsChannel;
+    
+    // Используемые сервисы
+    MWFeedParser *_feedParser;
+    id <HURSSChannelStoreProtocol> _channelStore;
 }
 
 
 #pragma mark - UIView LifeCycle
 
+/// Переопределяется метод загрузки вьюшки (здесь выполняется программное создание вьюшки, создание и конфигурирование сабвьюшек)
 - (void)loadView{
     
     HUSelectRSSChannelView *rootChannelsView = [HUSelectRSSChannelView createChannelView];
     [rootChannelsView configurationAllStartedViews];
-    
     
     self.selectChannelView = rootChannelsView;
     self.view = rootChannelsView;
@@ -47,13 +39,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Инжектировать зависимости
+    [self injectDependencies];
+    
+    // Скрыть бар навигации
     [self.navigationController.navigationBar setHidden:YES];
     
+    // Установить обработчики кнопок
     [self.selectChannelView setShowChannelHandler:@selector(obtainChannelsButtonPressed:) withTarget:self];
     [self.selectChannelView setGetFeedsHandler:@selector(recieveFeedsButtonPressed:) withTarget:self];
     [self.selectChannelView setAddChannelHandler:@selector(addChannelButtonPressed:) withTarget:self];
     [self.selectChannelView setDeleteChannelHandler:@selector(deleteChannelButtonPressed:) withTarget:self];
     
+    // Обновить базовое состояние интерфейса (ничего не введено)
     [self.selectChannelView updateUIWhenEnteredChannelURLValidate:NO];
     
     
@@ -66,26 +64,40 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
 }
 
+
+#pragma mark - Dependencies
+
+ /// Инжектировать зависимости (хранилище каналов)
+- (void)injectDependencies{
+    
+    _channelStore = [HURSSChannelStore sharedStore];
+}
+
 - (void)channelTextChangedNotification:(NSNotification*)channelTextNotification{
     
+    // Извлечь текстового поля и его тип
     HURSSChannelTextField *channelTextField = (HURSSChannelTextField*)channelTextNotification.object;
     HURSSChannelTextFieldType channelFieldType = [self.selectChannelView getChannelTextFieldType:channelTextField];
     
     if(channelFieldType == HURSSChannelEnterURLFieldType){
         
+        // Если изменена информация в текстовом поле URL-а
         NSString *channelTextURLString = channelTextField.text;
         NSURL *enteredChannelURL = [NSURL URLWithString:channelTextURLString];
         
+        // Валидировать URL, и обновить состояние интерфейса
         BOOL isValidRSSChannel = enteredChannelURL && [HURSSChannel isValidChannelURL:enteredChannelURL];
         [self.selectChannelView updateUIWhenEnteredChannelURLValidate:isValidRSSChannel];
         
     }else if(channelFieldType == HURSSChannelAliasFieldType){
         
-        HURSSChannelStore *channelStore = [HURSSChannelStore sharedStore];
+        // Если изменена информация в текстовом поле для названия канала
+        // Достаточно ли длинное название канала, и есть ли канал со схожим названием в хранилище
         NSString *channelTextAliasString = channelTextField.text;
         BOOL isNameEnoughLength = channelTextAliasString && (channelTextAliasString.length >= 4);
-        BOOL isChannelFounded = [channelStore containsChannelWithName:channelTextAliasString];
+        BOOL isChannelFounded = [_channelStore containsChannelWithName:channelTextAliasString];
         
+        // Вычислить текущее состояние канала
         HURSSChannelState currentChannelState = HURSSChannelStateImpossible;
         if(isNameEnoughLength){
             if(isChannelFounded){
@@ -94,7 +106,7 @@
                 currentChannelState = HURSSChannelStatePossibleAdd;
             }
         }
-        
+        // Обновить UI определенным состоянием
         [self.selectChannelView updateUIWhenChannelChangeState:currentChannelState];
     }
 }
@@ -113,9 +125,8 @@
 - (void)obtainChannelsButtonPressed:(UIButton*)channelsButton{
     
     // Загрузить список каналов, и получить массив названий каналов
-    HURSSChannelStore *channelsStore = [HURSSChannelStore sharedStore];
-    _reservedChannels = [channelsStore loadStoredChannels];
-    _reservedChannelNames = [channelsStore loadStoredChannelsName];
+    _reservedChannels = [_channelStore loadStoredChannels];
+    _reservedChannelNames = [_channelStore loadStoredChannelsName];
     
     // Скрыть клавиатуру (чтобы диалог нормально показать)
     [self.selectChannelView hideKeyboard];
@@ -144,8 +155,7 @@
     HURSSChannel *newChannel = [HURSSChannel channelWithAlias:newChannelAlias withURL:newChannelURL withType:channelType];
     
     // Попытаться сохранить новый канал в хранилище
-    HURSSChannelStore *channelsStore = [HURSSChannelStore sharedStore];
-    BOOL isSuccessSaved = [channelsStore saveNewChannel:newChannel];
+    BOOL isSuccessSaved = [_channelStore saveNewChannel:newChannel];
     
     // Если удалось удалить - убрать клавиатуру, обновить состояние UI и показать диалог
     if(isSuccessSaved){
@@ -175,8 +185,7 @@
     HURSSChannel *currentChannel = [HURSSChannel channelWithAlias:currentChannelAlias withURL:currentChannelURL withType:channelType];
     
     // Попытаться удалить канал из хранилища
-    HURSSChannelStore *channelsStore = [HURSSChannelStore sharedStore];
-    BOOL isSuccessDeleted = [channelsStore deleteChannel:currentChannel];
+    BOOL isSuccessDeleted = [_channelStore deleteChannel:currentChannel];
     
     // Если удалось удалить - убрать клавиатуру, обновить состояние UI и показать диалог
     if(isSuccessDeleted){
@@ -188,6 +197,84 @@
 
 - (void)recieveFeedsButtonPressed:(UIButton*)feedsButton{
     
+    // Сформировать канал, для которого нужно получить новости, и установить текущий канал
+    NSString *currentChannelAlias = [self.selectChannelView getChannelAlias];
+    NSURL *currentChannelURL = [self.selectChannelView getChannelURLLink];
+    HURSSChannelRecievingType channelType = HURSSChannelUserCreated;
+    
+    HURSSChannel *currentChannel = [HURSSChannel channelWithAlias:currentChannelAlias withURL:currentChannelURL withType:channelType];
+    _recievingFeedsChannel = currentChannel;
+    
+    // Инициализировать парсер и загрузчик RSS URL-ом текущего канала
+    _feedParser = [[MWFeedParser alloc] initWithFeedURL:currentChannel.channelURL];
+    _feedParser.delegate = self;
+    _feedParser.feedParseType = ParseTypeFull;
+    _feedParser.connectionType = ConnectionTypeSynchronously;
+    
+    // Запустить парсинг
+    [_feedParser parse];
+    
+    // Повесить на интерфейс ожидание
+    [self.selectChannelView startFeedsWaiting];
+}
+
+- (void)feedParserDidStart:(MWFeedParser *)parser{
+    NSLog(@"PARSER START");
+    printf("");
+}
+
+- (void)feedParser:(MWFeedParser *)parser didParseFeedInfo:(MWFeedInfo *)info{
+    printf("");
+}
+
+- (void)feedParser:(MWFeedParser *)parser didParseFeedItem:(MWFeedItem *)item{
+    printf("");
+}
+- (void)feedParserDidFinish:(MWFeedParser *)parser{
+    
+#if HU_RSS_NEED_FEEDS_FAIL == 1
+    
+    NSUInteger errorCode = 0;
+    int randNumb = arc4random() % 2;
+    if(randNumb == 0){
+        errorCode = MWErrorCodeConnectionFailed;
+    }else{
+        errorCode = MWErrorCodeFeedParsingError;
+    }
+    NSError *testError = [NSError errorWithDomain:@"testDomain" code:errorCode userInfo:nil];
+    [self feedParser:parser didFailWithError:testError];
+    return;
+#else
+    
+    
+    [self.selectChannelView endFeedsWaiting];
+    // Здесь запустить переход, и передать параметрами полученные новости
+    
+#endif
+}
+
+- (void)feedParser:(MWFeedParser *)parser didFailWithError:(NSError *)error{
+    
+    NSString *channelName = _recievingFeedsChannel.channelAlias;
+    
+    NSString *feedsErrorDescription = nil;
+    NSUInteger feedsErrorCode = MWErrorCodeConnectionFailed;
+    switch (feedsErrorCode) {
+        case MWErrorCodeConnectionFailed:
+            feedsErrorDescription = @"Соединение с сервером установить не удалось";
+            break;
+        case MWErrorCodeFeedParsingError:
+        case MWErrorCodeFeedValidationError:
+            feedsErrorDescription = @"С сервера была присланы неправильно форматированные данные";
+            break;
+        default:
+            feedsErrorDescription = @"Неизвестная ошибка";
+            break;
+    }
+    
+    [self.selectChannelView endFeedsWaiting];
+    [self.selectChannelView showFeedsFailRecivingAlertForChannelName:channelName withErrorDescription:feedsErrorDescription];
+    [self.selectChannelView setFeedsRepeatAlertHandler:@selector(recieveFeedsButtonPressed:) withTarget:self];
 }
 
 #pragma mark - HURSSChannelSelectionDelegate IMP

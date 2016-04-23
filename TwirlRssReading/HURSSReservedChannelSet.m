@@ -7,7 +7,6 @@
 //
 
 #import "HURSSReservedChannelSet.h"
-#import "HURSSChannel.h"
 
 @implementation HURSSReservedChannelSet{
     

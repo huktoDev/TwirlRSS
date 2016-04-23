@@ -7,19 +7,23 @@
 //
 
 #import "HURSSChannelStore.h"
-#import "HURSSChannel.h"
-#import "HURSSReservedChannelSet.h"
 
-
-
-
+/**
+    @constant HU_RSS_STORED_CHANNELS_FILENAME
+        Название файла, в котором будет храниться информация о каналах
+ */
 static NSString *HU_RSS_STORED_CHANNELS_FILENAME = @"StoredChannels.json";
 
+/**
+    @constant HU_RSS_STORED_CHANNELS_DEFAULTS_KEY
+        Ключ для сохранения каналов в NSUserDefaults
+ */
 NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
 
 
 @implementation HURSSChannelStore{
     
+    // Закэшированные каналы, и их названия
     NSArray <HURSSChannel*>     *_loadedChannels;
     NSArray <NSString*>         *_loadedChannelsNames;
 }
@@ -44,9 +48,9 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
 #if HU_RSS_NEED_CLEAR_STORED_CHANNELS == 1
         [self resetChannels];
 #endif
-        // Если имеются зарезервированные каналы - они в начале сохраняются в локальное хранилище (чтобы потом их можно было удобно извлекать)
+        // Если имеются зарезервированные каналы - они в начале сохраняются в локальное хранилище (чтобы потом их можно было удобно извлекать), и сразу кэшируются
         [self attemptFillStoredChannels];
-        [self  loadStoredChannels];
+        [self loadStoredChannels];
     }
     return self;
 }
@@ -77,38 +81,8 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
     return NO;
 }
 
-/// Сохранить новый канал (как в кэш хранилища, так и в само хранилище)
-- (BOOL)saveNewChannel:(HURSSChannel*)newChannel{
-    
-    NSMutableArray <HURSSChannel*> *bufferChannels = [_loadedChannels mutableCopy];
-    NSUInteger indexSimilarChannel = [self indexOfChannelWithName:newChannel.channelAlias];
-    if(indexSimilarChannel != -1){
-        [bufferChannels replaceObjectAtIndex:indexSimilarChannel withObject:newChannel];
-    }else{
-        [bufferChannels addObject:newChannel];
-    }
-    
-    _loadedChannels = [NSArray arrayWithArray:bufferChannels];
-    BOOL isSuccessSaved = [self internalSaveStoredChannelsToLocalStore:_loadedChannels];
-    return isSuccessSaved;
-}
 
-
-- (BOOL)deleteChannel:(HURSSChannel*)deletingChannel{
-    
-    BOOL containgDeletingChannel = [self containsChannelWithName:deletingChannel.channelAlias];
-    if(containgDeletingChannel){
-        
-        NSUInteger indexDeletingChannel = [self indexOfChannelWithName:deletingChannel.channelAlias];
-        NSMutableArray <HURSSChannel*> *bufferChannels = [_loadedChannels mutableCopy];
-        [bufferChannels removeObjectAtIndex:indexDeletingChannel];
-        _loadedChannels = [NSArray arrayWithArray:bufferChannels];
-        
-        BOOL isSuccessSaved = [self internalSaveStoredChannelsToLocalStore:_loadedChannels];
-        return isSuccessSaved;
-    }
-    return NO;
-}
+#pragma mark - LOAD FROM STORE
 
 /**
     @abstract Загрузить список каналов из локального хранилища
@@ -141,6 +115,70 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
     }
 }
 
+#pragma mark - SAVE TO STORE
+
+/**
+    @abstract Сохранить новый канал
+    @discussion
+    Если имеется канал в хранилище - изменяет его, иначе - добавляет в конец. Передает управления внутреннему методу сохранения.
+    Кроме всего, модифицирует кэш
+ 
+    @param newChannel     Модель добавляемого канала
+    @return Если удалось сохранить канал - YES, иначе - NO
+ */
+- (BOOL)saveNewChannel:(HURSSChannel*)newChannel{
+    
+    // Создает мутабельный массив-буфер из кэша
+    NSMutableArray <HURSSChannel*> *bufferChannels = [_loadedChannels mutableCopy];
+    
+    // Выполняет изменения с буфером (находит индекс данного канала, и заменяет, либо просто добавляет в конец)
+    NSUInteger indexSimilarChannel = [self indexOfChannelWithName:newChannel.channelAlias];
+    if(indexSimilarChannel != -1){
+        [bufferChannels replaceObjectAtIndex:indexSimilarChannel withObject:newChannel];
+    }else{
+        [bufferChannels addObject:newChannel];
+    }
+    
+    // Выполнить сохранение
+    _loadedChannels = [NSArray arrayWithArray:bufferChannels];
+    BOOL isSuccessSaved = [self internalSaveStoredChannelsToLocalStore:_loadedChannels];
+    return isSuccessSaved;
+}
+
+
+#pragma mark - DELETE FROM STORE
+
+/**
+    @abstract Удаляет имеющийся канал
+    @discussion
+    Проверяет, есть ли схожий канал в хранилище. (с таким же названием)
+    Если есть канал - удаляет его из хранилища. (Перезаписывает требуемый файл с каналами)
+ 
+    @param deletingChannel     Модель удаляемого канала
+    @return Если удалось удалить канал - YES, иначе - NO
+ */
+- (BOOL)deleteChannel:(HURSSChannel*)deletingChannel{
+    
+    // Провереяет, есть ли канал?
+    BOOL containgDeletingChannel = [self containsChannelWithName:deletingChannel.channelAlias];
+    if(containgDeletingChannel){
+        
+        // Находит индекс канала, и удаляет
+        NSUInteger indexDeletingChannel = [self indexOfChannelWithName:deletingChannel.channelAlias];
+        NSMutableArray <HURSSChannel*> *bufferChannels = [_loadedChannels mutableCopy];
+        [bufferChannels removeObjectAtIndex:indexDeletingChannel];
+        _loadedChannels = [NSArray arrayWithArray:bufferChannels];
+        
+        // Выполняет синхронизацию с хранилищем
+        BOOL isSuccessSaved = [self internalSaveStoredChannelsToLocalStore:_loadedChannels];
+        return isSuccessSaved;
+    }
+    return NO;
+}
+
+
+#pragma mark - CHANNELs Names
+
 /**
     @abstract Получить массив названий каналов
     @discussion
@@ -159,6 +197,10 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
     return _loadedChannelsNames;
 }
 
+
+#pragma mark - CHECK Exist Channel
+
+/// Проверяет, содержится ли канал с таким названием в кэше хранилища
 - (BOOL)containsChannelWithName:(NSString*)checkChannelName{
     
     for (HURSSChannel *currentChannel in _loadedChannels) {
@@ -171,6 +213,7 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
     return NO;
 }
 
+/// Находит индекс канала с таким названием (-1 - если не находит)
 - (NSInteger)indexOfChannelWithName:(NSString*)searchChannelName{
     
     for (NSUInteger indexChannel = 0; indexChannel < _loadedChannels.count; indexChannel ++) {
@@ -184,6 +227,10 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
     return -1;
 }
 
+
+#pragma mark - INTERNAL Save & Load
+
+/// Получение пути к файлу (по которому будут сохраняться каналы)
 - (NSString*)storedChannelsFilePath{
     
     static NSString *_storedChannelsFilePath = nil;
@@ -197,26 +244,47 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
     return _storedChannelsFilePath;
 }
 
+/**
+    @abstract Внутренний метод загрузки каналов из хранилища
+    @discussion
+    Загрузка каналов из хранилища с различными проверками загруженных данных.
+    @note Но вся логика загрузки содержится в процедуре loadChannels
+ 
+    @throw channelsLoadException
+        В случае, если данные не загрузились, но файл существует (для HU_RSS_USE_FILE_SERIALIZATION == 1)
+    @throw channelsArrayException
+        В случае, если не удалось воссоздать массив
+ 
+    @throw channelsDataException
+        В случае, если загруженные данные - не объекты каналов
+ 
+    @return Возвращает загруженный массив каналов (или пустой массив, если не удалось)
+ */
 - (NSArray <HURSSChannel*>*)internalLoadStoredChannelsFromLocalStore{
     
-    NSString *storedChannelsFilePath = [self storedChannelsFilePath];
-    
+    // Загрузить данные подходящим способом
     id unarchivedChannelsData = [self loadChannels];
     NSArray<HURSSChannel*> *storedChannels = (NSArray<HURSSChannel*>*)unarchivedChannelsData;
     
     BOOL isLoadedData = (unarchivedChannelsData != nil);
     
 #if HU_RSS_USE_FILE_SERIALIZATION == 1
+    
+    // Если файл существует, но загрузить не удалось - сгенерить исключение
+    NSString *storedChannelsFilePath = [self storedChannelsFilePath];
     NSFileManager *fileManager = [NSFileManager defaultManager];
+    
     BOOL isChannelsFileExist = [fileManager fileExistsAtPath:storedChannelsFilePath];
     if(! isLoadedData && isChannelsFileExist){
         @throw [NSException exceptionWithName:@"channelsLoadException" reason:@"Unfortunately! Channels list don't restored from File" userInfo:nil];
     }
 #endif
+    // Если просто загрузить не удалось - вернуть пустой массив
     if(! isLoadedData){
         return [NSArray new];
     }
     
+    // Проверка полученного массив каналов на валидность
     BOOL isChannelsArray = ([unarchivedChannelsData isKindOfClass:[NSArray class]]);
     if(! isChannelsArray){
         @throw [NSException exceptionWithName:@"channelsArrayException" reason:@"Loaded Data From File is not a NSArray" userInfo:nil];
@@ -230,15 +298,31 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
     return  storedChannels;
 }
 
+/// Внутренний метод-враппер для saveChannels:
 - (BOOL)internalSaveStoredChannelsToLocalStore:(NSArray<HURSSChannel*>*)channelsToStore{
     
     BOOL isSavedData = [self saveChannels:channelsToStore];
     return isSavedData;
 }
 
+
+#pragma mark - WORK With LOCAL Stores
+
+/**
+    @abstract Метод, где выполняется загрузка каналов
+    @discussion
+    Реализуются 2 способа загрузки :
+    <ul>
+        <li> Загрузка из NSUserDefaults
+            (HU_RSS_USE_LOCAL_PREFERENCES == 1) </li>
+        <li> Загрузка из файла
+            (HU_RSS_USE_FILE_SERIALIZATION == 1) </li>
+    </ul>
+ */
 - (id)loadChannels{
-#if HU_RSS_USE_LOCAL_PREFERENCES == 1
     
+#if HU_RSS_USE_LOCAL_PREFERENCES == 1
+    // Загрузка из NSUserDefaults, после чего десериализуются полученные данные
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSData *channelsArchivedData = (NSData*)[userDefaults objectForKey:HU_RSS_STORED_CHANNELS_DEFAULTS_KEY];
     if(! channelsArchivedData){
@@ -248,7 +332,7 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
     return channelsData;
     
 #elif HU_RSS_USE_FILE_SERIALIZATION == 1
-    
+    // Просто загруить данные из файла, и десериализовать их
     NSString *storedChannelsFilePath = [self storedChannelsFilePath];
     id unarchivedChannelsData = [NSKeyedUnarchiver unarchiveObjectWithFile:storedChannelsFilePath];
     return unarchivedChannelsData;
@@ -257,14 +341,26 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
 #endif
 }
 
+/**
+    @abstract Метод, где выполняется сохранение каналов
+    @discussion
+    Реализуются 2 способа сохранения :
+    <ul>
+        <li> Сохранение в NSUserDefaults
+            (HU_RSS_USE_LOCAL_PREFERENCES == 1) </li>
+        <li> Сохранение в файл
+            (HU_RSS_USE_FILE_SERIALIZATION == 1) </li>
+    </ul>
+ */
 - (BOOL)saveChannels:(id)channels{
     
+    // Если каналы не переданы - не делает ничего
     if(! channels){
         return NO;
     }
     
 #if HU_RSS_USE_LOCAL_PREFERENCES == 1
-    
+    // Сохранение в NSUserDefaults, сериализуются данные и синхронизируются
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSData *channelsArchivedData = [NSKeyedArchiver archivedDataWithRootObject:channels];
     [userDefaults setObject:channelsArchivedData forKey:HU_RSS_STORED_CHANNELS_DEFAULTS_KEY];
@@ -272,7 +368,7 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
     return isSuccessSynchronize;
     
 #elif HU_RSS_USE_FILE_SERIALIZATION == 1
-    
+    // Сохранение в файл, данные перед сохранением сериализуются
     NSString *storedChannelsFilePath = [self storedChannelsFilePath];
     BOOL isSavedData = [NSKeyedArchiver archiveRootObject:channels toFile:storedChannelsFilePath];
     return isSavedData;
@@ -281,6 +377,7 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
 #endif
 }
 
+/// Очистить список каналов (удалить  данные из используемого хранилища)
 - (void)resetChannels{
     
 #if HU_RSS_USE_LOCAL_PREFERENCES == 1
@@ -296,7 +393,7 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
     [fileManager removeItemAtPath:storedChannelsFilePath error:nil];
     
 #else
-#error Need to determine on of constants : HU_RSS_USE_LOCAL_PREFERENCES or HU_RSS_USE_FILE_SERIALIZATION
+    #error Need to determine on of constants : HU_RSS_USE_LOCAL_PREFERENCES or HU_RSS_USE_FILE_SERIALIZATION
 #endif
 }
 

@@ -1,0 +1,68 @@
+//
+//  HURSSImportRoot.pch
+//  TwirlRssReading
+//
+//  Created by Alexandr Babenko on 23.04.16.
+//  Copyright © 2016 Alexandr Babenko. All rights reserved.
+//
+
+#ifndef HURSSImportRoot_pch
+#define HURSSImportRoot_pch
+
+#import "HURSSChannelViewAssembly.h"
+
+
+/**
+    @def HU_RSS_NEED_CLEAR_STORED_CHANNELS
+        Нужна ли очистка сохраненных каналов при каждом запуске?
+ */
+
+/**
+    @def HU_RSS_USE_LOCAL_PREFERENCES
+        Использовать ли для сохранения хранилище NSUserDefaults
+    @def HU_RSS_USE_FILE_SERIALIZATION
+        Использовать для хранения сериализованные данные в файле в Documents
+ */
+
+#define HU_RSS_NEED_CLEAR_STORED_CHANNELS 1
+
+#define HU_RSS_USE_LOCAL_PREFERENCES 1
+#define HU_RSS_USE_FILE_SERIALIZATION 0
+
+
+/**
+    @def HU_RSS_NEED_FEEDS_FAIL
+        Эмулировать неудачное получение новостей в SelectChannel экране
+ */
+
+#define HU_RSS_NEED_FEEDS_FAIL 1
+
+//TODO: Исправить ошибки с NSNumber (там transform.scale убрать)
+
+
+#import "Masonry.h"
+#import "CZPicker.h"
+#import "URBNAlert.h"
+#import "MWFeedParser.h"
+
+
+
+#import "HURSSControllersAndPresenters.h"
+#import "HURSSTwirlRouter.h"
+
+#import "HURSSTwirlStyle.h"
+
+
+
+
+#import "HURSSChannelsStoring.h"
+
+#import "HURSSChannelViewAssembly.h"
+
+
+
+
+
+
+
+#endif /* HURSSImportRoot_pch */

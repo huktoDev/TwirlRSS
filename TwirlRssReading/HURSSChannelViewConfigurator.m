@@ -8,13 +8,12 @@
 
 #import "HURSSChannelViewConfigurator.h"
 
-
-#import "Masonry.h"
-
 @implementation HURSSChannelViewConfigurator{
     
+    // Корневая вьюшка (для которой и существует конфигуратор)
     HUSelectRSSChannelView  *_configurationChannelView;
     
+    // UI-элементы SelectChannel-вьюшки
     UIScrollView            *_channelContentView;
     
     UILabel                 *_enterChannelLabel;
@@ -31,8 +30,10 @@
     URBNAlertViewController *_obtainFeedsAlertVC;
     
     URBNAlertViewController *_channelAlertVC;
+    URBNAlertViewController *_feedsNotRecievingAlertVC;
     
     
+    // Вспомогательные сервисы - Стилизатор и Фабрика правил интерфейса
     id <HURSSChannelViewStylizationInterface> _presentStyle;
     id <HURSSChannelViewPositionRulesInterface> _constraintsFactory;
 }
@@ -40,7 +41,17 @@
 
 #pragma mark - Construction & Destroying
 
+/**
+    @abstract Инициализатор для конфигуратора
+    @discussion
+    Для работы конфигуратора - требуется передать 3 параметра :
+    @param channelRootView      Корневая вьюшка, для которой создается конфигуратор
+    @param viewStyler        Стилизатор вьюшки
+    @param viewRules        Правила интерфейса
+    @return Готовый конфигуратор
+ */
 - (instancetype)initWithRootView:(HUSelectRSSChannelView*)channelRootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler withConstraintsFactory:(id<HURSSChannelViewPositionRulesInterface>)viewRules{
+    
     if(self = [super init]){
         _configurationChannelView = channelRootView;
         _presentStyle = viewStyler;
@@ -49,7 +60,7 @@
     return self;
 }
 
-/// Конструктор для конфигуратора
+/// Конструктор для конфигуратора (использующий назначенный инициализатор)
 + (instancetype)createConfiguratorForRootView:(HUSelectRSSChannelView*)channelRootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler withConstraintsFactory:(id<HURSSChannelViewPositionRulesInterface>)viewRules{
     
     HURSSChannelViewConfigurator *newManager = [[HURSSChannelViewConfigurator alloc] initWithRootView:channelRootView withStyler:viewStyler withConstraintsFactory:viewRules];
@@ -57,14 +68,20 @@
 }
 
 
+#pragma mark - Config BACKGROUND
+
+/// Сконфигурировать фон корневой вьюшки
 - (void)configBackground{
     
     UIColor *selectChannelBackColor = [_presentStyle selectChannelScreenColor];
     [_configurationChannelView setBackgroundColor:selectChannelBackColor];
 }
 
-#pragma mark - Config UI Elements
+#pragma mark - CONFIG UI ELEMENTS -
 
+#pragma mark Create SCROLL
+
+/// Создать и добавить контент вьюшку (скролл вью для скроллирования) (вписать в корневую вьюшку)
 - (UIScrollView*)createContentScrollView{
     
     UIScrollView *contentScrollView = [UIScrollView new];
@@ -83,6 +100,9 @@
     return contentScrollView;
 }
 
+
+#pragma mark - Create LABELs
+
 /// Конфигурирует верхний лейбл ("введите URL")
 - (UILabel*)createEnterChannelLabel{
     
@@ -93,43 +113,11 @@
     enterChannelLabel.textAlignment = NSTextAlignmentCenter;
     
     [_channelContentView addSubview:enterChannelLabel];
-    
-    [enterChannelLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_channelContentView);
-        make.leading.equalTo(_channelContentView.mas_leading).with.offset(20.f);
-        make.top.equalTo(_channelContentView.mas_top).with.offset(60.f);
-        make.height.mas_equalTo(60.f);
-    }];
-    
     _enterChannelLabel = enterChannelLabel;
-    return enterChannelLabel;
-}
+    
+    [self configPresentLocationEnterChannelLabel];
 
-/// Конфигурирует текст филд для ввода  канала
-- (HURSSChannelTextField*)createChannelTextField{
-    
-    const CGFloat textFieldSize = [_presentStyle channelUIElementHeight];
-    
-    HURSSChannelTextField *channelTextField = [HURSSChannelTextField new];
-    
-    // Плейсхолдер текста
-    
-    UIImage *searchIconImage = [UIImage imageNamed:@"SearchIcon.png"];
-    [channelTextField setImage:searchIconImage];
-    
-    channelTextField.text = @"http://";
-    
-    [_channelContentView addSubview:channelTextField];
-    
-    [channelTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_channelContentView);
-        make.top.equalTo(_enterChannelLabel.mas_bottom).with.offset(20.f);
-        make.width.equalTo(_enterChannelLabel.mas_width);
-        make.height.mas_equalTo(textFieldSize);
-    }];
-    
-    _channelTextField = channelTextField;
-    return channelTextField;
+    return enterChannelLabel;
 }
 
 /// Конфигурирует лейбл "Выберите из предложенных"
@@ -142,43 +130,69 @@
     selectSuggestedLabel.textAlignment = NSTextAlignmentCenter;
     
     [_channelContentView addSubview:selectSuggestedLabel];
-    
-    [selectSuggestedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_channelContentView);
-        make.width.equalTo(_enterChannelLabel.mas_width);
-        make.top.equalTo(_channelTextField.mas_bottom).with.offset(20.f);
-        make.height.mas_equalTo(90.f);
-    }];
-    
     _selectSuggestedLabel = selectSuggestedLabel;
+    
+    [self configBaseLocationSuggestedLabel];
+    
     return selectSuggestedLabel;
 }
 
+
+#pragma mark - Create TEXTFIELDs
+
+/// Конфигурирует текст филд для ввода  канала
+- (HURSSChannelTextField*)createChannelTextField{
+    
+    HURSSChannelTextField *channelTextField = [HURSSChannelTextField new];
+    
+    UIImage *searchIconImage = [UIImage imageNamed:@"SearchIcon.png"];
+    [channelTextField setImage:searchIconImage];
+    
+    channelTextField.text = @"http://";
+    
+    [_channelContentView addSubview:channelTextField];
+    _channelTextField = channelTextField;
+    
+    [self configPresentLocationChannelTextField];
+    
+    return channelTextField;
+}
+
+/// Создает и конфигурирует текстфилд для ввода названия канала
+- (HURSSChannelTextField*)createChannelAliasTextField{
+    
+    HURSSChannelTextField *channelAliasTextField = [HURSSChannelTextField new];
+    channelAliasTextField.placeholder = @"Как назвать канал?";
+    
+    UIImage *channelAliasImage = [UIImage imageNamed:@"RSSIconFill.png"];
+    [channelAliasTextField setImage:channelAliasImage];
+    
+    [_channelContentView insertSubview:channelAliasTextField belowSubview:_channelTextField];
+    _channelAliasTextField = channelAliasTextField;
+    
+    [self configCreatedLocationAliasTextField];
+    
+    return channelAliasTextField;
+}
+
+#pragma mark - Create BUTTONs
+
 /// Конфигурирует кнопку "СМОТРЕТЬ" (выбор  предпочитаемых каналов)
 - (HURSSChannelButton*)createShowChannelButton{
-    
-    const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
     
     HURSSChannelButton *showChannelButton = [HURSSChannelButton new];
     [showChannelButton setTitle:@"СМОТРЕТЬ" forState:UIControlStateNormal];
     
     [_channelContentView addSubview:showChannelButton];
-    
-    [showChannelButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_channelContentView);
-        make.top.equalTo(_selectSuggestedLabel.mas_bottom).with.offset(20.f);
-        make.width.equalTo(_channelTextField.mas_width);
-        make.height.mas_equalTo(channelButtonSize);
-    }];
-    
     _showChannelButton = showChannelButton;
+    
+    [self configPresentLocationShowChannelButton];
+    
     return showChannelButton;
 }
 
 /// Конфигурирует кнопку "ПОЛУЧИТЬ" (получить новости выбранного канала)
 - (HURSSChannelButton*)createGetFeedsButton{
-    
-    //const CGFloat feedsButtonSize = [_presentStyle channelUIElementHeight];
     
     HURSSChannelButton *feedsButton = [HURSSChannelButton new];
     [feedsButton setTitle:@"ПОЛУЧИТЬ" forState:UIControlStateNormal];
@@ -189,21 +203,44 @@
     // Пришлось так сделать, т.к почему-то не срабатывало если прикреплять к низу скролл вью
     _feedsButton = feedsButton;
     [self configPresentLocationFeedsButton];
-    /*
-    CGFloat heightScreen = [UIScreen mainScreen].bounds.size.height;
-    
-    [feedsButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_channelContentView);
-        make.bottom.equalTo(_channelContentView.mas_top).with.offset(heightScreen - (feedsButtonSize/2.f) - 20.f);
-        make.width.equalTo(_showChannelButton.mas_width);
-        make.height.mas_equalTo(feedsButtonSize);
-    }];
-     */
-    
     
     return feedsButton;
 }
 
+/// Конфигурирует кнопку "ДОБАВИТЬ" (кнопка добавления канала)
+- (HURSSChannelButton*)createChannelAddButton{
+    
+    HURSSChannelButton *addChannelButton = [HURSSChannelButton new];
+    [self configChangeChannelButtonToAddMode];
+    
+    [_channelContentView insertSubview:addChannelButton belowSubview:_channelAliasTextField];
+    _addChannelButton = addChannelButton;
+    
+    [self configCreatedLocationChannelAddButton];
+    
+    return addChannelButton;
+}
+
+/// Конфигурирует кнопку "УДАЛИТЬ" (кнопка удаления канала)
+- (HURSSChannelButton*)createChannelRemoveButton{
+    
+    HURSSChannelButton *deleteChannelButton = [HURSSChannelButton new];
+    [deleteChannelButton setTitle:@"УДАЛИТЬ" forState:UIControlStateNormal];
+    
+    [_channelContentView insertSubview:deleteChannelButton belowSubview:_addChannelButton];
+    _deleteChannelButton = deleteChannelButton;
+    
+    [self configCreatedLocationChannelRemoveButton];
+    
+    return deleteChannelButton;
+}
+
+
+#pragma mark - CONFIG DIALOGs -
+
+#pragma mark Create CZPicker
+
+/// Создает пикер для отображения списка каналов
 - (CZPickerView*)createChannelsPickerView{
     
     // Создает пикер
@@ -222,6 +259,16 @@
     return channelPickerView;
 }
 
+
+#pragma mark - Create URBNAlertViewController
+
+/**
+    @abstract Общий конфигурационный метод для алерта
+    @discussion
+    Алерты URBNAlertViewController следует конфигурировать схожим образом (с одинаковой ситилизацией) - здесь и выполняется такое конфигурирование
+ 
+    @param configureAlertVC      Алерт, который надо настроить
+ */
 - (void)configBaseStyleURBNViewController:(URBNAlertViewController*)configureAlertVC{
     
     // Установить стили
@@ -240,6 +287,7 @@
     alertConfig.touchOutsideViewToDismiss = YES;
 }
 
+/// Создать диалог для "Получения новостей" после выбора канала в пикере
 - (URBNAlertViewController*)createObtainingFeedsAlertWithChannelName:(NSString*)channelName{
     
     // Получить тексты
@@ -259,6 +307,17 @@
     return obtainFeedsAlertVC;
 }
 
+/**
+    @abstract Создать алерт для ситуации, когда выполнено определенное  действие с каналом
+    @discussion
+    При выполнении определенного действия (Добавить/Изменить/Удалить) - алерт настраивается по-своему
+ 
+    @param channelActionType      Тип действия с каналом (Добавить/Изменить/Удалить)
+    @param channelName       Название  канала
+    @param channelURL        URL-ссылка канала
+ 
+    @return Готовый алерт
+ */
 - (URBNAlertViewController*)createChannelAlertWithPostAction:(HURSSChannelActionType)channelActionType WithChannelName:(NSString*)channelName andWithURL:(NSURL*)channelURL{
     
     NSString *actionString = nil;
@@ -286,59 +345,109 @@
     return channelAlertVC;
 }
 
-- (HURSSChannelTextField*)createChannelAliasTextField{
+- (URBNAlertViewController*)createFeedsRecvievingAlertWithChannelname:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription{
     
-    HURSSChannelTextField *channelAliasTextField = [HURSSChannelTextField new];
-    channelAliasTextField.placeholder = @"Как назвать канал?";
+    // Получить тексты
+    NSString *feedsAlertTitle = @"Новости получить не удалось";
+    NSString *feedsAlertDescription = [NSString stringWithFormat:@"Не удалось получить новости RSS-канала %@\n\nОписание ошибки :\n%@", channelName, feedsErrorDescription];
     
-    UIImage *channelAliasImage = [UIImage imageNamed:@"RSSIconFill.png"];
-    [channelAliasTextField setImage:channelAliasImage];
+    // Инициализировать Alert Controller
+    URBNAlertViewController *feedsNotRecievedAlertVC = [[URBNAlertViewController alloc] initWithTitle:feedsAlertTitle message:feedsAlertDescription];
     
-    [_channelContentView insertSubview:channelAliasTextField belowSubview:_channelTextField];
-    _channelAliasTextField = channelAliasTextField;
+    [self configBaseStyleURBNViewController:feedsNotRecievedAlertVC];
     
-    [self configCreatedLocationAliasTextField];
-    /*
-    [channelAliasTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+    NSString *feedsAlertButtonTitle = nil;
+    if(arc4random() % 2 == 0){
+        feedsAlertButtonTitle = @"Жаль";
+    }else{
+        feedsAlertButtonTitle = @"Блин";
+    }
+    
+    // Добавить пустые экшены
+    [feedsNotRecievedAlertVC addAction:[URBNAlertAction actionWithTitle:feedsAlertButtonTitle actionType:URBNAlertActionTypeCancel actionCompleted:nil]];
+    [feedsNotRecievedAlertVC addAction:[URBNAlertAction actionWithTitle:@"Еще раз" actionType:URBNAlertActionTypeNormal actionCompleted:nil]];
+    
+    _feedsNotRecievingAlertVC = feedsNotRecievedAlertVC;
+    return feedsNotRecievedAlertVC;
+}
+
+
+#pragma mark - CONFIG LOCATIONs -
+
+#pragma mark CONFIG Label
+
+///  Конфигурировать местоположение верхнего лейбла
+- (void)configPresentLocationEnterChannelLabel{
+    
+    [_enterChannelLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(_channelContentView);
-        make.centerY.equalTo(_channelTextField.mas_centerY);
+        make.leading.equalTo(_channelContentView.mas_leading).with.offset(20.f);
+        make.top.equalTo(_channelContentView.mas_top).with.offset(60.f);
+        make.height.mas_equalTo(60.f);
+    }];
+}
+
+///  Конфигурировать местоположение нижнего лейбла (базовое - под URL textField-ом)
+- (void)configBaseLocationSuggestedLabel{
+    
+    [_selectSuggestedLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_channelContentView);
+        make.width.equalTo(_enterChannelLabel.mas_width);
+        make.top.equalTo(_channelTextField.mas_bottom).with.offset(20.f);
+        make.height.mas_equalTo(90.f);
+    }];
+}
+
+///  Конфигурировать местоположение нижнего лейбла (второе - под Alias textField-ом)
+- (void)configSecondLocationSuggestedLabel{
+    
+    [_selectSuggestedLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_channelContentView);
+        make.width.equalTo(_enterChannelLabel.mas_width);
+        make.top.equalTo(_channelAliasTextField.mas_bottom).with.offset(20.f);
+        make.height.mas_equalTo(90.f);
+    }];
+}
+
+///  Конфигурировать местоположение нижнего лейбла (третье - под Add кнопкой)
+- (void)configThirdLocationSuggestedLabel{
+    
+    [_selectSuggestedLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_channelContentView);
+        make.width.equalTo(_enterChannelLabel.mas_width);
+        make.top.equalTo(_addChannelButton.mas_bottom).with.offset(20.f);
+        make.height.mas_equalTo(90.f);
+    }];
+}
+
+///  Конфигурировать местоположение нижнего лейбла (четвертое - под Delete кнопкой)
+- (void)configFourLocationSuggestedLabel{
+    
+    [_selectSuggestedLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_channelContentView);
+        make.width.equalTo(_enterChannelLabel.mas_width);
+        make.top.equalTo(_deleteChannelButton.mas_bottom).with.offset(20.f);
+        make.height.mas_equalTo(90.f);
+    }];
+}
+
+
+#pragma mark - CONFIG TextFields
+
+///  Конфигурировать местоположение URL TextField-а
+- (void)configPresentLocationChannelTextField{
+    
+    const CGFloat textFieldSize = [_presentStyle channelUIElementHeight];
+    
+    [_channelTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_channelContentView);
+        make.top.equalTo(_enterChannelLabel.mas_bottom).with.offset(20.f);
         make.width.equalTo(_enterChannelLabel.mas_width);
         make.height.mas_equalTo(textFieldSize);
     }];
-     */
-    
-    
-    return channelAliasTextField;
 }
 
-- (HURSSChannelButton*)createChannelAddButton{
-    
-    //const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
-    
-    HURSSChannelButton *addChannelButton = [HURSSChannelButton new];
-    [addChannelButton setTitle:@"ДОБАВИТЬ" forState:UIControlStateNormal];
-    
-    [_channelContentView insertSubview:addChannelButton belowSubview:_channelAliasTextField];
-    _addChannelButton = addChannelButton;
-    
-    [self configCreatedLocationChannelAddButton];
-    
-    return addChannelButton;
-}\
-
-- (HURSSChannelButton*)createChannelRemoveButton{
-    
-    HURSSChannelButton *deleteChannelButton = [HURSSChannelButton new];
-    [deleteChannelButton setTitle:@"УДАЛИТЬ" forState:UIControlStateNormal];
-    
-    [_channelContentView insertSubview:deleteChannelButton belowSubview:_addChannelButton];
-    _deleteChannelButton = deleteChannelButton;
-    
-    [self configCreatedLocationChannelRemoveButton];
-    
-    return deleteChannelButton;
-}
-
+/// Конфигурировать истинное местоположение Alias TextField-а (после анимации падения)
 - (void)configPresentLocationAliasTextField{
     
     const CGFloat textFieldSize = [_presentStyle channelUIElementHeight];
@@ -351,6 +460,7 @@
     }];
 }
 
+/// Конфигурировать базовое местоположение Alias TextField-а (при создании)
 - (void)configCreatedLocationAliasTextField{
     
     const CGFloat textFieldSize = [_presentStyle channelUIElementHeight];
@@ -363,6 +473,7 @@
     }];
 }
 
+/// Конфигурировать последнее местоположение Alias TextField-а (при уничтожении куда уезжает элемент)
 - (void)configDestroyedLocationAliasTextField{
     
     const CGFloat textFieldSize = [_presentStyle channelUIElementHeight];
@@ -376,6 +487,21 @@
 }
 
 
+#pragma mark - CONFIG Buttons
+
+- (void)configPresentLocationShowChannelButton{
+    
+    const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
+    
+    [_showChannelButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_channelContentView);
+        make.top.equalTo(_selectSuggestedLabel.mas_bottom).with.offset(20.f);
+        make.width.equalTo(_channelTextField.mas_width);
+        make.height.mas_equalTo(channelButtonSize);
+    }];
+}
+
+/// Конфигурировать истинное местоположение Add Button-а (после анимации падения)
 - (void)configPresentLocationChannelAddButton{
     
     const CGFloat textFieldSize = [_presentStyle channelUIElementHeight];
@@ -388,6 +514,7 @@
     }];
 }
 
+/// Конфигурировать базовое местоположение Add Button-а (при создании)
 - (void)configCreatedLocationChannelAddButton{
     
     const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
@@ -400,6 +527,7 @@
     }];
 }
 
+/// Конфигурировать последнее местоположение Add Button-а (при уничтожении куда уезжает элемент)
 - (void)configDestroyedLocationChannelAddButton{
     
     const CGFloat textFieldSize = [_presentStyle channelUIElementHeight];
@@ -412,6 +540,7 @@
     }];
 }
 
+/// Конфигурировать истинное местоположение Delete Button-а (после анимации падения)
 - (void)configPresentLocationChannelRemoveButton{
     
     const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
@@ -424,6 +553,7 @@
     }];
 }
 
+/// Конфигурировать базовое местоположение Delete Button-а (при создании)
 - (void)configCreatedLocationChannelRemoveButton{
     
     const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
@@ -436,6 +566,7 @@
     }];
 }
 
+/// Конфигурировать последнее местоположение Delete Button-а (при уничтожении куда уезжает элемент)
 - (void)configDestoyedLocationChannelRemoveButton{
     
     const CGFloat channelButtonSize = [_presentStyle channelUIElementHeight];
@@ -448,46 +579,7 @@
     }];
 }
 
-- (void)configBaseLocationSuggestedLabel{
-    
-    [_selectSuggestedLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_channelContentView);
-        make.width.equalTo(_enterChannelLabel.mas_width);
-        make.top.equalTo(_channelTextField.mas_bottom).with.offset(20.f);
-        make.height.mas_equalTo(90.f);
-    }];
-}
-
-- (void)configSecondLocationSuggestedLabel{
-    
-    [_selectSuggestedLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_channelContentView);
-        make.width.equalTo(_enterChannelLabel.mas_width);
-        make.top.equalTo(_channelAliasTextField.mas_bottom).with.offset(20.f);
-        make.height.mas_equalTo(90.f);
-    }];
-}
-
-- (void)configThirdLocationSuggestedLabel{
-    
-    [_selectSuggestedLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_channelContentView);
-        make.width.equalTo(_enterChannelLabel.mas_width);
-        make.top.equalTo(_addChannelButton.mas_bottom).with.offset(20.f);
-        make.height.mas_equalTo(90.f);
-    }];
-}
-
-- (void)configFourLocationSuggestedLabel{
-    
-    [_selectSuggestedLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_channelContentView);
-        make.width.equalTo(_enterChannelLabel.mas_width);
-        make.top.equalTo(_deleteChannelButton.mas_bottom).with.offset(20.f);
-        make.height.mas_equalTo(90.f);
-    }];
-}
-
+/// Конфигурировать основное местоположение Feeds Button-а (внизу экрана)
 - (void)configPresentLocationFeedsButton{
     
     const CGFloat feedsButtonSize = [_presentStyle channelUIElementHeight];
@@ -502,18 +594,52 @@
     }];
 }
 
+/// Конфигурировать местоположение Feeds Button-а (внизу экрана) (и размер кнопки в режиме ожидания)
+- (void)configWaitingLocationFeedsButton{
+    
+    const CGFloat feedsButtonSize = [_presentStyle channelUIElementHeight];
+    const CGSize currentContentSize = _channelContentView.contentSize;
+    const CGFloat currentContentHeight = currentContentSize.height;
+    
+    [_feedsButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_channelContentView);
+        make.bottom.equalTo(_channelContentView.mas_top).with.offset(currentContentHeight - (feedsButtonSize/2.f) - 20.f);
+        make.width.mas_equalTo(feedsButtonSize);
+        make.height.mas_equalTo(feedsButtonSize);
+    }];
+}
+
+
+#pragma mark - CONFIG State's
+
+/// Задизейблить получение новостей
 - (void)configGetFeedsDisable{
     
     _channelTextField.textColor = [_presentStyle channelTextFieldTextColor];
     _feedsButton.enabled = NO;
 }
 
+/// Включить возможность получения новостей
 - (void)configGetFeedsEnable{
     
     _channelTextField.textColor = [UIColor darkGrayColor];
     _feedsButton.enabled = YES;
 }
 
+/// Конфигурировать Add-кнопку в режим Добавления канала
+- (void)configChangeChannelButtonToAddMode{
+    [_addChannelButton setTitle:@"ДОБАВИТЬ" forState:UIControlStateNormal];
+}
+
+/// Конфигурировать Modify-кнопку в режим  Изменения канала
+- (void)configChangeChannelButtonToModifyMode{
+    [_addChannelButton setTitle:@"ИЗМЕНИТЬ" forState:UIControlStateNormal];
+}
+
+
+#pragma mark - CONFIG for Keyboard
+
+/// Конфигурировать отступ для клавиатуры (когда выезжает клавиатура, или уезжает)
 - (void)configKeyboardWithInsets:(UIEdgeInsets)contentInset{
     
     [_channelContentView mas_remakeConstraints:^(MASConstraintMaker *make) {

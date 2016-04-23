@@ -20,4 +20,7 @@
 
 - (void)setTouchHandler:(SEL)actionHandler toTarget:(id)actionTarget;
 
+- (void)startWaitingIndicator;
+- (void)endWaitingIndicator;
+
 @end

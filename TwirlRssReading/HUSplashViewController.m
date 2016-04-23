@@ -8,12 +8,9 @@
 
 #import "HUSplashViewController.h"
 
-#import "HURSSTwirlRouter.h"
-#import "HURSSTwirlStyle.h"
-#import "Masonry.h"
-
 @interface HUSplashViewController ()
 
+/// Имейдж вью для логотипа
 @property UIImageView *logoImageView;
 
 @end

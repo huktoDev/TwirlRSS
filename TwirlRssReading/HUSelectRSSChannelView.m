@@ -33,6 +33,7 @@
     CZPickerView *_channelPickerView;
     URBNAlertViewController *_obtainFeedsAlertVC;
     URBNAlertViewController *_actionChannelAlertVC;
+    URBNAlertViewController *_feedsAlertVC;
     
     // Названия каналов для пикера
     NSArray <NSString*> *_pickerChannelNames;
@@ -142,13 +143,14 @@
     [self.channelAliasTextField setText:channelAlias];
 }
 
-/// Возврати
+/// Возвратить введенный URL (тот, который в текстовом поле)
 - (NSURL*)getChannelURLLink{
     NSString *channelLinkString = self.channelTextField.text;
     NSURL *channelURL = [NSURL URLWithString:channelLinkString];
     return channelURL;
 }
 
+/// Возвратить введенное название канала (то, которое в текстовое поле)
 - (NSString*)getChannelAlias{
     NSString *channelAlias = self.channelAliasTextField.text;
     return channelAlias;
@@ -280,7 +282,14 @@
     _obtainFeedsAlertVC = obtainFeedsAlertVC;
 }
 
-/// Установить обработчик для алерта на получение новостей
+/**
+    @abstract Установить обработчик для алерта на получение новостей 
+    @discussion
+    Когда пользователь  выбирает канал из списка - ему показывается диалог (получить ли список новостей?). С помощь этого метода назначается обработчик кнопки "Да". По идее, после нажатия на нее - должно иницироваться получение новостей.
+ 
+    @param actionHandler      Метод-обработчик получения новостей
+    @param actionTarget       Таргет у которого вызывается селектор
+ */
 - (void)setObtainingFeedsAlertHandler:(SEL)actionHandler withTarget:(id)actionTarget{
     
     NSArray <URBNAlertAction*>*actions = _obtainFeedsAlertVC.alertConfig.actions;
@@ -294,6 +303,18 @@
     }];
 }
 
+
+#pragma mark - CHANNEL Action Dialog -
+
+/**
+    @abstract Показать алерт для различных действий с каналами
+    @discussion
+    Показать алерт URBNAlertViewController, с одной кнопкой - "ОК". Просто информировать пользователя о том, что действие было совершено. Тексты в диалоге генерятся с учетом названия канала, и URL-а.
+ 
+    @param channelActionType      Тип действия с каналом
+    @param channelName       Название канала
+    @param channelURl       URL -канала
+ */
 - (void)showAlertPostAction:(HURSSChannelActionType)channelActionType ForChannelName:(NSString*)channelName withURL:(NSURL*)channelURl{
     
     // Создать алерт-контроллер
@@ -307,7 +328,55 @@
 }
 
 
-#pragma mark - UPDATE UI To States
+#pragma mark - FAIL Feeds Dialog -
+
+/**
+    @abstract Диалог в случае неудачного получения новостей
+    @discussion
+    Если новости получить не удалось - показать диалог. В диалоге будут 2 кнопки - "Жаль" и "Еще раз".
+ 
+    @note Показывать не сразу - чтобы корректно были показаны все анимации (все равно весь UI дизейблится)
+ 
+    @param channelName       Название канала
+    @param feedsErrorDescription      Описание ошибки получения новостей
+ */
+- (void)showFeedsFailRecivingAlertForChannelName:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription{
+    
+    URBNAlertViewController *feedsAlertVC = [_presentConfigurator createFeedsRecvievingAlertWithChannelname:channelName withErrorDescription:feedsErrorDescription];
+    
+    // Запомнить объект алерта
+    _feedsAlertVC = feedsAlertVC;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        // Показать алерт
+        [feedsAlertVC show];
+    });
+}
+
+/**
+    @abstract Повесть обработчик для кнопки "Еще раз" фейл-диалога
+    @discussion
+    Когда  пользователю показывается диалог в случае неудачного получения новостей - то там есть кнопка "Еще раз". При нажатии на эту кнопку следует еще раз перезагружать новости. С помощью этого метода на эту кнопку назначается обработчик
+ 
+    @param actionHandler      Метод-обработчик
+    @param actionTarget        Таргет, в котором ищется селектор
+ */
+- (void)setFeedsRepeatAlertHandler:(SEL)actionHandler withTarget:(id)actionTarget{
+    
+    NSArray <URBNAlertAction*>*actions = _feedsAlertVC.alertConfig.actions;
+    URBNAlertAction *obtainingAction = actions[1];
+    
+    __weak __block typeof(self) weakTarget = actionTarget;
+    [obtainingAction setCompletionBlock:^(URBNAlertAction *action) {
+        __strong __block typeof(weakTarget) strongTarget = weakTarget;
+        
+        [strongTarget performSelector:actionHandler withObject:nil afterDelay:0.f];
+    }];
+}
+
+
+#pragma mark - UPDATE UI To States -
 
 /**
     @abstract Обновить UI, когда успешно/неудачно валидируется RSS URL
@@ -322,12 +391,12 @@
     if(passValidate){
         // Валидация была  успешно проведена - показать текстовое  поле
         [_presentConfigurator configGetFeedsEnable];
-        [_presentAnimator performCreationAliasTextField];
+        [_presentAnimator performAnimatedCreationAliasTextField];
         
     }else{
         // Валидация была провалена - убрать текстовое поле
         [_presentConfigurator configGetFeedsDisable];
-        [_presentAnimator performDestroyAliasTextField];
+        [_presentAnimator performAnimatedDestroyAliasTextField];
     }
 }
 
@@ -350,22 +419,22 @@
     
     if(channelState == HURSSChannelStatePossibleModifyDel){
         
-        [_presentAnimator performCreationChannelAddButton];
-        [_presentAnimator performCreationChannelRemoveButton];
+        [_presentAnimator performAnimatedCreationChannelAddButton];
+        [_presentAnimator performAnimatedCreationChannelRemoveButton];
         
-        [self.addChannelButton setTitle:@"ИЗМЕНИТЬ" forState:UIControlStateNormal];
+        [_presentConfigurator configChangeChannelButtonToModifyMode];
         
     }else if(channelState == HURSSChannelStatePossibleAdd){
         
-        [_presentAnimator performCreationChannelAddButton];
-        [_presentAnimator performDestroyChannelRemoveButton];
+        [_presentAnimator performAnimatedCreationChannelAddButton];
+        [_presentAnimator performAnimatedDestroyChannelRemoveButton];
         
-        [self.addChannelButton setTitle:@"ДОБАВИТЬ" forState:UIControlStateNormal];
+        [_presentConfigurator configChangeChannelButtonToAddMode];
         
     }else if(channelState == HURSSChannelStateImpossible){
         
-        [_presentAnimator performDestroyChannelRemoveButton];
-        [_presentAnimator performDestroyChannelAddButton];
+        [_presentAnimator performAnimatedDestroyChannelRemoveButton];
+        [_presentAnimator performAnimatedDestroyChannelAddButton];
     }
 }
 
@@ -402,7 +471,7 @@
     [_presentConfigurator configThirdLocationSuggestedLabel];
     [self layoutIfNeeded];
     
-    // Запустить анимацию "падения" кнопку добавления
+    // Запустить анимацию "падения" кнопки добавления
     [_presentAnimator performAnimateFallChannelAddButtonWithCompletion:^{
         // Когда кнопка успешно добавлена - повесить на нее обработчик
         [self.addChannelButton setTouchHandler:_addChannelActionHandler toTarget:_addChannelActionTarget];
@@ -420,9 +489,9 @@
     [_presentConfigurator configFourLocationSuggestedLabel];
     [self layoutIfNeeded];
     
-    
+    // Запустить анимацию "падения" для кнопки "Удалить"
     [_presentAnimator performAnimateFallChannelRemoveButtonWithCompletion:^{
-        
+        // Когда кнопка успешно добавлена - повесить на нее обработчик
         [self.deleteChannelButton setTouchHandler:_deleteChannelActionHandler toTarget:_deleteChannelActionTarget];
     }];
     
@@ -442,8 +511,8 @@
         [self destroyChannelAddButton];
     }
     
-    _startDestroyingAliasTextField = YES;
     // Запустить анимацию уничтожения кнопки (уезжает в сторону), и в конце анимации уничтожается
+    _startDestroyingAliasTextField = YES;
     [_presentAnimator performAnimateMoveAwayAliasTextFieldWithCompletion:^{
         
         [self.channelAliasTextField removeFromSuperview];
@@ -453,17 +522,16 @@
 }
 
 
-
-
 /// Уничтожение кнопки для добавления канала
 - (void)destroyChannelAddButton{
     
+    // Прежде - уничтожить кнопку удаления (как связанную)
     if(self.deleteChannelButton){
         [self destroyChannelDeleteButton];
     }
     
-    _startDestroyingAddButton = YES;
     // Запустить анимацию "уезжания" кнопки, по окончанию - уничтожить кнопку
+    _startDestroyingAddButton = YES;
     [_presentAnimator performAnimateMoveAwayChannelAddButtonWithCompletion:^{
         
         [self.addChannelButton removeFromSuperview];
@@ -472,11 +540,10 @@
     }];
 }
 
-
-
-
+/// Уничтожение кнопки для удаления канала
 - (void)destroyChannelDeleteButton{
     
+    // Запустить анимацию "уезжания" кнопки, по окончанию - уничтожить кнопку
     _startDestroyingDeleteButton = YES;
     [_presentAnimator performAnimateMoveAwayChannelRemoveButtonWithCompletion:^{
         
@@ -498,6 +565,7 @@
  */
 - (void)updateContentSizeWithLayout:(BOOL)needLayout{
     
+    // Рассчитать и установить новый контент-сайз (и обновить макет)
     const CGFloat newContentHeight = [self evaluateContentSize];
     CGSize newContentSize = CGSizeMake(self.channelContentView.contentSize.width, newContentHeight);
     [self.channelContentView setContentSize:newContentSize];
@@ -514,6 +582,7 @@
     }
 }
 
+/// Расчет размера контента (пришлось сделать после  того, как иначе нормально обновлять контент-сайз не получилось)
 - (CGFloat)evaluateContentSize{
     
     CGFloat evalContentSize = 60.f + CGRectGetHeight(_enterChannelLabel.frame) + 20.f + CGRectGetHeight(_channelTextField.frame) + 20.f + CGRectGetHeight(_selectSuggestedLabel.frame) + 20.f + CGRectGetHeight(_showChannelButton.frame) + 20.f;
@@ -535,7 +604,7 @@
     return (evalContentSize > viewHeight) ? evalContentSize : viewHeight;
 }
 
-#pragma mark - Keyboard SHOW/HIDE
+#pragma mark - Keyboard SHOW/HIDE -
 
 /// Действия с UI при появлении клавиатуры (передает  управление аниматору)
 - (void)showKeyboardActionsWithDuration:(NSTimeInterval)animationDuration withKeyboardSize:(CGSize)keyboardSize withChannelFieldType:(HURSSChannelTextFieldType)channelFieldType withCompletionBlock:(dispatch_block_t)keyboardActionCompletion{
@@ -556,5 +625,77 @@
 }
 
 
+#pragma mark - FEEDS Waiting
+
+/**
+    @abstract Стартовать получение  новостей (показать ожидание)
+    @discussion
+    Когда пользователь нажимает на кнопку "Получить" - следует повесить ожидание. 
+    <ol type="1">
+        <li> Задизейблить UI </li>
+        <li> Ждать, пока анимация восстановления кнопки завершится, прежде чем начать эту </li>
+        <li> Кнопка сжимается по x оси, становясь круглой </li>
+        <li> Когда кнопка сжата - на нее вешается индикатор </li>
+    </ol>
+ */
+- (void)startFeedsWaiting{
+    
+    self.userInteractionEnabled = NO;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [UIView animateWithDuration:0.25f animations:^{
+            self.feedsButton.titleLabel.alpha = 0.f;
+        }];
+        
+        [UIView animateWithDuration:0.6f delay:0.f usingSpringWithDamping:0.5f initialSpringVelocity:0.f options:0 animations:^{
+            
+            [_presentConfigurator configWaitingLocationFeedsButton];
+            [self layoutIfNeeded];
+            
+        }completion:^(BOOL finished) {
+            
+            // После окончания анимаци - повесить на кнопку индикатор (после небольшой задержки)
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                [self.feedsButton startWaitingIndicator];
+            });
+        }];
+    });
+}
+
+/**
+    @abstract Окончить получение  новостей (убрать ожидание)
+    @discussion
+    После нажатия на  кнопку "Получить", если новости удалось, или не удалось получить - следует убрать ожидание
+ 
+    @note Следуется сделать приличную задержку, чтобы анимации были переходящими (для случая, когда сразу же после старта приходит Failure)
+    <ol type="1">
+        <li> Убрать индикатор ожидания </li>
+        <li> Вернуть кнопке  feedsButton нормальный размер </li>
+        <li> По окончанию анимаций - раздизейблить UI </li>
+    </ol>
+ */
+- (void)endFeedsWaiting{
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [UIView animateWithDuration:0.25f animations:^{
+            self.feedsButton.titleLabel.alpha = 1.f;
+        }];
+        
+        [UIView animateWithDuration:0.6f delay:0.f usingSpringWithDamping:0.5f initialSpringVelocity:0.f options:0 animations:^{
+            
+            [_presentConfigurator configPresentLocationFeedsButton];
+            [self.feedsButton endWaitingIndicator];
+            [self layoutIfNeeded];
+        }completion:^(BOOL finished) {
+            self.userInteractionEnabled = YES;
+        }];
+    });
+}
+
+
+
 @end
+
 

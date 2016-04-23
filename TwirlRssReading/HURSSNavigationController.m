@@ -9,11 +9,6 @@
 #import "HURSSNavigationController.h"
 #import "HUSplashTransitionAnimator.h"
 
-#import "HUSplashViewController.h"
-#import "HUSelectRSSChannelPresenter.h"
-#import "HURSSFeedsPresenter.h"
-#import "HURSSItemPresenter.h"
-
 
 #define BASE_ROOT_NAV_CLASS HUSelectRSSChannelPresenter
 

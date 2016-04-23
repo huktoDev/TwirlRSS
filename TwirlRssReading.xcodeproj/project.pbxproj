@@ -23,6 +23,7 @@
 		6B1A45071CC9FEE4002BC53A /* HURSSChannelViewConstraintsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45061CC9FEE4002BC53A /* HURSSChannelViewConstraintsFactory.m */; };
 		6B1A450A1CCA016D002BC53A /* HURSSChannelViewStyler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45091CCA016D002BC53A /* HURSSChannelViewStyler.m */; };
 		6B1A450D1CCA1CAD002BC53A /* HURSSReservedChannelSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A450C1CCA1CAD002BC53A /* HURSSReservedChannelSet.m */; };
+		6B1A45111CCABC52002BC53A /* BLMultiColorLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45101CCABC52002BC53A /* BLMultiColorLoader.m */; };
 		6B7DF00E1CC2C21400AE4096 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF00D1CC2C21400AE4096 /* main.m */; };
 		6B7DF0111CC2C21400AE4096 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0101CC2C21400AE4096 /* AppDelegate.m */; };
 		6B7DF0141CC2C21400AE4096 /* HUSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0131CC2C21400AE4096 /* HUSplashViewController.m */; };
@@ -81,6 +82,11 @@
 		6B1A45091CCA016D002BC53A /* HURSSChannelViewStyler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSChannelViewStyler.m; sourceTree = "<group>"; };
 		6B1A450B1CCA1CAD002BC53A /* HURSSReservedChannelSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSReservedChannelSet.h; sourceTree = "<group>"; };
 		6B1A450C1CCA1CAD002BC53A /* HURSSReservedChannelSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSReservedChannelSet.m; sourceTree = "<group>"; };
+		6B1A450F1CCABC52002BC53A /* BLMultiColorLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLMultiColorLoader.h; sourceTree = "<group>"; };
+		6B1A45101CCABC52002BC53A /* BLMultiColorLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLMultiColorLoader.m; sourceTree = "<group>"; };
+		6B1A45121CCBB25F002BC53A /* HURSSImportRoot.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSImportRoot.pch; sourceTree = "<group>"; };
+		6B1A45131CCBBCDD002BC53A /* HURSSControllersAndPresenters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSControllersAndPresenters.h; sourceTree = "<group>"; };
+		6B1A45141CCBBDFF002BC53A /* HURSSChannelsStoring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSChannelsStoring.h; sourceTree = "<group>"; };
 		6B7DF0091CC2C21400AE4096 /* TwirlRssReading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwirlRssReading.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B7DF00D1CC2C21400AE4096 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6B7DF00F1CC2C21400AE4096 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -135,6 +141,7 @@
 		6B1A44EB1CC5D8CE002BC53A /* Routing */ = {
 			isa = PBXGroup;
 			children = (
+				6B1A45131CCBBCDD002BC53A /* HURSSControllersAndPresenters.h */,
 				6B1A44E21CC402F2002BC53A /* HURSSTwirlRouter.h */,
 				6B1A44E31CC402F2002BC53A /* HURSSTwirlRouter.m */,
 				6B1A44E51CC40DFD002BC53A /* HURSSTwirlRouter+CustomSegues.h */,
@@ -146,8 +153,6 @@
 		6B1A44EC1CC5D8E0002BC53A /* Splash Screen */ = {
 			isa = PBXGroup;
 			children = (
-				6B7DF0121CC2C21400AE4096 /* HUSplashViewController.h */,
-				6B7DF0131CC2C21400AE4096 /* HUSplashViewController.m */,
 				6B7DF0431CC2D1E600AE4096 /* HUSplashTransitionAnimator.h */,
 				6B7DF0441CC2D1E600AE4096 /* HUSplashTransitionAnimator.m */,
 			);
@@ -157,8 +162,6 @@
 		6B1A44ED1CC5D8F5002BC53A /* Feeds Screen */ = {
 			isa = PBXGroup;
 			children = (
-				6B7DF0311CC2C2C300AE4096 /* HURSSFeedsPresenter.h */,
-				6B7DF0321CC2C2C300AE4096 /* HURSSFeedsPresenter.m */,
 				6B7DF0371CC2C2FD00AE4096 /* HURSSFeedsTableView.h */,
 				6B7DF0381CC2C2FD00AE4096 /* HURSSFeedsTableView.m */,
 				6B7DF03A1CC2C31700AE4096 /* HURSSFeedsCell.h */,
@@ -170,8 +173,6 @@
 		6B1A44EE1CC5D903002BC53A /* ItemDetails Screen */ = {
 			isa = PBXGroup;
 			children = (
-				6B7DF0341CC2C2DF00AE4096 /* HURSSItemPresenter.h */,
-				6B7DF0351CC2C2DF00AE4096 /* HURSSItemPresenter.m */,
 				6B7DF03D1CC2C33C00AE4096 /* HURSSItemDetailView.h */,
 				6B7DF03E1CC2C33C00AE4096 /* HURSSItemDetailView.m */,
 			);
@@ -181,8 +182,6 @@
 		6B1A44EF1CC5D923002BC53A /* SelectChannel Screen */ = {
 			isa = PBXGroup;
 			children = (
-				6B1A44DC1CC350E1002BC53A /* HUSelectRSSChannelPresenter.h */,
-				6B1A44DD1CC350E1002BC53A /* HUSelectRSSChannelPresenter.m */,
 				6B1A44DF1CC350F8002BC53A /* HUSelectRSSChannelView.h */,
 				6B1A44E01CC350F8002BC53A /* HUSelectRSSChannelView.m */,
 				6B1A44E81CC54B3D002BC53A /* HURSSChannelTextField.h */,
@@ -203,6 +202,46 @@
 				6B1A45091CCA016D002BC53A /* HURSSChannelViewStyler.m */,
 			);
 			name = "SelectChannel Screen";
+			sourceTree = "<group>";
+		};
+		6B1A450E1CCABC3C002BC53A /* Third Party */ = {
+			isa = PBXGroup;
+			children = (
+				6B1A450F1CCABC52002BC53A /* BLMultiColorLoader.h */,
+				6B1A45101CCABC52002BC53A /* BLMultiColorLoader.m */,
+			);
+			name = "Third Party";
+			sourceTree = "<group>";
+		};
+		6B1A45151CCBC223002BC53A /* Channels Store */ = {
+			isa = PBXGroup;
+			children = (
+				6B1A45141CCBBDFF002BC53A /* HURSSChannelsStoring.h */,
+				6B1A44F31CC683D3002BC53A /* HURSSChannel.h */,
+				6B1A44F41CC683D3002BC53A /* HURSSChannel.m */,
+				6B1A44F61CC683EE002BC53A /* HURSSChannelStore.h */,
+				6B1A44F71CC683EE002BC53A /* HURSSChannelStore.m */,
+				6B1A450B1CCA1CAD002BC53A /* HURSSReservedChannelSet.h */,
+				6B1A450C1CCA1CAD002BC53A /* HURSSReservedChannelSet.m */,
+			);
+			name = "Channels Store";
+			sourceTree = "<group>";
+		};
+		6B1A45161CCBC31E002BC53A /* Controllers & Presenters */ = {
+			isa = PBXGroup;
+			children = (
+				6B7DF0461CC2D3DD00AE4096 /* HURSSNavigationController.h */,
+				6B7DF0471CC2D3DD00AE4096 /* HURSSNavigationController.m */,
+				6B7DF0121CC2C21400AE4096 /* HUSplashViewController.h */,
+				6B7DF0131CC2C21400AE4096 /* HUSplashViewController.m */,
+				6B1A44DC1CC350E1002BC53A /* HUSelectRSSChannelPresenter.h */,
+				6B1A44DD1CC350E1002BC53A /* HUSelectRSSChannelPresenter.m */,
+				6B7DF0311CC2C2C300AE4096 /* HURSSFeedsPresenter.h */,
+				6B7DF0321CC2C2C300AE4096 /* HURSSFeedsPresenter.m */,
+				6B7DF0341CC2C2DF00AE4096 /* HURSSItemPresenter.h */,
+				6B7DF0351CC2C2DF00AE4096 /* HURSSItemPresenter.m */,
+			);
+			name = "Controllers & Presenters";
 			sourceTree = "<group>";
 		};
 		6B7DF0001CC2C21400AE4096 = {
@@ -228,23 +267,18 @@
 		6B7DF00B1CC2C21400AE4096 /* TwirlRssReading */ = {
 			isa = PBXGroup;
 			children = (
+				6B1A450E1CCABC3C002BC53A /* Third Party */,
 				6B7DF00F1CC2C21400AE4096 /* AppDelegate.h */,
 				6B7DF0101CC2C21400AE4096 /* AppDelegate.m */,
-				6B7DF0461CC2D3DD00AE4096 /* HURSSNavigationController.h */,
-				6B7DF0471CC2D3DD00AE4096 /* HURSSNavigationController.m */,
 				6B7DF0401CC2CB8D00AE4096 /* HURSSTwirlStyle.h */,
 				6B7DF0411CC2CB8D00AE4096 /* HURSSTwirlStyle.m */,
-				6B1A44F31CC683D3002BC53A /* HURSSChannel.h */,
-				6B1A44F41CC683D3002BC53A /* HURSSChannel.m */,
-				6B1A44F61CC683EE002BC53A /* HURSSChannelStore.h */,
-				6B1A44F71CC683EE002BC53A /* HURSSChannelStore.m */,
-				6B1A450B1CCA1CAD002BC53A /* HURSSReservedChannelSet.h */,
-				6B1A450C1CCA1CAD002BC53A /* HURSSReservedChannelSet.m */,
+				6B1A44EB1CC5D8CE002BC53A /* Routing */,
+				6B1A45161CCBC31E002BC53A /* Controllers & Presenters */,
+				6B1A45151CCBC223002BC53A /* Channels Store */,
 				6B1A44EC1CC5D8E0002BC53A /* Splash Screen */,
 				6B1A44EF1CC5D923002BC53A /* SelectChannel Screen */,
 				6B1A44ED1CC5D8F5002BC53A /* Feeds Screen */,
 				6B1A44EE1CC5D903002BC53A /* ItemDetails Screen */,
-				6B1A44EB1CC5D8CE002BC53A /* Routing */,
 				6B7DF0181CC2C21400AE4096 /* Assets.xcassets */,
 				6B7DF01A1CC2C21400AE4096 /* LaunchScreen.storyboard */,
 				6B7DF01D1CC2C21400AE4096 /* Info.plist */,
@@ -257,6 +291,7 @@
 			isa = PBXGroup;
 			children = (
 				6B7DF00D1CC2C21400AE4096 /* main.m */,
+				6B1A45121CCBB25F002BC53A /* HURSSImportRoot.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -445,6 +480,7 @@
 				6B7DF0331CC2C2C300AE4096 /* HURSSFeedsPresenter.m in Sources */,
 				6B1A44E11CC350F8002BC53A /* HUSelectRSSChannelView.m in Sources */,
 				6B1A44F51CC683D3002BC53A /* HURSSChannel.m in Sources */,
+				6B1A45111CCABC52002BC53A /* BLMultiColorLoader.m in Sources */,
 				6B7DF0141CC2C21400AE4096 /* HUSplashViewController.m in Sources */,
 				6B7DF0421CC2CB8D00AE4096 /* HURSSTwirlStyle.m in Sources */,
 				6B7DF03F1CC2C33C00AE4096 /* HURSSItemDetailView.m in Sources */,
@@ -585,6 +621,7 @@
 			baseConfigurationReference = D186BE21BDB8C05D39B050DE /* Pods-TwirlRssReading.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PRODUCT_NAME)/HURSSImportRoot.pch";
 				INFOPLIST_FILE = TwirlRssReading/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -598,6 +635,7 @@
 			baseConfigurationReference = 2BDBBD39828BF905546467BF /* Pods-TwirlRssReading.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PRODUCT_NAME)/HURSSImportRoot.pch";
 				INFOPLIST_FILE = TwirlRssReading/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

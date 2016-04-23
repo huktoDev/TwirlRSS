@@ -8,87 +8,85 @@
 
 #import <Foundation/Foundation.h>
 
-#import "HUSelectRSSChannelView.h"
-#import "HURSSChannelViewStyler.h"
-#import "HURSSChannelViewConstraintsFactory.h"
 
-#import "CZPicker.h"
-#import "URBNAlert.h"
-
+/**
+    @protocol HURSSChannelViewConfiguratorInterface
+    @author HuktoDev
+    @updated 23.04.2016
+    @abstract Интерфейс для конфигуратора вьюшки SelectChannel-экрана
+    @discussion
+    Предоставляет интерфейс для объекта HURSSChannelViewConfigurator, выступающего в роли конфигуратора вьюшки.
+    <b> Основные задачи конфигуратора : </b>
+    <ol type="a">
+        <li> Создает сабвьюшки </li>
+        <li> Задает местоположения сабвьюшек </li>
+        <li> Меняет UI, в зависимости от некоторых состояний  </li>
+    </ol>
+ 
+    @see 
+    HURSSChannelViewConfigurator \n
+    HUSelectRSSChannelView \n
+ */
 @protocol HURSSChannelViewConfiguratorInterface <NSObject>
 
 @required
 
+#pragma mark - Config BACKGROUND
+// Конфигурирование фона
+
 - (void)configBackground;
 
+
+#pragma mark - CREATE UI ELEMENTS -
+// Конструкторы всех сабвьюшек
+
+#pragma mark Create SCROLL
 - (UIScrollView*)createContentScrollView;
+
+#pragma mark - Create LABELs
 - (UILabel*)createEnterChannelLabel;
-- (HURSSChannelTextField*)createChannelTextField;
 - (UILabel*)createSelectSuggestedLabel;
+
+#pragma mark - Create TEXTFIELDs
+- (HURSSChannelTextField*)createChannelTextField;
+- (HURSSChannelTextField*)createChannelAliasTextField;
+
+#pragma mark - Create BUTTONs
 - (HURSSChannelButton*)createShowChannelButton;
 - (HURSSChannelButton*)createGetFeedsButton;
-
-- (CZPickerView*)createChannelsPickerView;
-- (URBNAlertViewController*)createObtainingFeedsAlertWithChannelName:(NSString*)channelName;
-
-- (HURSSChannelTextField*)createChannelAliasTextField;
 - (HURSSChannelButton*)createChannelAddButton;
 - (HURSSChannelButton*)createChannelRemoveButton;
 
-- (void)configPresentLocationAliasTextField;
-- (void)configCreatedLocationAliasTextField;
-- (void)configDestroyedLocationAliasTextField;
+#pragma mark Create CZPicker
+- (CZPickerView*)createChannelsPickerView;
 
-- (void)configPresentLocationChannelAddButton;
-- (void)configCreatedLocationChannelAddButton;
-- (void)configDestroyedLocationChannelAddButton;
+#pragma mark - Create URBNAlertViewController
+- (URBNAlertViewController*)createObtainingFeedsAlertWithChannelName:(NSString*)channelName;
+- (URBNAlertViewController*)createChannelAlertWithPostAction:(HURSSChannelActionType)channelActionType WithChannelName:(NSString*)channelName andWithURL:(NSURL*)channelURL;
+- (URBNAlertViewController*)createFeedsRecvievingAlertWithChannelname:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription;
 
-- (void)configPresentLocationChannelRemoveButton;
-- (void)configCreatedLocationChannelRemoveButton;
-- (void)configDestoyedLocationChannelRemoveButton;
+
+#pragma mark - CONFIG LOCATIONs -
+// Конфигурировать размер и местоположение сабвьюшек
+
+#pragma mark CONFIG Label
+- (void)configPresentLocationEnterChannelLabel;
 
 - (void)configBaseLocationSuggestedLabel;
 - (void)configSecondLocationSuggestedLabel;
 - (void)configThirdLocationSuggestedLabel;
 - (void)configFourLocationSuggestedLabel;
 
-- (void)configPresentLocationFeedsButton;
-
-- (void)configGetFeedsDisable;
-- (void)configGetFeedsEnable;
-
-- (void)configKeyboardWithInsets:(UIEdgeInsets)contentInset;
-
-- (URBNAlertViewController*)createChannelAlertWithPostAction:(HURSSChannelActionType)channelActionType WithChannelName:(NSString*)channelName andWithURL:(NSURL*)channelURL;
-    
-@end
-
-
-@interface HURSSChannelViewConfigurator : NSObject <HURSSChannelViewConfiguratorInterface>
-
-+ (instancetype)createConfiguratorForRootView:(HUSelectRSSChannelView*)channelRootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler withConstraintsFactory:(id<HURSSChannelViewPositionRulesInterface>)viewRules;
-
-- (void)configBackground;
-
-- (UIScrollView*)createContentScrollView;
-- (UILabel*)createEnterChannelLabel;
-- (HURSSChannelTextField*)createChannelTextField;
-- (UILabel*)createSelectSuggestedLabel;
-- (HURSSChannelButton*)createShowChannelButton;
-- (HURSSChannelButton*)createGetFeedsButton;
-
-- (CZPickerView*)createChannelsPickerView;
-- (URBNAlertViewController*)createObtainingFeedsAlertWithChannelName:(NSString*)channelName;
-
-- (HURSSChannelTextField*)createChannelAliasTextField;
-- (HURSSChannelButton*)createChannelAddButton;
-- (HURSSChannelButton*)createChannelRemoveButton;
-
+#pragma mark - CONFIG TextFields
+- (void)configPresentLocationChannelTextField;
 
 - (void)configPresentLocationAliasTextField;
 - (void)configCreatedLocationAliasTextField;
 - (void)configDestroyedLocationAliasTextField;
-    
+
+#pragma mark - CONFIG Buttons
+- (void)configPresentLocationShowChannelButton;
+
 - (void)configPresentLocationChannelAddButton;
 - (void)configCreatedLocationChannelAddButton;
 - (void)configDestroyedLocationChannelAddButton;
@@ -97,18 +95,52 @@
 - (void)configCreatedLocationChannelRemoveButton;
 - (void)configDestoyedLocationChannelRemoveButton;
 
-- (void)configBaseLocationSuggestedLabel;
-- (void)configSecondLocationSuggestedLabel;
-- (void)configThirdLocationSuggestedLabel;
-
 - (void)configPresentLocationFeedsButton;
+- (void)configWaitingLocationFeedsButton;
+
+#pragma mark - CONFIG State's
+// Конфигурировать разные состояния Ui
 
 - (void)configGetFeedsDisable;
 - (void)configGetFeedsEnable;
 
-- (void)configKeyboardWithInsets:(UIEdgeInsets)contentInset;
+- (void)configChangeChannelButtonToAddMode;
+- (void)configChangeChannelButtonToModifyMode;
 
-- (URBNAlertViewController*)createChannelAlertWithPostAction:(HURSSChannelActionType)channelActionType WithChannelName:(NSString*)channelName andWithURL:(NSURL*)channelURL;
+
+#pragma mark - CONFIG for Keyboard
+/// Отступ для клавиатуры
+
+- (void)configKeyboardWithInsets:(UIEdgeInsets)contentInset;
+    
+@end
+
+
+/**
+    @class HURSSChannelViewConfigurator
+    @author HuktoDev
+    @updated 23.04.2016
+    @abstract Является реализацией протокола конфигуратора HURSSChannelViewConfiguratorInterface для SelectScreen-вьюшки
+    @discussion
+    Реализует все методы данного протокола (по идее, можно подставлять другие конфигураторы (чем осуществляется инверсия зависимостей))
+    Кроме всего, в своей деятельность использует 2 объекта :
+    <ol type="a">
+        <li> Объект стилизатора (возвращает стили различных вьюшек) </li>
+        <li> Фабрику правил интерфейса (благодаря ей - задатся разые местоположения) </li>
+    </ol>
+ 
+    @note Имеет удобный конструктор
+ */
+@interface HURSSChannelViewConfigurator : NSObject <HURSSChannelViewConfiguratorInterface>
+
++ (instancetype)createConfiguratorForRootView:(HUSelectRSSChannelView*)channelRootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler withConstraintsFactory:(id<HURSSChannelViewPositionRulesInterface>)viewRules;
+
 
 @end
+
+
+
+
+
+
 

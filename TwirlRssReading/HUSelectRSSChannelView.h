@@ -160,6 +160,9 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 // Изменен
 - (void)showAlertPostAction:(HURSSChannelActionType)channelActionType ForChannelName:(NSString*)channelName withURL:(NSURL*)channelURl;
 
+- (void)showFeedsFailRecivingAlertForChannelName:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription;
+- (void)setFeedsRepeatAlertHandler:(SEL)actionHandler withTarget:(id)actionTarget;
+
 
 #pragma mark - UPDATE UI To States
 // Обновить UI при разных состояниях
@@ -197,6 +200,9 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 
 - (void)hideKeyboard;
 
+
+- (void)startFeedsWaiting;
+- (void)endFeedsWaiting;
 
 
 @end
