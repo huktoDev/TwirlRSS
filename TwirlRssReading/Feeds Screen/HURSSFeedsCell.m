@@ -17,7 +17,7 @@
     MASConstraint *_feedsSummaryHeightConstraint;
     MASConstraint *_feedsTitleHeightConstraint;
     
-    
+    // Запомненный верхний констрейнт вьюшки контента
     MASConstraint *_feedsTopSummaryConstraint;
 }
 
@@ -203,6 +203,10 @@
     return feedDescriptionLabel;
 }
 
+
+#pragma mark - Config Locations
+
+/// Задать лейблу даты нижнее расположение (под лейблом автора)
 - (void)configBottomLocationFeedsDate{
     
     [self.feedDateLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -213,6 +217,7 @@
     }];
 }
 
+/// Задать лейблу даты верхнее расположение (под сепаратором)
 - (void)configTopLocationFeedsDate{
     
     [self.feedDateLabel mas_remakeConstraints:^(MASConstraintMaker *make) {

@@ -224,6 +224,8 @@
 }
 
 
+#pragma mark - HURSSChannelSelectRecievedFeedsProtocol IMP
+
 - (NSArray<HURSSFeedItem*>*)getRecievedFeeds{
     
     if(! _isFeedsSuccessRecieved){
@@ -240,6 +242,8 @@
     return _recievedHeaderFeedInfo;
 }
 
+
+#pragma mark - HURSSFeedsRecieverDelegate IMP
 
 - (void)didSuccessRecievedFeeds:(NSArray<HURSSFeedItem*>*)recievedFeeds withFeedInfo:(HURSSFeedInfo*)recievedFeedInfo forChannel:(HURSSChannel*)feedsChannel{
     

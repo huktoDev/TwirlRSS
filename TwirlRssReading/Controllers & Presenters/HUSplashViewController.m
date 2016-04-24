@@ -7,6 +7,7 @@
 //
 
 #import "HUSplashViewController.h"
+#import "HURSSCoreDataFeedsStore.h"
 
 @interface HUSplashViewController ()
 
@@ -30,6 +31,23 @@
     
     // Инъекция сервисов
     [self injectDependencies];
+    
+    
+    HURSSCoreDataFeedsStore *feedsStore = [HURSSCoreDataFeedsStore feedsStore];
+    
+    NSArray <HURSSFeedInfo*> *storedFeedInfos = [feedsStore loadFeedInfo];
+    
+    HURSSFeedInfo *newFeedInfo = [HURSSFeedInfo new];
+    
+    newFeedInfo.title = @"FUCK";
+    newFeedInfo.link = @"OVERFUCK";
+    newFeedInfo.summary = @"SUMMARY FUCK";
+    newFeedInfo.url = [NSURL URLWithString:@"http://fuck.ru"];
+    
+    [feedsStore saveFeedInfo:newFeedInfo];
+    
+    NSArray <HURSSFeedInfo*> *storedFeedInfos2 = [feedsStore loadFeedInfo];
+    
     
     // Установить бэкграунд
     UIColor *backColor = [_presentStyle splashScreenColor];

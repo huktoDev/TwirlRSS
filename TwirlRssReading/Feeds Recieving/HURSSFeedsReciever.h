@@ -12,6 +12,23 @@
 #import "HURSSFeedItem.h"
 #import "HURSSChannel.h"
 
+/**
+    @protocol HURSSFeedsRecieverDelegate
+    @author HuktoDev
+    @updated 24.04.2016
+    @abstract Интерфейс делегата сервиса HURSSFeedsReciever
+    @discussion
+    Благодаря этому интерфейсу - объект, который его реализует, и становится делегатом сервиса - может получать через методы интерфейса- информацию от сервиса
+ 
+    @note  Имеет 2 метода :
+    <ol type="a">
+        <li> Новости удалось получить (возвращает их) </li>
+        <li> Новости не удалось получить (возвращает описание ошибки) </li>
+    </ol>
+    
+    @see
+    HURSSFeedsReciever \n
+ */
 @protocol HURSSFeedsRecieverDelegate <NSObject>
 
 - (void)didSuccessRecievedFeeds:(NSArray<HURSSFeedItem*>*)recievedFeeds withFeedInfo:(HURSSFeedInfo*)recievedFeedInfo forChannel:(HURSSChannel*)feedsChannel;

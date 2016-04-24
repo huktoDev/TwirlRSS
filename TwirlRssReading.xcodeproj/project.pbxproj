@@ -35,6 +35,12 @@
 		6B1A460D1CCCB6B9002BC53A /* HURSSFeedInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46081CCCB6B9002BC53A /* HURSSFeedInfo.m */; };
 		6B1A460E1CCCB6B9002BC53A /* HURSSFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A460A1CCCB6B9002BC53A /* HURSSFeedItem.m */; };
 		6B1A460F1CCCB6B9002BC53A /* HURSSFeedsReciever.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A460C1CCCB6B9002BC53A /* HURSSFeedsReciever.m */; };
+		6B1A46121CCD4F7B002BC53A /* HURSSFeedsCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46111CCD4F7B002BC53A /* HURSSFeedsCache.m */; };
+		6B1A46151CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46141CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.m */; };
+		6B1A46181CCD55B2002BC53A /* FeedsDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46161CCD55B2002BC53A /* FeedsDataModel.xcdatamodeld */; };
+		6B1A46331CCD61A2002BC53A /* HURSSManagedFeedInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46321CCD61A2002BC53A /* HURSSManagedFeedInfo.m */; };
+		6B1A46361CCD6A9E002BC53A /* HURSSManagedChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46351CCD6A9E002BC53A /* HURSSManagedChannel.m */; };
+		6B1A46391CCD6B3E002BC53A /* HURSSManagedFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46381CCD6B3E002BC53A /* HURSSManagedFeedItem.m */; };
 		6B7DF00E1CC2C21400AE4096 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF00D1CC2C21400AE4096 /* main.m */; };
 		6B7DF0111CC2C21400AE4096 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0101CC2C21400AE4096 /* AppDelegate.m */; };
 		6B7DF0191CC2C21400AE4096 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B7DF0181CC2C21400AE4096 /* Assets.xcassets */; };
@@ -112,6 +118,17 @@
 		6B1A460A1CCCB6B9002BC53A /* HURSSFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSFeedItem.m; path = "Feeds Recieving/HURSSFeedItem.m"; sourceTree = "<group>"; };
 		6B1A460B1CCCB6B9002BC53A /* HURSSFeedsReciever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSFeedsReciever.h; path = "Feeds Recieving/HURSSFeedsReciever.h"; sourceTree = "<group>"; };
 		6B1A460C1CCCB6B9002BC53A /* HURSSFeedsReciever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSFeedsReciever.m; path = "Feeds Recieving/HURSSFeedsReciever.m"; sourceTree = "<group>"; };
+		6B1A46101CCD4F7B002BC53A /* HURSSFeedsCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSFeedsCache.h; sourceTree = "<group>"; };
+		6B1A46111CCD4F7B002BC53A /* HURSSFeedsCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSFeedsCache.m; sourceTree = "<group>"; };
+		6B1A46131CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSCoreDataFeedsStore.h; sourceTree = "<group>"; };
+		6B1A46141CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSCoreDataFeedsStore.m; sourceTree = "<group>"; };
+		6B1A46171CCD55B2002BC53A /* FeedsDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FeedsDataModel.xcdatamodel; sourceTree = "<group>"; };
+		6B1A46311CCD61A2002BC53A /* HURSSManagedFeedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSManagedFeedInfo.h; sourceTree = "<group>"; };
+		6B1A46321CCD61A2002BC53A /* HURSSManagedFeedInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSManagedFeedInfo.m; sourceTree = "<group>"; };
+		6B1A46341CCD6A9E002BC53A /* HURSSManagedChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSManagedChannel.h; sourceTree = "<group>"; };
+		6B1A46351CCD6A9E002BC53A /* HURSSManagedChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSManagedChannel.m; sourceTree = "<group>"; };
+		6B1A46371CCD6B3E002BC53A /* HURSSManagedFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSManagedFeedItem.h; sourceTree = "<group>"; };
+		6B1A46381CCD6B3E002BC53A /* HURSSManagedFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSManagedFeedItem.m; sourceTree = "<group>"; };
 		6B7DF0091CC2C21400AE4096 /* TwirlRssReading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwirlRssReading.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B7DF00D1CC2C21400AE4096 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6B7DF00F1CC2C21400AE4096 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -278,6 +295,16 @@
 				6B1A460A1CCCB6B9002BC53A /* HURSSFeedItem.m */,
 				6B1A460B1CCCB6B9002BC53A /* HURSSFeedsReciever.h */,
 				6B1A460C1CCCB6B9002BC53A /* HURSSFeedsReciever.m */,
+				6B1A46101CCD4F7B002BC53A /* HURSSFeedsCache.h */,
+				6B1A46111CCD4F7B002BC53A /* HURSSFeedsCache.m */,
+				6B1A46131CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.h */,
+				6B1A46141CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.m */,
+				6B1A46311CCD61A2002BC53A /* HURSSManagedFeedInfo.h */,
+				6B1A46321CCD61A2002BC53A /* HURSSManagedFeedInfo.m */,
+				6B1A46341CCD6A9E002BC53A /* HURSSManagedChannel.h */,
+				6B1A46351CCD6A9E002BC53A /* HURSSManagedChannel.m */,
+				6B1A46371CCD6B3E002BC53A /* HURSSManagedFeedItem.h */,
+				6B1A46381CCD6B3E002BC53A /* HURSSManagedFeedItem.m */,
 			);
 			name = "Feeds Recieving";
 			sourceTree = "<group>";
@@ -321,6 +348,7 @@
 				6B7DF0181CC2C21400AE4096 /* Assets.xcassets */,
 				6B7DF01A1CC2C21400AE4096 /* LaunchScreen.storyboard */,
 				6B7DF01D1CC2C21400AE4096 /* Info.plist */,
+				6B1A46161CCD55B2002BC53A /* FeedsDataModel.xcdatamodeld */,
 				6B7DF00C1CC2C21400AE4096 /* Supporting Files */,
 			);
 			path = TwirlRssReading;
@@ -523,22 +551,28 @@
 				6B1A45F91CCCB5EF002BC53A /* HURSSChannelViewAnimator.m in Sources */,
 				6B1A45F81CCCB5EF002BC53A /* HURSSChannelTextFieldManager.m in Sources */,
 				6B1A45E61CCCB5C8002BC53A /* HURSSChannelViewAssembly.m in Sources */,
+				6B1A46151CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.m in Sources */,
 				6B1A45FB1CCCB5EF002BC53A /* HURSSChannelViewConstraintsFactory.m in Sources */,
 				6B1A45FC1CCCB5EF002BC53A /* HURSSChannelViewStyler.m in Sources */,
 				6B1A45C21CCCB370002BC53A /* HURSSTwirlRouter.m in Sources */,
 				6B7DF0421CC2CB8D00AE4096 /* HURSSTwirlStyle.m in Sources */,
 				6B1A45DF1CCCB4E3002BC53A /* HUSplashTransitionAnimator.m in Sources */,
 				6B1A45FA1CCCB5EF002BC53A /* HURSSChannelViewConfigurator.m in Sources */,
+				6B1A46361CCD6A9E002BC53A /* HURSSManagedChannel.m in Sources */,
+				6B1A46121CCD4F7B002BC53A /* HURSSFeedsCache.m in Sources */,
 				6B1A45DB1CCCB4A8002BC53A /* HURSSChannelStore.m in Sources */,
 				6B1A45CF1CCCB437002BC53A /* HURSSItemPresenter.m in Sources */,
+				6B1A46181CCD55B2002BC53A /* FeedsDataModel.xcdatamodeld in Sources */,
 				6B1A45DA1CCCB4A8002BC53A /* HURSSChannel.m in Sources */,
 				6B1A45D01CCCB437002BC53A /* HURSSNavigationController.m in Sources */,
 				6B1A460D1CCCB6B9002BC53A /* HURSSFeedInfo.m in Sources */,
 				6B7DF0111CC2C21400AE4096 /* AppDelegate.m in Sources */,
+				6B1A46391CCD6B3E002BC53A /* HURSSManagedFeedItem.m in Sources */,
 				6B1A46051CCCB683002BC53A /* HURSSItemDetailView.m in Sources */,
 				6B1A45DC1CCCB4A8002BC53A /* HURSSReservedChannelSet.m in Sources */,
 				6B7DF00E1CC2C21400AE4096 /* main.m in Sources */,
 				6B1A45D11CCCB437002BC53A /* HUSelectRSSChannelPresenter.m in Sources */,
+				6B1A46331CCD61A2002BC53A /* HURSSManagedFeedInfo.m in Sources */,
 				6B1A46011CCCB64C002BC53A /* HURSSFeedsCell.m in Sources */,
 				6B1A46021CCCB64C002BC53A /* HURSSFeedsTableView.m in Sources */,
 				6B1A45D21CCCB437002BC53A /* HUSplashViewController.m in Sources */,
@@ -741,6 +775,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		6B1A46161CCD55B2002BC53A /* FeedsDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				6B1A46171CCD55B2002BC53A /* FeedsDataModel.xcdatamodel */,
+			);
+			currentVersion = 6B1A46171CCD55B2002BC53A /* FeedsDataModel.xcdatamodel */;
+			path = FeedsDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 6B7DF0011CC2C21400AE4096 /* Project object */;
 }
