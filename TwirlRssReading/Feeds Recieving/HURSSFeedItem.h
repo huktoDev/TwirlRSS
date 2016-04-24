@@ -15,6 +15,9 @@ typedef void(^HURSSFeedItemBlock)(NSAttributedString *recievedString, CGFloat he
 @interface HURSSFeedItem : MWFeedItem
 
 @property (strong, nonatomic) NSAttributedString *attributedSummary;
+@property (strong, nonatomic) NSString *formattedCreationDate;
+
+@property (assign, nonatomic) CGFloat titleContentHeight;
 @property (assign, nonatomic) CGFloat summaryContentHeight;
 
 - (void)parseSummaryHTMLWithContentWidth:(const CGFloat)summaryContentWidth WithCompletion:(HURSSFeedItemBlock)completionBlock;

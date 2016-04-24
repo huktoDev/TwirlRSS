@@ -201,6 +201,9 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 - (void)hideKeyboard;
 
 
+#pragma mark - FEEDS Waiting
+// Работа с клавиатурой
+
 - (void)startFeedsWaiting;
 - (void)endFeedsWaitingWithCompletion:(dispatch_block_t)waitingCompletion;
 

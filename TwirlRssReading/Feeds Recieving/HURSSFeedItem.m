@@ -58,26 +58,37 @@
             CGFloat feedSummaryScale = (summaryContentWidth / boundsAttachmentImage.size.width);
             
             NSData *imageFileContent = [currentAttachment.fileWrapper regularFileContents];
-            UIImage *resizedAttachmentImage = [[UIImage alloc] initWithData:imageFileContent scale:feedSummaryScale];
+            UIImage *attachmentImage = [[UIImage alloc] initWithData:imageFileContent];
             
-            currentAttachment.image = resizedAttachmentImage;
+            CGSize newImageSize = CGSizeApplyAffineTransform(attachmentImage.size, CGAffineTransformMakeScale(feedSummaryScale, feedSummaryScale));
             
+            UIGraphicsBeginImageContextWithOptions(newImageSize, YES, 0.f);
+            [attachmentImage drawInRect:CGRectMake(0.f, 0.f, newImageSize.width, newImageSize.height)];
             
-            /*
-            CGSize newImageSize = CGSizeMake(boundsAttachmentImage.size.width * feedSummaryScale, boundsAttachmentImage.size.height * feedSummaryScale);
-            CGRect newImageBouds = CGRectMake(0.f, 0.f, newImageSize.width, newImageSize.height);
+            UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
             
-            currentAttachment.bounds = newImageBouds;
-             */
+            currentAttachment.image = scaledImage;
+            currentAttachment.bounds = CGRectMake(0.f, 0.f, scaledImage.size.width, scaledImage.size.height);
         }
     }];
     
-    
-    CGRect feedSummaryStringRect = [feedAttribString boundingRectWithSize:CGSizeMake(summaryContentWidth, 10000.f) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) context:nil];
+    NSStringDrawingOptions drawingOptions = (NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading);
+    CGRect feedSummaryStringRect = [feedAttribString boundingRectWithSize:CGSizeMake(summaryContentWidth, 10000.f) options:drawingOptions context:nil];
     CGFloat feedSummaryStringHeight = feedSummaryStringRect.size.height;
+    
+    CGRect feedTitleStringRect = [self.title boundingRectWithSize:CGSizeMake(summaryContentWidth, 10000.f) options:drawingOptions attributes:@{NSFontAttributeName : [[HURSSTwirlStyle sharedStyle] channelTextFieldFont]} context:nil];
+    CGFloat feedTitleStringHeight = feedTitleStringRect.size.height;
+    
+    NSDateFormatter *feedDateFormatter = [NSDateFormatter new];
+    [feedDateFormatter setDateFormat:@"dd MMMM yyyy, hh:mm a"];
+    NSString *formattedFeedDate = [feedDateFormatter stringFromDate:self.date];
+    
     
     self.attributedSummary = feedAttribString;
     self.summaryContentHeight = feedSummaryStringHeight;
+    self.titleContentHeight = feedTitleStringHeight;
+    self.formattedCreationDate = formattedFeedDate;
     
     if(completionBlock){
         completionBlock(feedAttribString, feedSummaryStringHeight);

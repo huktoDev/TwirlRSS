@@ -93,7 +93,7 @@
     
     
     // Выполнить переход
-    [sourceVC presentViewController:feedsViewController animated:YES completion:nil];
+    [sourceVC.navigationController pushViewController:feedsViewController animated:YES];
 }
 
 - (void)performFeedDetailsSegueFromScreen:(UIViewController*)sourceVC{

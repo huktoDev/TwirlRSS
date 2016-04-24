@@ -49,9 +49,6 @@
     // Инжектировать зависимости
     [self injectDependencies];
     
-    // Скрыть бар навигации
-    [self.navigationController.navigationBar setHidden:YES];
-    
     // Установить обработчики кнопок
     [self.selectChannelView setShowChannelHandler:@selector(obtainChannelsButtonPressed:) withTarget:self];
     [self.selectChannelView setGetFeedsHandler:@selector(recieveFeedsButtonPressed:) withTarget:self];
@@ -61,8 +58,15 @@
     // Обновить базовое состояние интерфейса (ничего не введено)
     [self.selectChannelView updateUIWhenEnteredChannelURLValidate:NO];
     
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(channelTextChangedNotification:) name:UITextFieldTextDidChangeNotification object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    static BOOL isFirstAppear = YES;
+    [self.navigationController setNavigationBarHidden:YES animated:(! isFirstAppear)];
+    isFirstAppear = NO;
 }
 
 - (void)viewDidDisappear:(BOOL)animated{

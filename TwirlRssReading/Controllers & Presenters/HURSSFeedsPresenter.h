@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+#import "HURSSFeedsTableView.h"
+#import "HURSSFeedsCell.h"
+
 @protocol HURSSFeedsTransferProtocol <NSObject>
 
 @property (strong, nonatomic) NSArray <HURSSFeedItem*> *feeds;
@@ -16,6 +19,6 @@
 @end
 
 
-@interface HURSSFeedsPresenter : UIViewController <HURSSFeedsTransferProtocol>
+@interface HURSSFeedsPresenter : UIViewController <HURSSFeedsTransferProtocol, HURSSFeedsSelectionDelegate>
 
 @end

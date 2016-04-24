@@ -7,8 +7,7 @@
 //
 
 #import "HURSSFeedsPresenter.h"
-#import "HURSSFeedsTableView.h"
-#import "HURSSFeedsCell.h"
+
 
 @interface HURSSFeedsPresenter () <UITableViewDataSource, UITableViewDelegate>
 
@@ -28,23 +27,37 @@
     self.feedsTableView = newFeedsTableView;
     self.view = newFeedsTableView;
     
-    self.feedsTableView.backgroundColor = [[HURSSTwirlStyle sharedStyle] selectChannelScreenColor];
+    [self.feedsTableView configBackgroundView];
 }
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSLog(@"RECIEVED %d FEEDS", self.feeds.count);
+    [self.feedsTableView setViewedFeeds:_feeds];
+    [self.feedsTableView setViewedInfo:_feedInfo];
     
-    [self.feedsTableView registerClass:[HURSSFeedsCell class] forCellReuseIdentifier:@"feedsCell"];
-    
-    
-    self.feedsTableView.delegate = self;
-    self.feedsTableView.dataSource = self;
+    self.feedsTableView.selectionDelegate = self;
     
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+
+
+- (void)didSelectFeedCell:(HURSSFeedsCell*)feedCell withLinkedFeedItem:(HURSSFeedItem*)feedItem{
+    
+    NSURL *feedURL = [NSURL URLWithString:feedItem.link];
+    
+    if([[UIApplication sharedApplication] canOpenURL:feedURL]){
+        [[UIApplication sharedApplication] openURL:feedURL];
+    }
+}
+
+/*
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     return self.feeds.count;
@@ -61,7 +74,7 @@
     HURSSFeedItem *currentFeedItem = self.feeds[indexPath.row];
     HURSSFeedsCell *feedCell = (HURSSFeedsCell*)tableCell;
     
-    [feedCell configWithFeedItem:currentFeedItem];
+    [feedCell prepareWithFeedItem:currentFeedItem];
     
     return feedCell;
 }
@@ -69,9 +82,26 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
 
     HURSSFeedItem *currentFeedItem = _feeds[indexPath.row];
-    return currentFeedItem.summaryContentHeight + 100.f;
+    return currentFeedItem.summaryContentHeight + currentFeedItem.titleContentHeight + 100.f;
 }
 
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    // Получить текущую новость
+    // извлечь URL
+    // открыть в браузере
+    
+    HURSSFeedItem *currentFeed = _feeds[indexPath.row];
+    NSURL *feedURL = [NSURL URLWithString:currentFeed.link];
+    
+    if([[UIApplication sharedApplication] canOpenURL:feedURL]){
+        [[UIApplication sharedApplication] openURL:feedURL];
+    }
+    
+    
+}
+ */
 
 @end
 

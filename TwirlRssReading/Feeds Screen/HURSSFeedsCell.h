@@ -14,8 +14,13 @@
 @property (strong, nonatomic) UILabel *feedTitleLabel;
 @property (strong, nonatomic) UILabel *feedDescriptionLabel;
 
+@property (strong, nonatomic) UIView *backView;
+@property (strong, nonatomic) UIView *separatorView;
+
+@property (strong, nonatomic) UILabel *feedAuthorLabel;
+@property (strong, nonatomic) UILabel *feedDateLabel;
 
 
-- (void)configWithFeedItem:(HURSSFeedItem*)feedItem;
+- (void)prepareWithFeedItem:(HURSSFeedItem*)feedItem;
 
 @end

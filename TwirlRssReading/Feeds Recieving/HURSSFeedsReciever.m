@@ -99,7 +99,7 @@
             for (HURSSFeedItem *currentItem in convertedFeeds) {
                 
                 dispatch_group_enter(parsingDispatchGroup);
-                [currentItem parseSummaryHTMLWithContentWidth:280.f WithCompletion:^(NSAttributedString *recievedString, CGFloat heightContent) {
+                [currentItem parseSummaryHTMLWithContentWidth:240.f WithCompletion:^(NSAttributedString *recievedString, CGFloat heightContent) {
                     
                     dispatch_group_leave(parsingDispatchGroup);
                 }];

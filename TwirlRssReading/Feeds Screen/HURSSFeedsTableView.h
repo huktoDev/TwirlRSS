@@ -7,7 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HURSSFeedsCell.h"
 
-@interface HURSSFeedsTableView : UITableView
+@protocol HURSSFeedsSelectionDelegate <NSObject>
+
+- (void)didSelectFeedCell:(HURSSFeedsCell*)feedCell withLinkedFeedItem:(HURSSFeedItem*)feedItem;
+
+@end
+
+
+@interface HURSSFeedsTableView : UITableView <UITableViewDataSource, UITableViewDelegate>
+
+@property (strong, nonatomic) HURSSFeedInfo *viewedInfo;
+@property (strong, nonatomic) NSArray <HURSSFeedItem*> *viewedFeeds;
+
+@property (weak, nonatomic) id <HURSSFeedsSelectionDelegate> selectionDelegate;
+
+- (void)configBackgroundView;
 
 @end
