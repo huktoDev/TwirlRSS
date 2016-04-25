@@ -14,7 +14,17 @@
 
 
 
-
+/**
+    @enum HURSSChannelActionType
+    @abstract Тип действия с каналом
+    
+    @constant HURSSChannelActionAdd
+         Добавление канала
+    @constant HURSSChannelActionModify
+        Изменение канала
+    @constant HURSSChannelActionDelete
+        Удаление канала
+ */
 typedef NS_ENUM(NSUInteger, HURSSChannelActionType) {
     HURSSChannelActionAdd = 1,
     HURSSChannelActionModify,
@@ -22,7 +32,17 @@ typedef NS_ENUM(NSUInteger, HURSSChannelActionType) {
 };
 
 
-
+/**
+    @enum HURSSChannelState
+    @abstract Состояние канала (для UI)
+    
+    @constant HURSSChannelStateImpossible
+        Введено недостаточно информации для добавления канала
+    @constant HURSSChannelStatePossibleAdd
+        Введено достаточно информации для добавления канала
+    @constant HURSSChannelStatePossibleModifyDel
+        Найден данный канал, и возможна его модификация/удаление
+ */
 typedef NS_ENUM(NSUInteger, HURSSChannelState) {
     HURSSChannelStateImpossible = 0,
     HURSSChannelStatePossibleAdd,
@@ -58,6 +78,21 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 
 @required
 - (void)didSelectedChannelWithIndex:(NSUInteger)indexChannel;
+
+@end
+
+
+
+/**
+    @protocol HURSSChannelTextChangedDelegate
+    @author HuktoDev
+    @updated 25.04.2016
+    @abstract Делегат для передачи информацию презентеру об изменениях в текстовых полях
+ */
+@protocol HURSSChannelTextChangedDelegate <NSObject>
+
+@required
+- (void)didTextChanged:(NSString*)newText forTextField:(HURSSChannelTextField*)channelTextField withFieldType:(HURSSChannelTextFieldType)channelFieldType;
 
 @end
 
@@ -125,7 +160,7 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 
 
 #pragma mark - Accessors & Mutators
-// Установить URL канала на интерфейс
+// Геттеры и сеттеры информации с интерфейса
 
 - (void)showChannelURLLink:(NSURL*)channelURL;
 - (void)showChannelAlias:(NSString*)channelAlias;
@@ -150,18 +185,23 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 
 
 #pragma mark - SELECT Obtatining FEEDS Dialog
-// Диалог получения новостей
+// Диалог получения новостей (хотите ли вы сразу и новости получить ? ;) )
 
 - (void)showObtainingFeedsAlertForChannelName:(NSString*)channelName;
 - (void)setObtainingFeedsAlertHandler:(SEL)actionHandler withTarget:(id)actionTarget;
 
-// Добавлен
-// Удален
-// Изменен
+
+#pragma mark - CHANNEL Action Dialog
+// Диалог действий с каналом (Добавить/Изменить/Удалить)
+
 - (void)showAlertPostAction:(HURSSChannelActionType)channelActionType ForChannelName:(NSString*)channelName withURL:(NSURL*)channelURl;
 
-- (void)showFeedsFailRecivingAlertForChannelName:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription;
+#pragma mark - FAIL Feeds Dialog 
+// Диалог в случае сетевой ошибки (показать cancel / try / offline show)
+
+- (void)showFeedsFailRecivingAlertForChannelName:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription withOfflineFeedsRequest:(BOOL)needOfflineRequest;
 - (void)setFeedsRepeatAlertHandler:(SEL)actionHandler withTarget:(id)actionTarget;
+- (void)setFeedsGetCachedAlertHandler:(SEL)actionHandler withTarget:(id)actionTarget;
 
 
 #pragma mark - UPDATE UI To States
@@ -171,24 +211,24 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 - (void)updateUIWhenChannelChangeState:(HURSSChannelState)channelState;
 
 
+#pragma mark - CREATE Additional UI Elems
 
 - (void)createChannelAliasTextField;
 - (void)createChannelAddButton;
+- (void)createChannelDeleteButton;
+
+#pragma mark - DESTROY Additional UI Elems
 
 - (void)destroyChannelAliasTextField;
 - (void)destroyChannelAddButton;
-
-
-- (void)createChannelDeleteButton;
 - (void)destroyChannelDeleteButton;
-
 
 
 #pragma mark - UPDATE Content Size
 // Обновить размер контента
 
 - (void)updateContentSizeWithLayout:(BOOL)needLayout;
-
+- (CGFloat)evaluateContentSize;
 
 
 #pragma mark - Keyboard SHOW/HIDE
@@ -199,6 +239,16 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 - (void)hideKeyboardActionsWithDuration:(NSTimeInterval)animationDuration withKeyboardSize:(CGSize)keyboardSize withChannelFieldType:(HURSSChannelTextFieldType)channelFieldType withCompletionBlock:(dispatch_block_t)keyboardActionCompletion;
 
 - (void)hideKeyboard;
+
+
+
+#pragma mark - Keyboard Change Events
+// События изменения текста
+
+@property (weak, nonatomic) id<HURSSChannelTextChangedDelegate> textEditingDelegate;
+- (void)startCatchChangeTextEvents;
+- (void)stopCatchChangeTextEvents;
+
 
 
 #pragma mark - FEEDS Waiting

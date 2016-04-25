@@ -14,9 +14,11 @@
 
 /**
     @protocol HURSSTextFieldManagerInterface
+    @author HuktoDev
+    @updated 25.04.2016
     @abstract Интерфейс для менеджера текстовых полей
     @discussion
-    Должен реализовывать собственное наблюдение за текстовыми полями, и уметь сркывать клавиатуру.
+    Должен реализовывать собственное наблюдение за текстовыми полями, и уметь скрывать клавиатуру. И уметь ловить события изменения текста
  */
 @protocol HURSSTextFieldManagerInterface <NSObject>
 
@@ -24,6 +26,9 @@
 
 - (void)refreshObserving;
 - (void)hideKeyboard;
+
+- (void)startCatchChangeTextEvents;
+- (void)stopCatchChangeTextEvents;
 
 @optional
 
@@ -60,6 +65,13 @@
 - (void)startObserving;
 - (void)endObserving;
 - (void)refreshObserving;
+
+
+#pragma mark - Text CHANGED Actions
+// События изменения текста
+
+- (void)startCatchChangeTextEvents;
+- (void)stopCatchChangeTextEvents;
 
 
 #pragma mark - HIDE Keyboard

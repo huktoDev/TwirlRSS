@@ -31,7 +31,7 @@
     
     // Инъекция сервисов
     [self injectDependencies];
-    
+    /*
     
     HURSSCoreDataFeedsStore *feedsStore = [HURSSCoreDataFeedsStore feedsStore];
     
@@ -47,6 +47,31 @@
     [feedsStore saveFeedInfo:newFeedInfo];
     
     NSArray <HURSSFeedInfo*> *storedFeedInfos2 = [feedsStore loadFeedInfo];
+    
+    HURSSChannel *testChannel = [HURSSChannel new];
+    
+    testChannel.channelAlias = @"FuckAlias1";
+    testChannel.channelURL = [NSURL URLWithString:@"http://fuck2.ru"];
+    testChannel.channelType = HURSSChannelUserCreated;
+
+    HURSSFeedItem *testItem = [HURSSFeedItem new];
+    testItem.title = @"HEH";
+    
+    HURSSFeedItem *testItem2 = [HURSSFeedItem new];
+    testItem2.title = @"HEH2";
+    
+    NSAttributedString *testString = [[NSAttributedString alloc] initWithString:@"TestATTRIB" attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:16.f]}];
+    testItem2.attributedSummary = testString;
+    testItem2.summaryContentHeight = 500.f;
+    
+    [feedsStore saveRSSChannelInfo:testChannel withFeedInfo:newFeedInfo withFeeds:@[testItem, testItem2]];
+    
+    [feedsStore loadRSSChannelsWithCallback:^(HURSSChannel *loadedChannel, HURSSFeedInfo *loadedFeedInfo, NSArray<HURSSFeedItem *> *loadedFeedItems) {
+        
+        NSLog(@"123123");
+    }];
+*/
+    
     
     
     // Установить бэкграунд

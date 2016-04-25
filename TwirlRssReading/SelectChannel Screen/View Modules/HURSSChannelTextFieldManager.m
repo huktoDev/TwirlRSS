@@ -355,6 +355,39 @@ const NSTimeInterval HURSS_CHANNEL_TEXT_FIELD_WAITING = 8.f;
 }
 
 
+#pragma mark - Text CHANGED Actions
+
+/// Начать ловить события изменения текста в связанных текстовых полях
+- (void)startCatchChangeTextEvents{
+    
+    [_notifCenter addObserver:self selector:@selector(channelTextChangedNotification:) name:UITextFieldTextDidChangeNotification object:nil];
+}
+
+/// Перестать ловить события изменения текста в связанных текстовых полях
+- (void)stopCatchChangeTextEvents{
+    [_notifCenter removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+}
+
+/**
+    @abstract Обработчик уведомления изменения текста
+    @discussion
+    Каждый раз, когда текст в текстовых полях изменяется - передать специальном делегату корневой вьюшки информацию об этом изменении - что изменилось и где изменилось
+ 
+    @param channelTextNotification      Объект уведомления (содержит UI-элемент инициатор уведомления)
+ */
+- (void)channelTextChangedNotification:(NSNotification*)channelTextNotification{
+    
+    // Извлечь текстового поля и его тип
+    HURSSChannelTextField *channelTextField = (HURSSChannelTextField*)channelTextNotification.object;
+    HURSSChannelTextFieldType channelFieldType = [_managedChannelRootView getChannelTextFieldType:channelTextField];
+    NSString *channelTextURLString = channelTextField.text;
+    
+    // Передать делегату информацию о событии изенения текста
+    if(_managedChannelRootView.textEditingDelegate && [_managedChannelRootView.textEditingDelegate conformsToProtocol:@protocol(HURSSChannelTextChangedDelegate)] && [_managedChannelRootView.textEditingDelegate respondsToSelector:@selector(didTextChanged:forTextField:withFieldType:)]){
+        
+        [_managedChannelRootView.textEditingDelegate didTextChanged:channelTextURLString forTextField:channelTextField withFieldType:channelFieldType];
+    }
+}
 
 
 @end

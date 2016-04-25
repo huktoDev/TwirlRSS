@@ -63,7 +63,7 @@
 #pragma mark - Create URBNAlertViewController
 - (URBNAlertViewController*)createObtainingFeedsAlertWithChannelName:(NSString*)channelName;
 - (URBNAlertViewController*)createChannelAlertWithPostAction:(HURSSChannelActionType)channelActionType WithChannelName:(NSString*)channelName andWithURL:(NSURL*)channelURL;
-- (URBNAlertViewController*)createFeedsRecvievingAlertWithChannelname:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription;
+- (URBNAlertViewController*)createFeedsRecvievingAlertWithChannelname:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription withOfflineFeedsRequest:(BOOL)needOfflineRequest;
 
 
 #pragma mark - CONFIG LOCATIONs -

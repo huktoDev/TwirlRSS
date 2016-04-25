@@ -7,6 +7,7 @@
 //
 
 #import "HURSSChannelButton.h"
+
 #import "HURSSChannelViewStyler.h"
 #import "HURSSChannelViewAssembly.h"
 
@@ -14,8 +15,10 @@
 
 @implementation HURSSChannelButton{
     
+    // Кастомный активити
     BLMultiColorLoader *_loaderIndicator;
     
+    // Стилизатор кнопки
     id<HURSSChannelViewStylizationInterface> _presentStyler;
 }
 
@@ -72,6 +75,10 @@
 }
 
 
+
+#pragma mark - EXTERNAL Touch Handling
+
+/// Назначение обработчик действия на кнопку (на тач ап)
 - (void)setTouchHandler:(SEL)actionHandler toTarget:(id)actionTarget{
     
     [self addTarget:actionTarget action:actionHandler forControlEvents:UIControlEventTouchUpInside];
@@ -152,27 +159,44 @@
     } completion:nil];
 }
 
+
+#pragma mark - Waiting Indicator
+
+/// Добавить индикацию ожидания на кнопку
 - (void)startWaitingIndicator{
     
-    _loaderIndicator = [[BLMultiColorLoader alloc] initWithFrame:CGRectMake(0.f, 0.f, 32.f, 32.f)];
-    _loaderIndicator.center = CGPointMake(CGRectGetWidth(self.frame) / 2.f, CGRectGetHeight(self.frame) / 2.f);
-    [self addSubview:_loaderIndicator];
+    // Вычисление фреймов и местоположения
+    const CGFloat indicatorHeight = 32.f;
+    CGRect loaderIndicatorBounds = CGRectMake(0.f, 0.f, indicatorHeight, indicatorHeight);
+    CGPoint loaderIndicatorCenter = CGPointMake(CGRectGetWidth(self.frame) / 2.f, CGRectGetHeight(self.frame) / 2.f);
     
+    // Инициализация индикатора
+    _loaderIndicator = [BLMultiColorLoader new];
+    
+    // Параметризация индикатора
     _loaderIndicator.backgroundColor = [UIColor clearColor];
-    
     _loaderIndicator.lineWidth = 4.0;
     
+    // Определение и установка цветов индикатора
     UIColor *firstColor = [[UIColor redColor] colorWithAlphaComponent:0.6f];
     UIColor *secondColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.6f];
     UIColor *thirdColor = [[UIColor yellowColor] colorWithAlphaComponent:0.6f];
     
     _loaderIndicator.colorArray = @[firstColor, secondColor, thirdColor];
+    
+    // Задание фрейма
+    [_loaderIndicator setBounds:loaderIndicatorBounds];
+    [_loaderIndicator setCenter:loaderIndicatorCenter];
+    
+    // Добавить на кнопку, и стартовать анимаци
+    [self addSubview:_loaderIndicator];
     [_loaderIndicator startAnimation];
-
 }
 
+/// Снять индикацию ожидания с кнопки
 - (void)endWaitingIndicator{
     
+    // Останавливает анимацию, и убирает вьюшку
     [_loaderIndicator stopAnimation];
     [_loaderIndicator removeFromSuperview];
     _loaderIndicator = nil;

@@ -7,31 +7,39 @@
 //
 
 #import "HURSSChannelTextField.h"
-#import "HURSSChannelViewStyler.h"
-#import "HURSSChannelViewAssembly.h"
 
 @implementation HURSSChannelTextField{
     
+    // ImageView иконки текстового поля (которая слева)
     UIImageView *_iconImageView;
     
+    // Стилизатор кнопки
     id<HURSSChannelViewStylizationInterface> _presentStyler;
 }
 
-- (instancetype)init{
+#pragma mark - Construction
+
+/// Назначенный инициализатор (передает стилизатор, и конфигурирует Ui)
+- (instancetype)initWithStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler{
     if(self = [super init]){
         
-        [self injectDependencies];
+        _presentStyler = viewStyler;
         [self configUI];
     }
     return self;
 }
 
-- (void)injectDependencies{
+/// Статический конструктор со стилизатором
++ (instancetype)channelTextFieldWithStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler{
     
-    HURSSChannelViewAssembly *channelViewAssembly = [HURSSChannelViewAssembly defaultAssemblyForChannelView];
-    _presentStyler = [channelViewAssembly getViewStyler];
+    HURSSChannelTextField *newTextField = [[HURSSChannelTextField alloc] initWithStyler:viewStyler];
+    return newTextField;
 }
 
+
+#pragma mark - Configuration
+
+/// Конфигурация внешнего вида
 - (void)configUI{
     
     // Установить фон
@@ -62,31 +70,42 @@
     [self setTintColor:cursorChannelFieldColor];
     
     
-    // Создать ImageView для иконки (пока не заполняя ее конкретной картинкой)
+    // Рассчитать размеры иконки
     const CGFloat SIDE_SIZE_TEXTFIELD_ICON = 25.f;
     const CGRect baseTextFieldIconBounds = CGRectMake(0.f, 0.f, SIDE_SIZE_TEXTFIELD_ICON, SIDE_SIZE_TEXTFIELD_ICON);
     const CGRect wrapperImageBounds = CGRectMake(0.f, 0.f, 2.f * SIDE_SIZE_TEXTFIELD_ICON, SIDE_SIZE_TEXTFIELD_ICON);
     
+    // Создать ImageView для иконки (пока не заполняя ее конкретной картинкой)
     UIImageView *textFieldImageView = [[UIImageView alloc] initWithFrame:baseTextFieldIconBounds];
     textFieldImageView.contentMode = UIViewContentModeScaleToFill;
     textFieldImageView.alpha = 0.6f;
     
+    // Завернуть иконку в специальный враппер, чтобы в нем реализовывать Content Offset
     UIView *offsetWrapperView = [[UIView alloc] initWithFrame:wrapperImageBounds];
     [textFieldImageView setCenter:CGPointMake(SIDE_SIZE_TEXTFIELD_ICON, SIDE_SIZE_TEXTFIELD_ICON / 2.f)];
     [offsetWrapperView addSubview:textFieldImageView];
     
+    // Установить иконку
     self.leftView = offsetWrapperView;
     self.leftViewMode = UITextFieldViewModeAlways;
     _iconImageView = textFieldImageView;
 }
 
+
+#pragma mark - Setters
+
+/// Устанавливает иконку в текст филд
 - (void)setImage:(UIImage *)innerImage{
     [_iconImageView setImage:innerImage];
 }
 
+/// Устанавливает текст в текст филд (при установке текста - автоматически генерить нотификейшен (в этом случае  did change автоматически не срабатывает))
 - (void)setText:(NSString *)text{
     [super setText:text];
     [[NSNotificationCenter defaultCenter]  postNotificationName:UITextFieldTextDidChangeNotification object:self];
 }
 
+
+
 @end
+

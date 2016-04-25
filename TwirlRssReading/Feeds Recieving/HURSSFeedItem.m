@@ -10,7 +10,7 @@
 
 @implementation HURSSFeedItem
 
-
+/// Конвертация модели MWFeedItem -> HURSSFeedItem
 + (instancetype)feedItemConvertedFrom:(MWFeedItem*)feedItem{
     
     HURSSFeedItem *convertedFeedItem = [HURSSFeedItem new];

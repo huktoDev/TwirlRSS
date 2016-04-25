@@ -22,6 +22,9 @@
     BOOL _startDestroyingAddButton;
     BOOL _startDestroyingDeleteButton;
     
+    // Текущее состояние
+    HURSSChannelState _channelState;
+    
     // Переменные для Action-Target паттерна
     __weak id _addChannelActionTarget;
     SEL _addChannelActionHandler;
@@ -340,9 +343,9 @@
     @param channelName       Название канала
     @param feedsErrorDescription      Описание ошибки получения новостей
  */
-- (void)showFeedsFailRecivingAlertForChannelName:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription{
+- (void)showFeedsFailRecivingAlertForChannelName:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription withOfflineFeedsRequest:(BOOL)needOfflineRequest{
     
-    URBNAlertViewController *feedsAlertVC = [_presentConfigurator createFeedsRecvievingAlertWithChannelname:channelName withErrorDescription:feedsErrorDescription];
+    URBNAlertViewController *feedsAlertVC = [_presentConfigurator createFeedsRecvievingAlertWithChannelname:channelName withErrorDescription:feedsErrorDescription withOfflineFeedsRequest:needOfflineRequest];
     
     // Запомнить объект алерта
     _feedsAlertVC = feedsAlertVC;
@@ -366,6 +369,19 @@
     
     NSArray <URBNAlertAction*>*actions = _feedsAlertVC.alertConfig.actions;
     URBNAlertAction *obtainingAction = actions[1];
+    
+    __weak __block typeof(self) weakTarget = actionTarget;
+    [obtainingAction setCompletionBlock:^(URBNAlertAction *action) {
+        __strong __block typeof(weakTarget) strongTarget = weakTarget;
+        
+        [strongTarget performSelector:actionHandler withObject:nil afterDelay:0.f];
+    }];
+}
+
+- (void)setFeedsGetCachedAlertHandler:(SEL)actionHandler withTarget:(id)actionTarget{
+    
+    NSArray <URBNAlertAction*>*actions = _feedsAlertVC.alertConfig.actions;
+    URBNAlertAction *obtainingAction = actions[2];
     
     __weak __block typeof(self) weakTarget = actionTarget;
     [obtainingAction setCompletionBlock:^(URBNAlertAction *action) {
@@ -417,6 +433,7 @@
  */
 - (void)updateUIWhenChannelChangeState:(HURSSChannelState)channelState{
     
+    _channelState = channelState;
     if(channelState == HURSSChannelStatePossibleModifyDel){
         
         [_presentAnimator performAnimatedCreationChannelAddButton];
@@ -426,14 +443,13 @@
         
     }else if(channelState == HURSSChannelStatePossibleAdd){
         
-        [_presentAnimator performAnimatedCreationChannelAddButton];
         [_presentAnimator performAnimatedDestroyChannelRemoveButton];
+        [_presentAnimator performAnimatedCreationChannelAddButton];
         
         [_presentConfigurator configChangeChannelButtonToAddMode];
         
     }else if(channelState == HURSSChannelStateImpossible){
         
-        [_presentAnimator performAnimatedDestroyChannelRemoveButton];
         [_presentAnimator performAnimatedDestroyChannelAddButton];
     }
 }
@@ -467,6 +483,13 @@
     HURSSChannelButton *addChannelButton = [_presentConfigurator createChannelAddButton];
     self.addChannelButton = addChannelButton;
     
+    // Обновить кнопку, в соответствии с текущим состоянием (Добавить/Модифицировать)
+    if(_channelState == HURSSChannelStatePossibleAdd){
+        [_presentConfigurator configChangeChannelButtonToAddMode];
+    }else if(_channelState == HURSSChannelStatePossibleModifyDel){
+        [_presentConfigurator configChangeChannelButtonToModifyMode];
+    }
+    
     // Конфигурировать лейбл "или выберите из предложенных" - привязать его к новой кнопке, и пересобрать макет
     [_presentConfigurator configThirdLocationSuggestedLabel];
     [self layoutIfNeeded];
@@ -475,6 +498,13 @@
     [_presentAnimator performAnimateFallChannelAddButtonWithCompletion:^{
         // Когда кнопка успешно добавлена - повесить на нее обработчик
         [self.addChannelButton setTouchHandler:_addChannelActionHandler toTarget:_addChannelActionTarget];
+        
+        // Обновить кнопку, в соответствии с текущим состоянием (Добавить/Модифицировать)
+        if(_channelState == HURSSChannelStatePossibleAdd){
+            [_presentConfigurator configChangeChannelButtonToAddMode];
+        }else if(_channelState == HURSSChannelStatePossibleModifyDel){
+            [_presentConfigurator configChangeChannelButtonToModifyMode];
+        }
     }];
 }
 
@@ -604,7 +634,9 @@
     return (evalContentSize > viewHeight) ? evalContentSize : viewHeight;
 }
 
-#pragma mark - Keyboard SHOW/HIDE -
+#pragma mark - UIKeyboard -
+
+#pragma mark Keyboard SHOW/HIDE
 
 /// Действия с UI при появлении клавиатуры (передает  управление аниматору)
 - (void)showKeyboardActionsWithDuration:(NSTimeInterval)animationDuration withKeyboardSize:(CGSize)keyboardSize withChannelFieldType:(HURSSChannelTextFieldType)channelFieldType withCompletionBlock:(dispatch_block_t)keyboardActionCompletion{
@@ -620,10 +652,21 @@
 
 /// Скрывает клавиатуру
 - (void)hideKeyboard{
-    
     [_textFieldManager hideKeyboard];
 }
 
+
+#pragma mark - Keyboard Change Events
+
+/// Начать ловить события изменения текста клавиатуры
+- (void)startCatchChangeTextEvents{
+    [_textFieldManager startCatchChangeTextEvents];
+}
+
+/// Перестаь ловить события изменения текста клавиатуры
+- (void)stopCatchChangeTextEvents{
+    [_textFieldManager stopCatchChangeTextEvents];
+}
 
 #pragma mark - FEEDS Waiting
 

@@ -14,13 +14,22 @@
     @updated 19.04.2016
     @abstract Кнопка экрана выбора канала
     @discussion
-    На SelectChannel-экране имеются 2 кнопки, у этих кнопок общий вид, и общая реакция на касание. Поэтому решено было сделать подкласс
+    На SelectChannel-экране имеются 2 кнопки, у этих кнопок общий вид, и общая реакция на касание. Поэтому решено было сделать подкласс.
+ 
+    Кроме всего, кнопка имеет встроенный индикатор ожидания
  */
 @interface HURSSChannelButton : UIButton
 
+#pragma mark - Touch Event
+/// Назначить обработчик нажатия (уже кнопка сама определяет, когда его обрабатывать (тач даун или тач аут))
 - (void)setTouchHandler:(SEL)actionHandler toTarget:(id)actionTarget;
+
+
+#pragma mark - Waiting Indicator
+// Активити индикатор
 
 - (void)startWaitingIndicator;
 - (void)endWaitingIndicator;
+
 
 @end

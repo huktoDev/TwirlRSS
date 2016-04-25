@@ -10,6 +10,7 @@
 
 @implementation HURSSFeedInfo
 
+/// Конвертация модели MWFeedInfo -> HURSSFeedInfo
 + (instancetype)feedInfoConvertedFrom:(MWFeedInfo*)feedInfo{
     
     HURSSFeedInfo *convertedFeedInfo = [HURSSFeedInfo new];

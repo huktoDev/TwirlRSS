@@ -7,22 +7,22 @@
 //
 
 #import "HURSSFeedsReciever.h"
+#import "HURSSFeedsCache.h"
 
-/**
-    @typedef HURSSFeedItemBlock
-        Блок для оабработчика окончания метода  prepareHTML для конкретного айтема
- */
-typedef void(^HURSSFeedItemBlock)(NSAttributedString *recievedString, CGFloat heightContent);
-
+#import "NSAttributedString+ResizeAttachments.h"
 
 @implementation HURSSFeedsReciever{
     
-    MWFeedParser *_innerFeedParser;
-    
+    // Канал новостей, получаемых в текущий момент
     HURSSChannel *_recievingFeedsChannel;
     
+    // Полученные новости
     MWFeedInfo *_recievedHeaderFeedInfo;
     NSMutableArray <MWFeedItem*> *_recievedFeedsItems;
+    
+    // Используемые сервисы
+    MWFeedParser *_innerFeedParser;
+    HURSSFeedsCache *_feedsCache;
 }
 
 @synthesize feedsDelegate=_feedsDelegate;
@@ -40,6 +40,21 @@ typedef void(^HURSSFeedItemBlock)(NSAttributedString *recievedString, CGFloat he
     return _sharedReciever;
 }
 
+- (instancetype)init{
+    if(self = [super init]){
+        [self injectDependencies];
+    }
+    return self;
+}
+
+
+#pragma mark - Dependencies
+
+/// Инжектировать зависимости
+- (void)injectDependencies{
+    
+    _feedsCache = [HURSSFeedsCache sharedCache];
+}
 
 #pragma mark - HURSSFeedsRemoteRecievingProtocol (LOAD FROM NETWORK)
 
@@ -63,6 +78,7 @@ typedef void(^HURSSFeedItemBlock)(NSAttributedString *recievedString, CGFloat he
     // Получить результаты парсинга
     _innerFeedParser.delegate = self;
     
+    //TODO: Mute Warning (не знаю, что за фигня с этим, так и не обнаружил причины)
     // Выполнить асинхронный запрос и парсинг
     [_innerFeedParser setConnectionType:ConnectionTypeAsynchronously];
     
@@ -70,14 +86,11 @@ typedef void(^HURSSFeedItemBlock)(NSAttributedString *recievedString, CGFloat he
     [_innerFeedParser parse];
 }
 
-- (void)loadAttachments{
-    
-    
-}
 
 /// Отменет загрузку новостей
 - (void)cancelLoading{
     
+    // TODO: Не прерывает пост-обработку, по-хорошему надо прерывать!
     [_innerFeedParser stopParsing];
 }
 
@@ -149,10 +162,12 @@ typedef void(^HURSSFeedItemBlock)(NSAttributedString *recievedString, CGFloat he
         // Для каждой модели - подготавливает контент
         [self prepareHTMLContentForFeeds:convertedFeeds forFeedInfo:convertedFeedInfo forChannel:_recievingFeedsChannel WithCompletion:^(NSArray<HURSSFeedItem *> *preparedFeeds, HURSSFeedInfo *preparedFeedInfo, HURSSChannel *usedRSSChannel) {
             
+            // Сохранить полученную информацию в кэш (базу данных) (для возможности оффлайн-просмотра)
+            [_feedsCache setCachedFeeds:preparedFeeds withFeedInfo:preparedFeedInfo forChannel:_recievingFeedsChannel];
+            
             // Передает подготовленные модели делегату
             [self.feedsDelegate didSuccessRecievedFeeds:preparedFeeds withFeedInfo:preparedFeedInfo forChannel:usedRSSChannel];
         }];
-        
     }
     
 #endif
@@ -191,6 +206,9 @@ typedef void(^HURSSFeedItemBlock)(NSAttributedString *recievedString, CGFloat he
         [self.feedsDelegate didFailureRecievingFeedsWithErrorDescription:feedsErrorDescription forChannel:_recievingFeedsChannel];
     }
 }
+
+
+#pragma mark - PostProcessing
 
 /**
     @abstract Подготавливает контент моделей к отображению
@@ -255,6 +273,8 @@ typedef void(^HURSSFeedItemBlock)(NSAttributedString *recievedString, CGFloat he
         <li> Создается форматированная строка даты </li>
     </ol>
  
+    @warning При таком подходе ресайза изображений (без создания новых экземпляров аттачментов) - при загрузке из базы данных NSAttributedString вновь применяет старые версии аттачментов (требется вновь ресайзить)
+ 
     @param summaryContentWidth      Ширина контента (от нее зависит сильно вычисленные размеры контента, и ресайз изображений)
     @param rawFeeditem         экземпляр HURSSFeedItem, который будет обрабатываться
     @param completionBlock      Блок окончания обработки (передает готовую информацию)
@@ -278,37 +298,7 @@ typedef void(^HURSSFeedItemBlock)(NSAttributedString *recievedString, CGFloat he
     
     
     // Перечисляет все NSTextAttachment (аттрибуты с NSAttachmentAttributeName) (картинки), и каждую картинку ресайзит
-    [feedAttribString enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, feedAttribString.length) options:0 usingBlock:^(id  _Nullable value, NSRange range, BOOL * _Nonnull stop) {
-        
-        NSTextAttachment *currentAttachment = (NSTextAttachment*)value;
-        CGRect boundsAttachmentImage = currentAttachment.bounds;
-        
-        // Если размер изображения аттачмента больше, чем ширина контента - ресайзить
-        if(boundsAttachmentImage.size.width > summaryContentWidth){
-            
-            // Вычисляется требуемый коэффициент скалирования
-            CGFloat feedSummaryScale = (summaryContentWidth / boundsAttachmentImage.size.width);
-            
-            // Извлекается изображения из загруженного файла
-            NSData *imageFileContent = [currentAttachment.fileWrapper regularFileContents];
-            UIImage *attachmentImage = [[UIImage alloc] initWithData:imageFileContent];
-            
-            // Вычисляются новые размеры изображения
-            CGSize newImageSize = CGSizeApplyAffineTransform(attachmentImage.size, CGAffineTransformMakeScale(feedSummaryScale, feedSummaryScale));
-            
-            // Создается контекст, и изображение на нем рендерится
-            UIGraphicsBeginImageContextWithOptions(newImageSize, YES, 0.f);
-            [attachmentImage drawInRect:CGRectMake(0.f, 0.f, newImageSize.width, newImageSize.height)];
-            
-            // Снимается новый UIImage с контекста
-            UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-            
-            // Устанавливается новое изображение, и новый размер
-            currentAttachment.image = scaledImage;
-            currentAttachment.bounds = CGRectMake(0.f, 0.f, scaledImage.size.width, scaledImage.size.height);
-        }
-    }];
+    [feedAttribString resizeAllAttachmentImagesWithMaxWidth:summaryContentWidth];
     
     // Вычисляется высота контента для summary
     NSStringDrawingOptions drawingOptions = (NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading);
@@ -337,19 +327,23 @@ typedef void(^HURSSFeedItemBlock)(NSAttributedString *recievedString, CGFloat he
 }
 
 
+#pragma mark - HURSSFeedsLocalRecievingProtocol (LOAD FROM CACHE DB)
 
-
+/// Проверяет, имеется ли закэшированные новости для данного канала в кэше (или в базе данных)
 - (BOOL)haveCachedFeedsForChannel:(HURSSChannel*)feedsChannel{
     
-    return NO;
+    return [_feedsCache haveCachedFeedsForChannel:feedsChannel];
 }
 
-- (void)getCachedFeedsForChannel:(HURSSChannel*)feedsChannel{
+/// Получает закэшированные  новости для канала (либо хранящиеся в базе данных)
+- (void)getCachedFeedsForChannel:(HURSSChannel*)feedsChannel withCallback:(HURSSFeedsCacheRecievingBlock)cachedInfoCallback{
     
+    [_feedsCache getCachedFeedsForChannel:feedsChannel withCallback:cachedInfoCallback];
 }
 
+/// По идее, должен отменять загрузку новостей из базы данных
 - (void)cancelCachedFeedsRecieving{
-    
+    [_feedsCache cancelCachedFeedsRecieving];
 }
 
 

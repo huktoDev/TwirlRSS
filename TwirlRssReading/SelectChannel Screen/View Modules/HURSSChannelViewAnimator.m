@@ -213,7 +213,7 @@
     
     // Анимировать эти действия (после настройки текстового поля пересобрать макет)
     _destroyAliasTextFieldAnimationEnded = NO;
-    [UIView animateWithDuration:1.1f delay:0.f usingSpringWithDamping:0.25f initialSpringVelocity:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    [UIView animateWithDuration:0.85f delay:0.f usingSpringWithDamping:0.25f initialSpringVelocity:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
         
         [_presentConfigurator configDestroyedLocationAliasTextField];
         [_animationChannelView layoutIfNeeded];
@@ -259,7 +259,7 @@
     
     // Анимировать эти действия (после настройки кнопки пересобрать макет)
     _destroyAddButtonAnimationEnded = NO;
-    [UIView animateWithDuration:1.1f delay:0.f usingSpringWithDamping:0.25f initialSpringVelocity:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    [UIView animateWithDuration:0.85f delay:0.f usingSpringWithDamping:0.25f initialSpringVelocity:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
         
         [_presentConfigurator configDestroyedLocationChannelAddButton];
         [_animationChannelView layoutIfNeeded];
@@ -305,7 +305,7 @@
     
     // Анимировать эти действия (после настройки кнопки пересобрать макет)
     _destroyRemoveButtonAnimationEnded = NO;
-    [UIView animateWithDuration:1.1f delay:0.f usingSpringWithDamping:0.25f initialSpringVelocity:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    [UIView animateWithDuration:0.85f delay:0.f usingSpringWithDamping:0.25f initialSpringVelocity:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
         
         [_presentConfigurator configDestoyedLocationChannelRemoveButton];
         [_animationChannelView layoutIfNeeded];

@@ -7,13 +7,15 @@
 //
 
 #import "HUSelectRSSChannelPresenter.h"
-
+#import "HURSSCoreDataFeedsStore.h"
 
 
 @implementation HUSelectRSSChannelPresenter{
     
+    // Удалось ли получить новости?
     BOOL _isFeedsSuccessRecieved;
     
+    // Полученная информация из  RSS-канала
     HURSSFeedInfo *_recievedHeaderFeedInfo;
     NSArray <HURSSFeedItem*> *_recievedFeedsItems;
     
@@ -22,10 +24,9 @@
     NSArray <NSString*> *_reservedChannelNames;
     
     // Канал, для которого сервис пытается выполнить получение новостей
-    //HURSSChannel *_recievingFeedsChannel;
+    HURSSChannel *_recievingFeedsChannel;
     
     // Используемые сервисы
-    //MWFeedParser *_feedParser;
     id <HURSSChannelStoreProtocol> _channelStore;
     id <HURSSFeedsRecievingProtocol> _feedsReciever;
 }
@@ -58,7 +59,6 @@
     // Обновить базовое состояние интерфейса (ничего не введено)
     [self.selectChannelView updateUIWhenEnteredChannelURLValidate:NO];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(channelTextChangedNotification:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -67,12 +67,16 @@
     static BOOL isFirstAppear = YES;
     [self.navigationController setNavigationBarHidden:YES animated:(! isFirstAppear)];
     isFirstAppear = NO;
+    
+    self.selectChannelView.textEditingDelegate = self;
+    [self.selectChannelView startCatchChangeTextEvents];
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+    [self.selectChannelView stopCatchChangeTextEvents];
+    self.selectChannelView.textEditingDelegate = nil;
 }
 
 
@@ -85,11 +89,8 @@
     _feedsReciever = [HURSSFeedsReciever sharedReciever];
 }
 
-- (void)channelTextChangedNotification:(NSNotification*)channelTextNotification{
+- (void)didTextChanged:(NSString*)newText forTextField:(HURSSChannelTextField*)channelTextField withFieldType:(HURSSChannelTextFieldType)channelFieldType{
     
-    // Извлечь текстового поля и его тип
-    HURSSChannelTextField *channelTextField = (HURSSChannelTextField*)channelTextNotification.object;
-    HURSSChannelTextFieldType channelFieldType = [self.selectChannelView getChannelTextFieldType:channelTextField];
     
     if(channelFieldType == HURSSChannelEnterURLFieldType){
         
@@ -121,7 +122,9 @@
         // Обновить UI определенным состоянием
         [self.selectChannelView updateUIWhenChannelChangeState:currentChannelState];
     }
+
 }
+
 
 #pragma mark - Button Handlers
 
@@ -166,6 +169,9 @@
     
     HURSSChannel *newChannel = [HURSSChannel channelWithAlias:newChannelAlias withURL:newChannelURL withType:channelType];
     
+    // Проверить, был ли такой канал до сохранения (чтобы потом узнать тип действия)
+    BOOL haveSimilarChannel = [_channelStore containsChannelWithName:newChannel.channelAlias];
+    
     // Попытаться сохранить новый канал в хранилище
     BOOL isSuccessSaved = [_channelStore saveNewChannel:newChannel];
     
@@ -173,7 +179,10 @@
     if(isSuccessSaved){
         [self.selectChannelView hideKeyboard];
         [self.selectChannelView updateUIWhenChannelChangeState:HURSSChannelStatePossibleModifyDel];
-        [self.selectChannelView showAlertPostAction:HURSSChannelActionAdd ForChannelName:newChannel.channelAlias withURL:newChannel.channelURL];
+        
+        // Опрелеление  выполненного действия с каналом
+        HURSSChannelActionType channelActionType = haveSimilarChannel ? HURSSChannelActionModify : HURSSChannelActionAdd;
+        [self.selectChannelView showAlertPostAction:channelActionType ForChannelName:newChannel.channelAlias withURL:newChannel.channelURL];
     }
 }
 
@@ -215,12 +224,26 @@
     HURSSChannelRecievingType channelType = HURSSChannelUserCreated;
     
     HURSSChannel *currentChannel = [HURSSChannel channelWithAlias:currentChannelAlias withURL:currentChannelURL withType:channelType];
+    _recievingFeedsChannel = currentChannel;
     
     _feedsReciever.feedsDelegate = self;
     [_feedsReciever loadFeedsForChannel:currentChannel];
     
     // Повесить на интерфейс ожидание
     [self.selectChannelView startFeedsWaiting];
+}
+
+
+- (void)getOfflineFeedsButtonPressed:(UIButton*)feedsButton{
+    
+    // получить новости из кэша, показать новости
+    
+    __weak __block typeof(self) weakSelf = self;
+    [_feedsReciever getCachedFeedsForChannel:_recievingFeedsChannel withCallback:^(HURSSChannel *feedsChannel, HURSSFeedInfo *cachedFeedInfo, NSArray<HURSSFeedItem *> *cachedFeedItems) {
+        
+        __strong __block typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf didSuccessRecievedFeeds:cachedFeedItems withFeedInfo:cachedFeedInfo forChannel:feedsChannel];
+    }];
 }
 
 
@@ -259,14 +282,38 @@
     }];
 }
 
+/**
+    @abstract Когда  пользователю не удается загрузить новости
+    @discussion
+    Этот метод срабатывает, если попытка загрузить новости из сети была провалена. 
+    В таком  случае - пользователю нужно показать сетевой алерт с описанием ошибки.
+    Кроме прочего в алерте должны быть 3 кнопки (или 2) :
+    <ol type="1">
+        <li> Кнопка отмены (Жаль/Блин) </li>
+        <li> Кнопка повтора (Еще раз) </li>
+        <li> Если в базе данных уже есть новости для схожего канала - кнопка "Смотреть сохраненные ранее" </li>
+    </ol>
+ 
+    @param errorDescription        Строка описания ошибки
+    @param feedsChannel           Модель новостного канала
+ */
 - (void)didFailureRecievingFeedsWithErrorDescription:(NSString*)errorDescription forChannel:(HURSSChannel*)feedsChannel{
     
-    NSLog(@"FAILURE FEEDS , ERROR : %@\nChannel : %@", errorDescription, feedsChannel.channelAlias);
-    
-    NSString *channelName = feedsChannel.channelAlias;
+    // Убрать индикатор ожидания (и разжать кнопку)
     [self.selectChannelView endFeedsWaitingWithCompletion:nil];
-    [self.selectChannelView showFeedsFailRecivingAlertForChannelName:channelName withErrorDescription:errorDescription];
+    
+    // Получить вспомогательные данные (псевдоним канала, и есть ли он в закэшированных?)
+    NSString *channelName = feedsChannel.channelAlias;
+    BOOL haveCachedFeeds = [_feedsReciever haveCachedFeedsForChannel:feedsChannel];
+    
+    // Показать алерт (2 или 3 кнопки)
+    [self.selectChannelView showFeedsFailRecivingAlertForChannelName:channelName withErrorDescription:errorDescription withOfflineFeedsRequest:haveCachedFeeds];
+    
+    // Настроить обработчики кнопок (обработчик "Смотреть сохраненные ранее" - устанавливать только, если  есть закэшированные новости)
     [self.selectChannelView setFeedsRepeatAlertHandler:@selector(recieveFeedsButtonPressed:) withTarget:self];
+    if(haveCachedFeeds){
+        [self.selectChannelView setFeedsGetCachedAlertHandler:@selector(getOfflineFeedsButtonPressed:) withTarget:self];
+    }
 }
 
 

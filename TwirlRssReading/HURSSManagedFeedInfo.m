@@ -11,17 +11,29 @@
 
 @implementation HURSSManagedFeedInfo
 
-
+// NSManagedObject динамически переопределяет методы доступа 
 @dynamic title;
 @dynamic link;
 @dynamic summary;
 @dynamic url;
 
 
+#pragma mark - CONTEXT Info
+
+/// Испоьзуемый контекст CoreData
 + (NSManagedObjectContext*)usedManagedContext{
     return [HURSSCoreDataFeedsStore feedsStore].managedObjectContext;
 }
 
+/// Название сущности этого NSManagedObject в модели CoreData
++ (NSString*)entityName{
+    return @"FeedInfo";
+}
+
+
+#pragma mark - Convertations
+
+/// Создаем модель для работы в контексте из основного типа модели
 + (instancetype)createFeedInfoFrom:(HURSSFeedInfo*)feedInfo{
     
     NSManagedObjectContext *usedContext = [[self class] usedManagedContext];
@@ -37,10 +49,8 @@
     return managedFeedInfo;
 }
 
-+ (NSString*)entityName{
-    return @"FeedInfo";
-}
 
+/// Конвертируем объект контекста в более используемую в приложении модель
 - (HURSSFeedInfo*)convertToSimpleRSSInfoModel{
     
     HURSSFeedInfo *convertedFeedInfo = [HURSSFeedInfo new];

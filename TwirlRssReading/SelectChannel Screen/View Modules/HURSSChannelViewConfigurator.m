@@ -143,7 +143,7 @@
 /// Конфигурирует текст филд для ввода  канала
 - (HURSSChannelTextField*)createChannelTextField{
     
-    HURSSChannelTextField *channelTextField = [HURSSChannelTextField new];
+    HURSSChannelTextField *channelTextField = [HURSSChannelTextField channelTextFieldWithStyler:_presentStyle];
     
     UIImage *searchIconImage = [UIImage imageNamed:@"SearchIcon.png"];
     [channelTextField setImage:searchIconImage];
@@ -161,7 +161,7 @@
 /// Создает и конфигурирует текстфилд для ввода названия канала
 - (HURSSChannelTextField*)createChannelAliasTextField{
     
-    HURSSChannelTextField *channelAliasTextField = [HURSSChannelTextField new];
+    HURSSChannelTextField *channelAliasTextField = [HURSSChannelTextField channelTextFieldWithStyler:_presentStyle];
     channelAliasTextField.placeholder = @"Как назвать канал?";
     
     UIImage *channelAliasImage = [UIImage imageNamed:@"RSSIconFill.png"];
@@ -345,7 +345,25 @@
     return channelAlertVC;
 }
 
-- (URBNAlertViewController*)createFeedsRecvievingAlertWithChannelname:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription{
+/**
+    @abstract Создать алерт для ситуации, когда новости RSS-канала не удалось получить
+    @discussion
+    В алерте обычно отображается описание ошибки и несколько кнопок.
+    <ol type="a">
+        <li> Кнопка "Блин/жаль", (отмена) </li>
+        <li> Кнопка "Еще раз" </li>
+        <li> Если needOfflineRequest == YES - кнопка "Смотреть сохраненные ранее" </li>
+    </ol>
+ 
+    @note Алерт настраивается стандартным образом в схожем стиле с другими URBNAlertViewController
+ 
+    @param channelName       Название канала, для которого не удалось получить новости
+    @param feedsErrorDescription      Описание ошибки (причины неудачи)
+    @param needOfflineRequest      Есть ли закэшированные новости? Можно ли извлечь их из БД?
+ 
+    @return Готовый алерт
+ */
+- (URBNAlertViewController*)createFeedsRecvievingAlertWithChannelname:(NSString*)channelName withErrorDescription:(NSString*)feedsErrorDescription withOfflineFeedsRequest:(BOOL)needOfflineRequest{
     
     // Получить тексты
     NSString *feedsAlertTitle = @"Новости получить не удалось";
@@ -366,6 +384,10 @@
     // Добавить пустые экшены
     [feedsNotRecievedAlertVC addAction:[URBNAlertAction actionWithTitle:feedsAlertButtonTitle actionType:URBNAlertActionTypeCancel actionCompleted:nil]];
     [feedsNotRecievedAlertVC addAction:[URBNAlertAction actionWithTitle:@"Еще раз" actionType:URBNAlertActionTypeNormal actionCompleted:nil]];
+    
+    if(needOfflineRequest){
+        [feedsNotRecievedAlertVC addAction:[URBNAlertAction actionWithTitle:@"Смотреть сохраненные ранее" actionType:URBNAlertActionTypeNormal actionCompleted:nil]];
+    }
     
     _feedsNotRecievingAlertVC = feedsNotRecievedAlertVC;
     return feedsNotRecievedAlertVC;

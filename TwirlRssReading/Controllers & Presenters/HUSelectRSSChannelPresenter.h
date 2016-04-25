@@ -59,7 +59,7 @@
     MWFeedParserDelegate \n
     HUSelectRSSChannelView \n
  */
-@interface HUSelectRSSChannelPresenter : UIViewController <HURSSChannelSelectionDelegate, MWFeedParserDelegate, HURSSChannelSelectRecievedFeedsProtocol, HURSSFeedsRecieverDelegate>
+@interface HUSelectRSSChannelPresenter : UIViewController <HURSSChannelSelectionDelegate, MWFeedParserDelegate, HURSSChannelSelectRecievedFeedsProtocol, HURSSFeedsRecieverDelegate, HURSSChannelTextChangedDelegate>
 
 /// Корневая вьюшка экрана
 @property (strong, nonatomic) HUSelectRSSChannelView *selectChannelView;

@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Xcode 7.0">
-    <entity name="Channel" syncable="YES">
-        <attribute name="attribute" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    <entity name="Channel" representedClassName="HURSSManagedChannel" syncable="YES">
+        <attribute name="alias" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="feedInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FeedInfo" inverseName="channel" inverseEntity="FeedInfo" syncable="YES"/>
+        <relationship name="feeds" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="FeedItem" inverseName="channel" inverseEntity="FeedItem" syncable="YES"/>
     </entity>
     <entity name="FeedInfo" representedClassName="HURSSManagedFeedInfo" syncable="YES">
         <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="channel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Channel" inverseName="feedInfo" inverseEntity="Channel" syncable="YES"/>
     </entity>
-    <entity name="HURSSManagedFeedItem" syncable="YES">
+    <entity name="FeedItem" representedClassName="HURSSManagedFeedItem" syncable="YES">
+        <attribute name="attribSummary" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="formattedDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="summaryHeight" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="titleHeight" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="updatedDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="channel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Channel" inverseName="feeds" inverseEntity="Channel" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Channel" positionX="-63" positionY="-18" width="128" height="60"/>
-        <element name="FeedInfo" positionX="-54" positionY="-9" width="128" height="105"/>
-        <element name="HURSSManagedFeedItem" positionX="-36" positionY="9" width="128" height="105"/>
+        <element name="Channel" positionX="52" positionY="-252" width="128" height="118"/>
+        <element name="FeedInfo" positionX="-153" positionY="-387" width="128" height="118"/>
+        <element name="FeedItem" positionX="-153" positionY="-177" width="128" height="238"/>
     </elements>
 </model>
