@@ -39,6 +39,8 @@ NSString* const HU_RSS_IDENTIFIER_FEED_CELL = @"feedsCell";
     backgroundView.backgroundColor = [[HURSSTwirlStyle sharedStyle] selectChannelScreenColor];
     self.backgroundView = backgroundView;
     
+    self.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
     self.backgroundColor = [UIColor whiteColor];
 }
 

@@ -9,9 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "HURSSChannelTextField.h"
 #import "HURSSChannelButton.h"
-#import "CZPicker.h"
-#import "URBNAlert.h"
-
 
 
 /**
@@ -256,6 +253,18 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 
 - (void)startFeedsWaiting;
 - (void)endFeedsWaitingWithCompletion:(dispatch_block_t)waitingCompletion;
+
+- (void)scrollToWaitingView;
+
+
+#pragma mark - ENABLE & DISABLE Interaction
+// Блокиратор/Деблокиратор UI
+
+- (void)enableUserInteraction;
+- (void)disableUserInteraction;
+
+
+
 
 
 @end

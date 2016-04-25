@@ -16,7 +16,6 @@
 		6B1A45D01CCCB437002BC53A /* HURSSNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45C91CCCB437002BC53A /* HURSSNavigationController.m */; };
 		6B1A45D11CCCB437002BC53A /* HUSelectRSSChannelPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45CB1CCCB437002BC53A /* HUSelectRSSChannelPresenter.m */; };
 		6B1A45D21CCCB437002BC53A /* HUSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45CD1CCCB437002BC53A /* HUSplashViewController.m */; };
-		6B1A45DA1CCCB4A8002BC53A /* HURSSChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45D41CCCB4A8002BC53A /* HURSSChannel.m */; };
 		6B1A45DB1CCCB4A8002BC53A /* HURSSChannelStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45D71CCCB4A8002BC53A /* HURSSChannelStore.m */; };
 		6B1A45DC1CCCB4A8002BC53A /* HURSSReservedChannelSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45D91CCCB4A8002BC53A /* HURSSReservedChannelSet.m */; };
 		6B1A45DF1CCCB4E3002BC53A /* HUSplashTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45DE1CCCB4E3002BC53A /* HUSplashTransitionAnimator.m */; };
@@ -32,17 +31,19 @@
 		6B1A46011CCCB64C002BC53A /* HURSSFeedsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A45FE1CCCB64C002BC53A /* HURSSFeedsCell.m */; };
 		6B1A46021CCCB64C002BC53A /* HURSSFeedsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46001CCCB64C002BC53A /* HURSSFeedsTableView.m */; };
 		6B1A46051CCCB683002BC53A /* HURSSItemDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46041CCCB683002BC53A /* HURSSItemDetailView.m */; };
-		6B1A460D1CCCB6B9002BC53A /* HURSSFeedInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46081CCCB6B9002BC53A /* HURSSFeedInfo.m */; };
-		6B1A460E1CCCB6B9002BC53A /* HURSSFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A460A1CCCB6B9002BC53A /* HURSSFeedItem.m */; };
 		6B1A460F1CCCB6B9002BC53A /* HURSSFeedsReciever.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A460C1CCCB6B9002BC53A /* HURSSFeedsReciever.m */; };
-		6B1A46121CCD4F7B002BC53A /* HURSSFeedsCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46111CCD4F7B002BC53A /* HURSSFeedsCache.m */; };
-		6B1A46151CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46141CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.m */; };
 		6B1A46181CCD55B2002BC53A /* FeedsDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46161CCD55B2002BC53A /* FeedsDataModel.xcdatamodeld */; };
-		6B1A46331CCD61A2002BC53A /* HURSSManagedFeedInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46321CCD61A2002BC53A /* HURSSManagedFeedInfo.m */; };
-		6B1A46361CCD6A9E002BC53A /* HURSSManagedChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46351CCD6A9E002BC53A /* HURSSManagedChannel.m */; };
-		6B1A46391CCD6B3E002BC53A /* HURSSManagedFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46381CCD6B3E002BC53A /* HURSSManagedFeedItem.m */; };
-		6B1A46421CCE565E002BC53A /* NSTextAttachment+ImageResizing.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46411CCE565E002BC53A /* NSTextAttachment+ImageResizing.m */; };
-		6B1A46481CCE5803002BC53A /* NSAttributedString+ResizeAttachments.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46471CCE5803002BC53A /* NSAttributedString+ResizeAttachments.m */; };
+		6B1A46521CCE7861002BC53A /* HURSSManagedChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A464D1CCE7861002BC53A /* HURSSManagedChannel.m */; };
+		6B1A46531CCE7861002BC53A /* HURSSManagedFeedInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A464F1CCE7861002BC53A /* HURSSManagedFeedInfo.m */; };
+		6B1A46541CCE7861002BC53A /* HURSSManagedFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46511CCE7861002BC53A /* HURSSManagedFeedItem.m */; };
+		6B1A465B1CCE7875002BC53A /* HURSSChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46561CCE7875002BC53A /* HURSSChannel.m */; };
+		6B1A465C1CCE7875002BC53A /* HURSSFeedInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46581CCE7875002BC53A /* HURSSFeedInfo.m */; };
+		6B1A465D1CCE7875002BC53A /* HURSSFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A465A1CCE7875002BC53A /* HURSSFeedItem.m */; };
+		6B1A46621CCE78AB002BC53A /* NSAttributedString+ResizeAttachments.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A465F1CCE78AB002BC53A /* NSAttributedString+ResizeAttachments.m */; };
+		6B1A46631CCE78AB002BC53A /* NSTextAttachment+ImageResizing.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46611CCE78AB002BC53A /* NSTextAttachment+ImageResizing.m */; };
+		6B1A46681CCE7902002BC53A /* HURSSCoreDataFeedsStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46651CCE7902002BC53A /* HURSSCoreDataFeedsStore.m */; };
+		6B1A46691CCE7902002BC53A /* HURSSFeedsCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A46671CCE7902002BC53A /* HURSSFeedsCache.m */; };
+		6B1A46701CCEB656002BC53A /* UIView+DisableMultiTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1A466F1CCEB656002BC53A /* UIView+DisableMultiTouch.m */; };
 		6B7DF00E1CC2C21400AE4096 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF00D1CC2C21400AE4096 /* main.m */; };
 		6B7DF0111CC2C21400AE4096 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7DF0101CC2C21400AE4096 /* AppDelegate.m */; };
 		6B7DF0191CC2C21400AE4096 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B7DF0181CC2C21400AE4096 /* Assets.xcassets */; };
@@ -81,8 +82,6 @@
 		6B1A45CB1CCCB437002BC53A /* HUSelectRSSChannelPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HUSelectRSSChannelPresenter.m; path = "Controllers & Presenters/HUSelectRSSChannelPresenter.m"; sourceTree = "<group>"; };
 		6B1A45CC1CCCB437002BC53A /* HUSplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HUSplashViewController.h; path = "Controllers & Presenters/HUSplashViewController.h"; sourceTree = "<group>"; };
 		6B1A45CD1CCCB437002BC53A /* HUSplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HUSplashViewController.m; path = "Controllers & Presenters/HUSplashViewController.m"; sourceTree = "<group>"; };
-		6B1A45D31CCCB4A8002BC53A /* HURSSChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSChannel.h; path = "Channels Store/HURSSChannel.h"; sourceTree = "<group>"; };
-		6B1A45D41CCCB4A8002BC53A /* HURSSChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSChannel.m; path = "Channels Store/HURSSChannel.m"; sourceTree = "<group>"; };
 		6B1A45D51CCCB4A8002BC53A /* HURSSChannelsStoring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSChannelsStoring.h; path = "Channels Store/HURSSChannelsStoring.h"; sourceTree = "<group>"; };
 		6B1A45D61CCCB4A8002BC53A /* HURSSChannelStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSChannelStore.h; path = "Channels Store/HURSSChannelStore.h"; sourceTree = "<group>"; };
 		6B1A45D71CCCB4A8002BC53A /* HURSSChannelStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSChannelStore.m; path = "Channels Store/HURSSChannelStore.m"; sourceTree = "<group>"; };
@@ -114,27 +113,35 @@
 		6B1A46001CCCB64C002BC53A /* HURSSFeedsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSFeedsTableView.m; path = "Feeds Screen/HURSSFeedsTableView.m"; sourceTree = "<group>"; };
 		6B1A46031CCCB683002BC53A /* HURSSItemDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSItemDetailView.h; path = "Item Details Screen/HURSSItemDetailView.h"; sourceTree = "<group>"; };
 		6B1A46041CCCB683002BC53A /* HURSSItemDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSItemDetailView.m; path = "Item Details Screen/HURSSItemDetailView.m"; sourceTree = "<group>"; };
-		6B1A46071CCCB6B9002BC53A /* HURSSFeedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSFeedInfo.h; path = "Feeds Recieving/HURSSFeedInfo.h"; sourceTree = "<group>"; };
-		6B1A46081CCCB6B9002BC53A /* HURSSFeedInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSFeedInfo.m; path = "Feeds Recieving/HURSSFeedInfo.m"; sourceTree = "<group>"; };
-		6B1A46091CCCB6B9002BC53A /* HURSSFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSFeedItem.h; path = "Feeds Recieving/HURSSFeedItem.h"; sourceTree = "<group>"; };
-		6B1A460A1CCCB6B9002BC53A /* HURSSFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSFeedItem.m; path = "Feeds Recieving/HURSSFeedItem.m"; sourceTree = "<group>"; };
 		6B1A460B1CCCB6B9002BC53A /* HURSSFeedsReciever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSFeedsReciever.h; path = "Feeds Recieving/HURSSFeedsReciever.h"; sourceTree = "<group>"; };
 		6B1A460C1CCCB6B9002BC53A /* HURSSFeedsReciever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSFeedsReciever.m; path = "Feeds Recieving/HURSSFeedsReciever.m"; sourceTree = "<group>"; };
-		6B1A46101CCD4F7B002BC53A /* HURSSFeedsCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSFeedsCache.h; sourceTree = "<group>"; };
-		6B1A46111CCD4F7B002BC53A /* HURSSFeedsCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSFeedsCache.m; sourceTree = "<group>"; };
-		6B1A46131CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSCoreDataFeedsStore.h; sourceTree = "<group>"; };
-		6B1A46141CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSCoreDataFeedsStore.m; sourceTree = "<group>"; };
 		6B1A46171CCD55B2002BC53A /* FeedsDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FeedsDataModel.xcdatamodel; sourceTree = "<group>"; };
-		6B1A46311CCD61A2002BC53A /* HURSSManagedFeedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSManagedFeedInfo.h; sourceTree = "<group>"; };
-		6B1A46321CCD61A2002BC53A /* HURSSManagedFeedInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSManagedFeedInfo.m; sourceTree = "<group>"; };
-		6B1A46341CCD6A9E002BC53A /* HURSSManagedChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSManagedChannel.h; sourceTree = "<group>"; };
-		6B1A46351CCD6A9E002BC53A /* HURSSManagedChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSManagedChannel.m; sourceTree = "<group>"; };
-		6B1A46371CCD6B3E002BC53A /* HURSSManagedFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSManagedFeedItem.h; sourceTree = "<group>"; };
-		6B1A46381CCD6B3E002BC53A /* HURSSManagedFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HURSSManagedFeedItem.m; sourceTree = "<group>"; };
-		6B1A46401CCE565E002BC53A /* NSTextAttachment+ImageResizing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTextAttachment+ImageResizing.h"; sourceTree = "<group>"; };
-		6B1A46411CCE565E002BC53A /* NSTextAttachment+ImageResizing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTextAttachment+ImageResizing.m"; sourceTree = "<group>"; };
-		6B1A46461CCE5803002BC53A /* NSAttributedString+ResizeAttachments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+ResizeAttachments.h"; sourceTree = "<group>"; };
-		6B1A46471CCE5803002BC53A /* NSAttributedString+ResizeAttachments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+ResizeAttachments.m"; sourceTree = "<group>"; };
+		6B1A464C1CCE7861002BC53A /* HURSSManagedChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSManagedChannel.h; path = "Managed Models/HURSSManagedChannel.h"; sourceTree = "<group>"; };
+		6B1A464D1CCE7861002BC53A /* HURSSManagedChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSManagedChannel.m; path = "Managed Models/HURSSManagedChannel.m"; sourceTree = "<group>"; };
+		6B1A464E1CCE7861002BC53A /* HURSSManagedFeedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSManagedFeedInfo.h; path = "Managed Models/HURSSManagedFeedInfo.h"; sourceTree = "<group>"; };
+		6B1A464F1CCE7861002BC53A /* HURSSManagedFeedInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSManagedFeedInfo.m; path = "Managed Models/HURSSManagedFeedInfo.m"; sourceTree = "<group>"; };
+		6B1A46501CCE7861002BC53A /* HURSSManagedFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSManagedFeedItem.h; path = "Managed Models/HURSSManagedFeedItem.h"; sourceTree = "<group>"; };
+		6B1A46511CCE7861002BC53A /* HURSSManagedFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSManagedFeedItem.m; path = "Managed Models/HURSSManagedFeedItem.m"; sourceTree = "<group>"; };
+		6B1A46551CCE7875002BC53A /* HURSSChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSChannel.h; path = "Simple Models/HURSSChannel.h"; sourceTree = "<group>"; };
+		6B1A46561CCE7875002BC53A /* HURSSChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSChannel.m; path = "Simple Models/HURSSChannel.m"; sourceTree = "<group>"; };
+		6B1A46571CCE7875002BC53A /* HURSSFeedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSFeedInfo.h; path = "Simple Models/HURSSFeedInfo.h"; sourceTree = "<group>"; };
+		6B1A46581CCE7875002BC53A /* HURSSFeedInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSFeedInfo.m; path = "Simple Models/HURSSFeedInfo.m"; sourceTree = "<group>"; };
+		6B1A46591CCE7875002BC53A /* HURSSFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSFeedItem.h; path = "Simple Models/HURSSFeedItem.h"; sourceTree = "<group>"; };
+		6B1A465A1CCE7875002BC53A /* HURSSFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSFeedItem.m; path = "Simple Models/HURSSFeedItem.m"; sourceTree = "<group>"; };
+		6B1A465E1CCE78AB002BC53A /* NSAttributedString+ResizeAttachments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSAttributedString+ResizeAttachments.h"; path = "Help Categories/NSAttributedString+ResizeAttachments.h"; sourceTree = "<group>"; };
+		6B1A465F1CCE78AB002BC53A /* NSAttributedString+ResizeAttachments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSAttributedString+ResizeAttachments.m"; path = "Help Categories/NSAttributedString+ResizeAttachments.m"; sourceTree = "<group>"; };
+		6B1A46601CCE78AB002BC53A /* NSTextAttachment+ImageResizing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSTextAttachment+ImageResizing.h"; path = "Help Categories/NSTextAttachment+ImageResizing.h"; sourceTree = "<group>"; };
+		6B1A46611CCE78AB002BC53A /* NSTextAttachment+ImageResizing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSTextAttachment+ImageResizing.m"; path = "Help Categories/NSTextAttachment+ImageResizing.m"; sourceTree = "<group>"; };
+		6B1A46641CCE7902002BC53A /* HURSSCoreDataFeedsStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSCoreDataFeedsStore.h; path = "Feeds Recieving/HURSSCoreDataFeedsStore.h"; sourceTree = "<group>"; };
+		6B1A46651CCE7902002BC53A /* HURSSCoreDataFeedsStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSCoreDataFeedsStore.m; path = "Feeds Recieving/HURSSCoreDataFeedsStore.m"; sourceTree = "<group>"; };
+		6B1A46661CCE7902002BC53A /* HURSSFeedsCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HURSSFeedsCache.h; path = "Feeds Recieving/HURSSFeedsCache.h"; sourceTree = "<group>"; };
+		6B1A46671CCE7902002BC53A /* HURSSFeedsCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HURSSFeedsCache.m; path = "Feeds Recieving/HURSSFeedsCache.m"; sourceTree = "<group>"; };
+		6B1A466A1CCE7A6A002BC53A /* HURSSHelperCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSHelperCategories.h; sourceTree = "<group>"; };
+		6B1A466B1CCE7AE5002BC53A /* HURSSModels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSModels.h; sourceTree = "<group>"; };
+		6B1A466C1CCE7B22002BC53A /* HURSSManagedModels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSManagedModels.h; sourceTree = "<group>"; };
+		6B1A466D1CCE7F05002BC53A /* HURSSFeedsRecieving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HURSSFeedsRecieving.h; sourceTree = "<group>"; };
+		6B1A466E1CCEB656002BC53A /* UIView+DisableMultiTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+DisableMultiTouch.h"; sourceTree = "<group>"; };
+		6B1A466F1CCEB656002BC53A /* UIView+DisableMultiTouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+DisableMultiTouch.m"; sourceTree = "<group>"; };
 		6B7DF0091CC2C21400AE4096 /* TwirlRssReading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwirlRssReading.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B7DF00D1CC2C21400AE4096 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6B7DF00F1CC2C21400AE4096 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -233,7 +240,7 @@
 			name = "Third Party";
 			sourceTree = "<group>";
 		};
-		6B1A45151CCBC223002BC53A /* Channels Store */ = {
+		6B1A45151CCBC223002BC53A /* Channels Storing Services */ = {
 			isa = PBXGroup;
 			children = (
 				6B1A45D51CCCB4A8002BC53A /* HURSSChannelsStoring.h */,
@@ -242,7 +249,7 @@
 				6B1A45D81CCCB4A8002BC53A /* HURSSReservedChannelSet.h */,
 				6B1A45D91CCCB4A8002BC53A /* HURSSReservedChannelSet.m */,
 			);
-			name = "Channels Store";
+			name = "Channels Storing Services";
 			sourceTree = "<group>";
 		};
 		6B1A45161CCBC31E002BC53A /* Controllers & Presenters */ = {
@@ -290,28 +297,30 @@
 			name = "View Modules";
 			sourceTree = "<group>";
 		};
-		6B1A46061CCCB68E002BC53A /* Feeds Recieving */ = {
+		6B1A46061CCCB68E002BC53A /* Feeds Recieving Services */ = {
 			isa = PBXGroup;
 			children = (
+				6B1A466D1CCE7F05002BC53A /* HURSSFeedsRecieving.h */,
 				6B1A460B1CCCB6B9002BC53A /* HURSSFeedsReciever.h */,
 				6B1A460C1CCCB6B9002BC53A /* HURSSFeedsReciever.m */,
-				6B1A46101CCD4F7B002BC53A /* HURSSFeedsCache.h */,
-				6B1A46111CCD4F7B002BC53A /* HURSSFeedsCache.m */,
-				6B1A46131CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.h */,
-				6B1A46141CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.m */,
+				6B1A46641CCE7902002BC53A /* HURSSCoreDataFeedsStore.h */,
+				6B1A46651CCE7902002BC53A /* HURSSCoreDataFeedsStore.m */,
+				6B1A46661CCE7902002BC53A /* HURSSFeedsCache.h */,
+				6B1A46671CCE7902002BC53A /* HURSSFeedsCache.m */,
 			);
-			name = "Feeds Recieving";
+			name = "Feeds Recieving Services";
 			sourceTree = "<group>";
 		};
 		6B1A46491CCE7690002BC53A /* Managed Models */ = {
 			isa = PBXGroup;
 			children = (
-				6B1A46341CCD6A9E002BC53A /* HURSSManagedChannel.h */,
-				6B1A46351CCD6A9E002BC53A /* HURSSManagedChannel.m */,
-				6B1A46311CCD61A2002BC53A /* HURSSManagedFeedInfo.h */,
-				6B1A46321CCD61A2002BC53A /* HURSSManagedFeedInfo.m */,
-				6B1A46371CCD6B3E002BC53A /* HURSSManagedFeedItem.h */,
-				6B1A46381CCD6B3E002BC53A /* HURSSManagedFeedItem.m */,
+				6B1A466C1CCE7B22002BC53A /* HURSSManagedModels.h */,
+				6B1A464C1CCE7861002BC53A /* HURSSManagedChannel.h */,
+				6B1A464D1CCE7861002BC53A /* HURSSManagedChannel.m */,
+				6B1A464E1CCE7861002BC53A /* HURSSManagedFeedInfo.h */,
+				6B1A464F1CCE7861002BC53A /* HURSSManagedFeedInfo.m */,
+				6B1A46501CCE7861002BC53A /* HURSSManagedFeedItem.h */,
+				6B1A46511CCE7861002BC53A /* HURSSManagedFeedItem.m */,
 			);
 			name = "Managed Models";
 			sourceTree = "<group>";
@@ -319,14 +328,29 @@
 		6B1A464A1CCE769F002BC53A /* Simple Models */ = {
 			isa = PBXGroup;
 			children = (
-				6B1A45D31CCCB4A8002BC53A /* HURSSChannel.h */,
-				6B1A45D41CCCB4A8002BC53A /* HURSSChannel.m */,
-				6B1A46071CCCB6B9002BC53A /* HURSSFeedInfo.h */,
-				6B1A46081CCCB6B9002BC53A /* HURSSFeedInfo.m */,
-				6B1A46091CCCB6B9002BC53A /* HURSSFeedItem.h */,
-				6B1A460A1CCCB6B9002BC53A /* HURSSFeedItem.m */,
+				6B1A466B1CCE7AE5002BC53A /* HURSSModels.h */,
+				6B1A46551CCE7875002BC53A /* HURSSChannel.h */,
+				6B1A46561CCE7875002BC53A /* HURSSChannel.m */,
+				6B1A46571CCE7875002BC53A /* HURSSFeedInfo.h */,
+				6B1A46581CCE7875002BC53A /* HURSSFeedInfo.m */,
+				6B1A46591CCE7875002BC53A /* HURSSFeedItem.h */,
+				6B1A465A1CCE7875002BC53A /* HURSSFeedItem.m */,
 			);
 			name = "Simple Models";
+			sourceTree = "<group>";
+		};
+		6B1A464B1CCE76FD002BC53A /* Help Categories */ = {
+			isa = PBXGroup;
+			children = (
+				6B1A466A1CCE7A6A002BC53A /* HURSSHelperCategories.h */,
+				6B1A465E1CCE78AB002BC53A /* NSAttributedString+ResizeAttachments.h */,
+				6B1A465F1CCE78AB002BC53A /* NSAttributedString+ResizeAttachments.m */,
+				6B1A46601CCE78AB002BC53A /* NSTextAttachment+ImageResizing.h */,
+				6B1A46611CCE78AB002BC53A /* NSTextAttachment+ImageResizing.m */,
+				6B1A466E1CCEB656002BC53A /* UIView+DisableMultiTouch.h */,
+				6B1A466F1CCEB656002BC53A /* UIView+DisableMultiTouch.m */,
+			);
+			name = "Help Categories";
 			sourceTree = "<group>";
 		};
 		6B7DF0001CC2C21400AE4096 = {
@@ -357,16 +381,13 @@
 				6B7DF0101CC2C21400AE4096 /* AppDelegate.m */,
 				6B7DF0401CC2CB8D00AE4096 /* HURSSTwirlStyle.h */,
 				6B7DF0411CC2CB8D00AE4096 /* HURSSTwirlStyle.m */,
-				6B1A46461CCE5803002BC53A /* NSAttributedString+ResizeAttachments.h */,
-				6B1A46471CCE5803002BC53A /* NSAttributedString+ResizeAttachments.m */,
-				6B1A46401CCE565E002BC53A /* NSTextAttachment+ImageResizing.h */,
-				6B1A46411CCE565E002BC53A /* NSTextAttachment+ImageResizing.m */,
+				6B1A464B1CCE76FD002BC53A /* Help Categories */,
 				6B1A464A1CCE769F002BC53A /* Simple Models */,
 				6B1A46491CCE7690002BC53A /* Managed Models */,
-				6B1A46061CCCB68E002BC53A /* Feeds Recieving */,
+				6B1A45151CCBC223002BC53A /* Channels Storing Services */,
+				6B1A46061CCCB68E002BC53A /* Feeds Recieving Services */,
 				6B1A44EB1CC5D8CE002BC53A /* Routing */,
 				6B1A45161CCBC31E002BC53A /* Controllers & Presenters */,
-				6B1A45151CCBC223002BC53A /* Channels Store */,
 				6B1A44EC1CC5D8E0002BC53A /* Splash Screen */,
 				6B1A44EF1CC5D923002BC53A /* SelectChannel Screen */,
 				6B1A44ED1CC5D8F5002BC53A /* Feeds Screen */,
@@ -567,44 +588,45 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B1A465D1CCE7875002BC53A /* HURSSFeedItem.m in Sources */,
 				6B1A460F1CCCB6B9002BC53A /* HURSSFeedsReciever.m in Sources */,
 				6B1A45ED1CCCB5DE002BC53A /* HURSSChannelTextField.m in Sources */,
 				6B1A45C31CCCB370002BC53A /* HURSSTwirlRouter+CustomSegues.m in Sources */,
+				6B1A465B1CCE7875002BC53A /* HURSSChannel.m in Sources */,
 				6B1A45EC1CCCB5DE002BC53A /* HURSSChannelButton.m in Sources */,
-				6B1A46481CCE5803002BC53A /* NSAttributedString+ResizeAttachments.m in Sources */,
+				6B1A46691CCE7902002BC53A /* HURSSFeedsCache.m in Sources */,
+				6B1A46631CCE78AB002BC53A /* NSTextAttachment+ImageResizing.m in Sources */,
+				6B1A46531CCE7861002BC53A /* HURSSManagedFeedInfo.m in Sources */,
 				6B1A45E71CCCB5C8002BC53A /* HUSelectRSSChannelView.m in Sources */,
 				6B1A45BC1CCCB30E002BC53A /* BLMultiColorLoader.m in Sources */,
+				6B1A46681CCE7902002BC53A /* HURSSCoreDataFeedsStore.m in Sources */,
+				6B1A46621CCE78AB002BC53A /* NSAttributedString+ResizeAttachments.m in Sources */,
 				6B1A45CE1CCCB437002BC53A /* HURSSFeedsPresenter.m in Sources */,
 				6B1A45F91CCCB5EF002BC53A /* HURSSChannelViewAnimator.m in Sources */,
 				6B1A45F81CCCB5EF002BC53A /* HURSSChannelTextFieldManager.m in Sources */,
 				6B1A45E61CCCB5C8002BC53A /* HURSSChannelViewAssembly.m in Sources */,
-				6B1A46151CCD4FEA002BC53A /* HURSSCoreDataFeedsStore.m in Sources */,
 				6B1A45FB1CCCB5EF002BC53A /* HURSSChannelViewConstraintsFactory.m in Sources */,
 				6B1A45FC1CCCB5EF002BC53A /* HURSSChannelViewStyler.m in Sources */,
 				6B1A45C21CCCB370002BC53A /* HURSSTwirlRouter.m in Sources */,
 				6B7DF0421CC2CB8D00AE4096 /* HURSSTwirlStyle.m in Sources */,
 				6B1A45DF1CCCB4E3002BC53A /* HUSplashTransitionAnimator.m in Sources */,
 				6B1A45FA1CCCB5EF002BC53A /* HURSSChannelViewConfigurator.m in Sources */,
-				6B1A46361CCD6A9E002BC53A /* HURSSManagedChannel.m in Sources */,
-				6B1A46121CCD4F7B002BC53A /* HURSSFeedsCache.m in Sources */,
 				6B1A45DB1CCCB4A8002BC53A /* HURSSChannelStore.m in Sources */,
 				6B1A45CF1CCCB437002BC53A /* HURSSItemPresenter.m in Sources */,
 				6B1A46181CCD55B2002BC53A /* FeedsDataModel.xcdatamodeld in Sources */,
-				6B1A45DA1CCCB4A8002BC53A /* HURSSChannel.m in Sources */,
+				6B1A465C1CCE7875002BC53A /* HURSSFeedInfo.m in Sources */,
 				6B1A45D01CCCB437002BC53A /* HURSSNavigationController.m in Sources */,
-				6B1A460D1CCCB6B9002BC53A /* HURSSFeedInfo.m in Sources */,
 				6B7DF0111CC2C21400AE4096 /* AppDelegate.m in Sources */,
-				6B1A46391CCD6B3E002BC53A /* HURSSManagedFeedItem.m in Sources */,
 				6B1A46051CCCB683002BC53A /* HURSSItemDetailView.m in Sources */,
 				6B1A45DC1CCCB4A8002BC53A /* HURSSReservedChannelSet.m in Sources */,
-				6B1A46421CCE565E002BC53A /* NSTextAttachment+ImageResizing.m in Sources */,
 				6B7DF00E1CC2C21400AE4096 /* main.m in Sources */,
 				6B1A45D11CCCB437002BC53A /* HUSelectRSSChannelPresenter.m in Sources */,
-				6B1A46331CCD61A2002BC53A /* HURSSManagedFeedInfo.m in Sources */,
+				6B1A46521CCE7861002BC53A /* HURSSManagedChannel.m in Sources */,
 				6B1A46011CCCB64C002BC53A /* HURSSFeedsCell.m in Sources */,
+				6B1A46701CCEB656002BC53A /* UIView+DisableMultiTouch.m in Sources */,
+				6B1A46541CCE7861002BC53A /* HURSSManagedFeedItem.m in Sources */,
 				6B1A46021CCCB64C002BC53A /* HURSSFeedsTableView.m in Sources */,
 				6B1A45D21CCCB437002BC53A /* HUSplashViewController.m in Sources */,
-				6B1A460E1CCCB6B9002BC53A /* HURSSFeedItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

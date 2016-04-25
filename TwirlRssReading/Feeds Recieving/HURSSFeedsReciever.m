@@ -7,9 +7,8 @@
 //
 
 #import "HURSSFeedsReciever.h"
-#import "HURSSFeedsCache.h"
 
-#import "NSAttributedString+ResizeAttachments.h"
+NSString* const kHURSSContentWidth = @"kHURSSContentWidth";
 
 @implementation HURSSFeedsReciever{
     
@@ -26,6 +25,7 @@
 }
 
 @synthesize feedsDelegate=_feedsDelegate;
+@synthesize feedParseProperties=_feedParseProperties;
 
 
 #pragma mark - Constructor 
@@ -237,6 +237,11 @@
     dispatch_group_t parsingDispatchGroup = dispatch_group_create();
     dispatch_group_enter(parsingDispatchGroup);
     
+    NSNumber *prepareContentNumber = self.feedParseProperties[kHURSSContentWidth];
+    NSAssert(prepareContentNumber, @"kHURSSContentWidth not recieved from feedParseProperties");
+    
+    const CGFloat prepareContentWidth = [prepareContentNumber doubleValue];
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         for (HURSSFeedItem *currentItem in rawFeeds) {
@@ -244,7 +249,7 @@
             // Запустить у каждой 
             dispatch_group_enter(parsingDispatchGroup);
             
-            [self prepareHTMLWithContentWidth:240.f ForItem:currentItem WithCompletion:^(NSAttributedString *recievedString, CGFloat heightContent) {
+            [self prepareHTMLWithContentWidth:prepareContentWidth ForItem:currentItem WithCompletion:^(NSAttributedString *recievedString, CGFloat heightContent) {
                 
                 dispatch_group_leave(parsingDispatchGroup);
             }];
@@ -280,11 +285,6 @@
     @param completionBlock      Блок окончания обработки (передает готовую информацию)
  */
 - (void)prepareHTMLWithContentWidth:(const CGFloat)summaryContentWidth ForItem:(HURSSFeedItem*)rawFeeditem WithCompletion:(HURSSFeedItemBlock)completionBlock{
-    
-    if(rawFeeditem.attributedSummary){
-        completionBlock(rawFeeditem.attributedSummary, rawFeeditem.summaryContentHeight);
-        return;
-    }
     
     // Формирует аттрибутированную строку (сначала в данные превращает, а потом подсовывает NSAttributedString, как HTML-документ)
     NSData *summaryData = [rawFeeditem.summary dataUsingEncoding:NSUTF8StringEncoding];
@@ -338,7 +338,17 @@
 /// Получает закэшированные  новости для канала (либо хранящиеся в базе данных)
 - (void)getCachedFeedsForChannel:(HURSSChannel*)feedsChannel withCallback:(HURSSFeedsCacheRecievingBlock)cachedInfoCallback{
     
-    [_feedsCache getCachedFeedsForChannel:feedsChannel withCallback:cachedInfoCallback];
+    //cachedInfoCallback
+    [_feedsCache getCachedFeedsForChannel:feedsChannel withCallback:^(HURSSChannel *feedsChannel, HURSSFeedInfo *cachedFeedInfo, NSArray<HURSSFeedItem *> *cahcedFeeds) {
+        
+        // К сожалению, он не сохраняет в объекте NSAttributedString аттачменты, и приходится еще 1 раз подготавливать
+        [self prepareHTMLContentForFeeds:cahcedFeeds forFeedInfo:cachedFeedInfo forChannel:feedsChannel WithCompletion:^(NSArray<HURSSFeedItem *> *preparedFeds, HURSSFeedInfo *preparedFeedInfo, HURSSChannel *feedsChannel) {
+            
+            if(cachedInfoCallback){
+                cachedInfoCallback(feedsChannel, preparedFeedInfo, preparedFeds);
+            }
+        }];
+    }];
 }
 
 /// По идее, должен отменять загрузку новостей из базы данных

@@ -7,8 +7,6 @@
 //
 
 #import <CoreData/CoreData.h>
-#import "HURSSCoreDataFeedsStore.h"
-#import "HURSSFeedItem.h"
 
 /**
     @class HURSSManagedFeedItem

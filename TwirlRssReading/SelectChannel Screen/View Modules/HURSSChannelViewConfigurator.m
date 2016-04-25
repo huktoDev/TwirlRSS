@@ -143,7 +143,7 @@
 /// Конфигурирует текст филд для ввода  канала
 - (HURSSChannelTextField*)createChannelTextField{
     
-    HURSSChannelTextField *channelTextField = [HURSSChannelTextField channelTextFieldWithStyler:_presentStyle];
+    HURSSChannelTextField *channelTextField = [HURSSChannelTextField channelTextFieldWithRootView:_configurationChannelView withStyler:_presentStyle];
     
     UIImage *searchIconImage = [UIImage imageNamed:@"SearchIcon.png"];
     [channelTextField setImage:searchIconImage];
@@ -161,7 +161,7 @@
 /// Создает и конфигурирует текстфилд для ввода названия канала
 - (HURSSChannelTextField*)createChannelAliasTextField{
     
-    HURSSChannelTextField *channelAliasTextField = [HURSSChannelTextField channelTextFieldWithStyler:_presentStyle];
+    HURSSChannelTextField *channelAliasTextField = [HURSSChannelTextField channelTextFieldWithRootView:_configurationChannelView withStyler:_presentStyle];
     channelAliasTextField.placeholder = @"Как назвать канал?";
     
     UIImage *channelAliasImage = [UIImage imageNamed:@"RSSIconFill.png"];
@@ -180,7 +180,7 @@
 /// Конфигурирует кнопку "СМОТРЕТЬ" (выбор  предпочитаемых каналов)
 - (HURSSChannelButton*)createShowChannelButton{
     
-    HURSSChannelButton *showChannelButton = [HURSSChannelButton new];
+    HURSSChannelButton *showChannelButton = [HURSSChannelButton channelButtonWithRootView:_configurationChannelView withStyler:_presentStyle];
     [showChannelButton setTitle:@"СМОТРЕТЬ" forState:UIControlStateNormal];
     
     [_channelContentView addSubview:showChannelButton];
@@ -194,7 +194,7 @@
 /// Конфигурирует кнопку "ПОЛУЧИТЬ" (получить новости выбранного канала)
 - (HURSSChannelButton*)createGetFeedsButton{
     
-    HURSSChannelButton *feedsButton = [HURSSChannelButton new];
+    HURSSChannelButton *feedsButton = [HURSSChannelButton channelButtonWithRootView:_configurationChannelView withStyler:_presentStyle];
     [feedsButton setTitle:@"ПОЛУЧИТЬ" forState:UIControlStateNormal];
     feedsButton.enabled = NO;
     
@@ -210,7 +210,7 @@
 /// Конфигурирует кнопку "ДОБАВИТЬ" (кнопка добавления канала)
 - (HURSSChannelButton*)createChannelAddButton{
     
-    HURSSChannelButton *addChannelButton = [HURSSChannelButton new];
+    HURSSChannelButton *addChannelButton = [HURSSChannelButton channelButtonWithRootView:_configurationChannelView withStyler:_presentStyle];
     [self configChangeChannelButtonToAddMode];
     
     [_channelContentView insertSubview:addChannelButton belowSubview:_channelAliasTextField];
@@ -224,7 +224,7 @@
 /// Конфигурирует кнопку "УДАЛИТЬ" (кнопка удаления канала)
 - (HURSSChannelButton*)createChannelRemoveButton{
     
-    HURSSChannelButton *deleteChannelButton = [HURSSChannelButton new];
+    HURSSChannelButton *deleteChannelButton = [HURSSChannelButton channelButtonWithRootView:_configurationChannelView withStyler:_presentStyle];
     [deleteChannelButton setTitle:@"УДАЛИТЬ" forState:UIControlStateNormal];
     
     [_channelContentView insertSubview:deleteChannelButton belowSubview:_addChannelButton];

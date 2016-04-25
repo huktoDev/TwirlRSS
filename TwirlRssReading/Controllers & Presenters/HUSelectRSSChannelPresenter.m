@@ -7,7 +7,6 @@
 //
 
 #import "HUSelectRSSChannelPresenter.h"
-#import "HURSSCoreDataFeedsStore.h"
 
 
 @implementation HUSelectRSSChannelPresenter{
@@ -91,6 +90,11 @@
 
 - (void)didTextChanged:(NSString*)newText forTextField:(HURSSChannelTextField*)channelTextField withFieldType:(HURSSChannelTextFieldType)channelFieldType{
     
+    [self.selectChannelView disableUserInteraction];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.selectChannelView enableUserInteraction];
+    });
     
     if(channelFieldType == HURSSChannelEnterURLFieldType){
         
@@ -139,6 +143,12 @@
  */
 - (void)obtainChannelsButtonPressed:(UIButton*)channelsButton{
     
+    [self.selectChannelView disableUserInteraction];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.selectChannelView enableUserInteraction];
+    });
+    
     // Загрузить список каналов, и получить массив названий каналов
     _reservedChannels = [_channelStore loadStoredChannels];
     _reservedChannelNames = [_channelStore loadStoredChannelsName];
@@ -161,6 +171,12 @@
     @param addButton     Кнопка, при нажатии на которую срабатывает этот метод
  */
 - (void)addChannelButtonPressed:(UIButton*)addButton{
+    
+    [self.selectChannelView disableUserInteraction];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.selectChannelView enableUserInteraction];
+    });
     
     // Сформировать новый объект канала (по введенным данным)
     NSString *newChannelAlias = [self.selectChannelView getChannelAlias];
@@ -198,6 +214,12 @@
  */
 - (void)deleteChannelButtonPressed:(UIButton*)deleteButton{
     
+    [self.selectChannelView disableUserInteraction];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.selectChannelView enableUserInteraction];
+    });
+    
     // Сформировать канал, который над удалить
     NSString *currentChannelAlias = [self.selectChannelView getChannelAlias];
     NSURL *currentChannelURL = [self.selectChannelView getChannelURLLink];
@@ -218,6 +240,11 @@
 
 - (void)recieveFeedsButtonPressed:(UIButton*)feedsButton{
     
+    [self.selectChannelView disableUserInteraction];
+    
+    // Проскроллить к самому низу, к кнопке ожидания
+    [self.selectChannelView scrollToWaitingView];
+    
     // Сформировать канал, для которого нужно получить новости, и установить текущий канал
     NSString *currentChannelAlias = [self.selectChannelView getChannelAlias];
     NSURL *currentChannelURL = [self.selectChannelView getChannelURLLink];
@@ -226,7 +253,13 @@
     HURSSChannel *currentChannel = [HURSSChannel channelWithAlias:currentChannelAlias withURL:currentChannelURL withType:channelType];
     _recievingFeedsChannel = currentChannel;
     
+    // Слегка костыльно (но все-таки требуется зараннее подогнать контент под размер)
+    CGFloat widthFeedsContent = CGRectGetWidth([UIScreen mainScreen].bounds) - 2 * HU_RSS_FEEDS_TABLE_VIEW_MARGIN - 2 * HU_RSS_FEEDS_CELL_CONTENT_MARGIN;
+    _feedsReciever.feedParseProperties = @{kHURSSContentWidth : @(widthFeedsContent)};
+    
+    //HU_RSS_FEEDS_TABLE_VIEW_MARGIN
     _feedsReciever.feedsDelegate = self;
+    
     [_feedsReciever loadFeedsForChannel:currentChannel];
     
     // Повесить на интерфейс ожидание
@@ -236,8 +269,13 @@
 
 - (void)getOfflineFeedsButtonPressed:(UIButton*)feedsButton{
     
-    // получить новости из кэша, показать новости
+    [self.selectChannelView startFeedsWaiting];
+    [self.selectChannelView scrollToWaitingView];
     
+    // Заблокировать взаимодействие
+    [self.selectChannelView disableUserInteraction];
+    
+    // Получить новости из кэша, показать новости
     __weak __block typeof(self) weakSelf = self;
     [_feedsReciever getCachedFeedsForChannel:_recievingFeedsChannel withCallback:^(HURSSChannel *feedsChannel, HURSSFeedInfo *cachedFeedInfo, NSArray<HURSSFeedItem *> *cachedFeedItems) {
         
@@ -278,6 +316,11 @@
     _isFeedsSuccessRecieved = YES;
     [self.selectChannelView endFeedsWaitingWithCompletion:^{
         
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            [self.selectChannelView enableUserInteraction];
+        });
+        
         [[HURSSTwirlRouter sharedRouter] performTransitionSegue:HURSSTwirlChannelSelectedSegue forScreen:self];
     }];
 }
@@ -299,9 +342,6 @@
  */
 - (void)didFailureRecievingFeedsWithErrorDescription:(NSString*)errorDescription forChannel:(HURSSChannel*)feedsChannel{
     
-    // Убрать индикатор ожидания (и разжать кнопку)
-    [self.selectChannelView endFeedsWaitingWithCompletion:nil];
-    
     // Получить вспомогательные данные (псевдоним канала, и есть ли он в закэшированных?)
     NSString *channelName = feedsChannel.channelAlias;
     BOOL haveCachedFeeds = [_feedsReciever haveCachedFeedsForChannel:feedsChannel];
@@ -314,6 +354,11 @@
     if(haveCachedFeeds){
         [self.selectChannelView setFeedsGetCachedAlertHandler:@selector(getOfflineFeedsButtonPressed:) withTarget:self];
     }
+    
+    // Убрать индикатор ожидания (и разжать кнопку)
+    [self.selectChannelView endFeedsWaitingWithCompletion:^{
+        [self.selectChannelView enableUserInteraction];
+    }];
 }
 
 
@@ -327,6 +372,12 @@
     @param indexChannel      Индекс выбранного канала (в массиве _preservedChannels)
  */
 - (void)didSelectedChannelWithIndex:(NSUInteger)indexChannel{
+    
+    [self.selectChannelView disableUserInteraction];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.selectChannelView enableUserInteraction];
+    });
     
     // Получить модель канала по индексу, установить информацию в UI
     HURSSChannel *selectedChannel = _reservedChannels[indexChannel];

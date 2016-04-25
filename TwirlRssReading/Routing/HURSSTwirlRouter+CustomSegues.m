@@ -68,6 +68,14 @@
     [sourceVC presentViewController:modalNavController animated:YES completion:nil];
 }
 
+/**
+    @abstract Выполнение перехода со SelectChannel-экрана на Feeds-экран
+    @discussion
+    По юзер-стори пользователь после выбора канала, и удачной загрзки новостей - попадет на Feeds-экран. Feeds-экрану требуется передать полученные  новости. 
+    Получение и передача осуществляется с помощью специализированных протоколов
+ 
+    @param sourceVC      Базовый контроллер, инициировавший переход (HURSSSelectScreenPresenter)
+ */
 - (void)performChannelSelectedSegueFromScreen:(UIViewController*)sourceVC{
     
     UIViewController *feedsViewController = [_feedsController new];
@@ -96,6 +104,7 @@
     [sourceVC.navigationController pushViewController:feedsViewController animated:YES];
 }
 
+/// Тут по идее, должен был быть FedDetails-переход
 - (void)performFeedDetailsSegueFromScreen:(UIViewController*)sourceVC{
     
 }
@@ -103,18 +112,22 @@
 
 #pragma mark - POSSIBLE Segues
 
+/// Набор переходов со Splash-экрана
 - (NSSet <NSString*>*)possibleSplashSegues{
     return [NSSet setWithArray:@[HURSSTwirlBaseNavigationSegue]];
 }
 
+/// Набор переходов с SelectChannel-экрана
 - (NSSet <NSString*>*)possibleSelectChannelSegues{
     return [NSSet setWithArray:@[HURSSTwirlChannelSelectedSegue]];
 }
 
+/// Набор переходов с Feeds-экрана
 - (NSSet <NSString*>*)possibleFeedsSegues{
     return [NSSet setWithArray:@[HURSSTwirlFeedDetailsSegue]];
 }
 
+/// Набор переходов с ItemDetails-экрана (так и не реализованного)
 - (NSSet <NSString*>*)possibleItemDetailsSegues{
     return [NSSet new];
 }

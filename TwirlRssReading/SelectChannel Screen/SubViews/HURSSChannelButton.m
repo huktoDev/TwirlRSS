@@ -15,6 +15,9 @@
 
 @implementation HURSSChannelButton{
     
+    // Вьюшка экрана (для отправления энейбл/дизейбл событий)
+    __weak HUSelectRSSChannelView *_parentView;
+    
     // Кастомный активити
     BLMultiColorLoader *_loaderIndicator;
     
@@ -24,27 +27,24 @@
 
 #pragma mark - Initialization
 
-- (instancetype)init{
+- (instancetype)initWithRootView:(HUSelectRSSChannelView*)rootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler{
     if(self = [super init]){
         
-        // Init Root
-        [self injectDependencies];
+        _parentView =  rootView;
+        _presentStyler = viewStyler;
+        
         [self configUI];
         [self addBaseTouchHandlers];
+        [self disableMultiTouch];
     }
     return self;
 }
 
-#pragma mark - Dependencies
-
-/// Инъекция зависимостей (в данном случае - стиля)
-- (void)injectDependencies{
++ (instancetype)channelButtonWithRootView:(HUSelectRSSChannelView*)rootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler{
     
-    HURSSChannelViewAssembly *viewAssembly = [HURSSChannelViewAssembly defaultAssemblyForChannelView];
-    
-    _presentStyler = [viewAssembly getViewStyler];
+    HURSSChannelButton *newChannelButton = [[HURSSChannelButton alloc] initWithRootView:rootView withStyler:viewStyler];
+    return newChannelButton;
 }
-
 
 #pragma mark - Configuration
 
@@ -69,7 +69,7 @@
     // Добавить границы и скругленные углы
     UIColor *borderButtonColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.25f];
     CALayer *channelButtonLayer = self.layer;
-    [channelButtonLayer setBorderWidth:1.f];
+    [channelButtonLayer setBorderWidth:2.f];
     [channelButtonLayer setBorderColor:borderButtonColor.CGColor];
     [channelButtonLayer setCornerRadius:buttonCornerRadius];
 }

@@ -10,6 +10,9 @@
 
 @implementation HURSSChannelTextField{
     
+    // Вьюшка экрана (для отправления энейбл/дизейбл событий)
+    __weak HUSelectRSSChannelView *_parentView;
+    
     // ImageView иконки текстового поля (которая слева)
     UIImageView *_iconImageView;
     
@@ -20,19 +23,21 @@
 #pragma mark - Construction
 
 /// Назначенный инициализатор (передает стилизатор, и конфигурирует Ui)
-- (instancetype)initWithStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler{
+- (instancetype)initWithRootView:(HUSelectRSSChannelView*)rootView Styler:(id<HURSSChannelViewStylizationInterface>)viewStyler{
     if(self = [super init]){
         
+        _parentView = rootView;
         _presentStyler = viewStyler;
         [self configUI];
+        [self disableMultiTouch];
     }
     return self;
 }
 
 /// Статический конструктор со стилизатором
-+ (instancetype)channelTextFieldWithStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler{
++ (instancetype)channelTextFieldWithRootView:(HUSelectRSSChannelView*)rootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler{
     
-    HURSSChannelTextField *newTextField = [[HURSSChannelTextField alloc] initWithStyler:viewStyler];
+    HURSSChannelTextField *newTextField = [[HURSSChannelTextField alloc] initWithRootView:rootView Styler:viewStyler];
     return newTextField;
 }
 
@@ -53,7 +58,7 @@
     // Добавить границы и скругленные углы
     UIColor *borderTextFieldColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.25f];
     CALayer *channelFieldLayer = self.layer;
-    [channelFieldLayer setBorderWidth:1.f];
+    [channelFieldLayer setBorderWidth:2.f];
     [channelFieldLayer setBorderColor:borderTextFieldColor.CGColor];
     [channelFieldLayer setCornerRadius:textFieldCornerRadius];
     

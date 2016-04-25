@@ -7,12 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@import CoreData;
 
-
-#import "HURSSManagedChannel.h"
-#import "HURSSManagedFeedInfo.h"
-#import "HURSSManagedFeedItem.h"
 
 @interface HURSSCoreDataFeedsStore : NSObject
 

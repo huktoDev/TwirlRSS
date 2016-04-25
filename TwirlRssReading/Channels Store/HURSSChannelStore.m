@@ -290,7 +290,7 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
         @throw [NSException exceptionWithName:@"channelsArrayException" reason:@"Loaded Data From File is not a NSArray" userInfo:nil];
     }
     
-    BOOL isCorrectChannels = (storedChannels.count > 0 && [[storedChannels firstObject] isKindOfClass:[HURSSChannel class]]);
+    BOOL isCorrectChannels = (storedChannels.count > 0 && [[storedChannels firstObject] isKindOfClass:[HURSSChannel class]]) || storedChannels.count == 0;
     if(! isCorrectChannels){
         @throw [NSException exceptionWithName:@"channelsDataException" reason:@"Loaded Data From File is not objects RSSChannels" userInfo:nil];
     }
@@ -396,9 +396,6 @@ NSString *const HU_RSS_STORED_CHANNELS_DEFAULTS_KEY = @"kStoredChannels";
     #error Need to determine on of constants : HU_RSS_USE_LOCAL_PREFERENCES or HU_RSS_USE_FILE_SERIALIZATION
 #endif
 }
-
-
-
 
 
 

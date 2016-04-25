@@ -7,7 +7,6 @@
 //
 
 #import "HURSSManagedFeedInfo.h"
-#import "HURSSFeedInfo.h"
 
 @implementation HURSSManagedFeedInfo
 

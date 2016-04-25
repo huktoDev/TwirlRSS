@@ -7,12 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HURSSFeedsReciever.h"
-
-@class HUSelectRSSChannelView;
-@class HURSSChannelTextField, HURSSChannelButton;
 
 
+/**
+    @protocol HURSSChannelSelectRecievedFeedsProtocol
+    @author HuktoDev
+    @updated 25.04.2016
+    @abstract Протокол для получения RSS-новостной информации.
+    @discussion
+    Этот протокол реализует HUSelectRSSChannelPresenter для передачи данных следующему экрану, для отображения
+ */
 @protocol HURSSChannelSelectRecievedFeedsProtocol <NSObject>
 
 - (NSArray<HURSSFeedItem*>*)getRecievedFeeds;

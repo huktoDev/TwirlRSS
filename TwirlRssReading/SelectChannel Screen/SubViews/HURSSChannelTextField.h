@@ -10,6 +10,8 @@
 #import "HURSSChannelViewStyler.h"
 #import "HURSSChannelViewAssembly.h"
 
+@class HUSelectRSSChannelView;
+
 /**
     @class HURSSChannelTextField
     @author HuktoDev
@@ -25,8 +27,7 @@
 #pragma mark - Construction
 // Создание текстового поля
 
-+ (instancetype)channelTextFieldWithStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler;
-
++ (instancetype)channelTextFieldWithRootView:(HUSelectRSSChannelView*)rootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler;
 
 #pragma mark - Setters
 // Сэттеры свойств

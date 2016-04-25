@@ -7,7 +7,6 @@
 //
 
 #import "HURSSFeedsCache.h"
-#import "HURSSFeedsReciever.h"
 
 @implementation HURSSFeedsCache{
     

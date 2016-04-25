@@ -77,6 +77,7 @@ NSString *const HUScaleTransitionAnimKey = @"scaleTransitionSplashAnim";
     if (self.needPresenting) {
         
         // Дизейблим UI
+        transitionContext.containerView.userInteractionEnabled = NO;
         _fromView.userInteractionEnabled = NO;
         _toView.userInteractionEnabled = NO;
         
@@ -142,6 +143,7 @@ NSString *const HUScaleTransitionAnimKey = @"scaleTransitionSplashAnim";
         
         _fromView.userInteractionEnabled = YES;
         _toView.userInteractionEnabled = YES;
+        _currentTransitionContext.containerView.userInteractionEnabled = YES;
         
         [_currentTransitionContext completeTransition:YES];
     });

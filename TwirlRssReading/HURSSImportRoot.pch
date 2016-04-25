@@ -9,8 +9,6 @@
 #ifndef HURSSImportRoot_pch
 #define HURSSImportRoot_pch
 
-#import "HURSSChannelViewAssembly.h"
-
 
 /**
     @def HU_RSS_NEED_CLEAR_STORED_CHANNELS
@@ -40,28 +38,41 @@
 //TODO: Исправить ошибки с NSNumber (там transform.scale убрать)
 
 
+/**
+    ---------------------------------------------------------------------------
+    ----------------------------- IMPORT ROOT ---------------------------
+    ---------------------------------------------------------------------------
+    *******   ПОСЛЕДОВАТЕЛЬНОСТЬ ИМПОРТИРОВАНИЯ : *****
+    *   1. Импортируются внешнием зависимости
+    *   2. Импортируются хелперы
+    *   3. Импортируются модели
+    *   4. Импортируются вьюшки и вью-пакеты экранов
+    *   5. Импортируются контроллеры и презентеры
+    *   6. Импортируются роутер и стилизатор
+    *   7. Импортируются сервисы
+    ---------------------------------------------------------------------------
+ */
+
 #import "Masonry.h"
 #import "CZPicker.h"
 #import "URBNAlert.h"
 #import "MWFeedParser.h"
 
+#import "HURSSHelperCategories.h"
 
+#import "HURSSModels.h"
+#import "HURSSManagedModels.h"
+
+#import "HURSSChannelViewAssembly.h"
+#import "HURSSFeedsTableView.h"
+#import "HURSSItemDetailView.h"
+
+#import "HURSSChannelsStoring.h"
+#import "HURSSFeedsRecieving.h"
 
 #import "HURSSControllersAndPresenters.h"
 #import "HURSSTwirlRouter.h"
-
 #import "HURSSTwirlStyle.h"
-
-
-
-
-#import "HURSSChannelsStoring.h"
-
-#import "HURSSChannelViewAssembly.h"
-
-
-
-
 
 
 

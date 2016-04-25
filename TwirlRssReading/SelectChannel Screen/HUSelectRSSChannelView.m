@@ -7,9 +7,6 @@
 //
 
 #import "HUSelectRSSChannelView.h"
-
-#import "Masonry.h"
-
 #import "HURSSChannelViewAssembly.h"
 
 //TODO: Запилить кэширование названия канала
@@ -90,6 +87,8 @@
         <li> Создает кнопку "Получить" (крепится к низу вьюшки) </li>
     </ol>
  
+    @note Дизейблит мультитач по всей вьюшке (но для создаваемых вьюшек это не относится, и нужно вручную блочить)
+ 
     @note Логика создания всех вьюшек - скрыта в конфигураторе
  */
 - (void)configurationAllStartedViews{
@@ -101,6 +100,7 @@
     self.selectSuggestedLabel = [_presentConfigurator createSelectSuggestedLabel];
     self.showChannelButton = [_presentConfigurator createShowChannelButton];
     self.feedsButton = [_presentConfigurator createGetFeedsButton];
+    [self disableMultiTouch];
 }
 
 #pragma mark - Type TextFields
@@ -668,7 +668,10 @@
     [_textFieldManager stopCatchChangeTextEvents];
 }
 
-#pragma mark - FEEDS Waiting
+
+#pragma mark - INTERMEDIATE STATEs -
+
+#pragma mark FEEDS Waiting
 
 /**
     @abstract Стартовать получение  новостей (показать ожидание)
@@ -683,7 +686,7 @@
  */
 - (void)startFeedsWaiting{
     
-    self.userInteractionEnabled = NO;
+    [self disableUserInteraction];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         [UIView animateWithDuration:0.25f animations:^{
@@ -733,13 +736,78 @@
             [self.feedsButton endWaitingIndicator];
             [self layoutIfNeeded];
         }completion:^(BOOL finished) {
-            self.userInteractionEnabled = YES;
+            [self enableUserInteraction];
             
             if(waitingCompletion){
                 waitingCompletion();
             }
         }];
     });
+}
+
+
+/// Скроллить к вьюшке  с индикатором ожидания (в данном случае - нижняя кнопка).
+- (void)scrollToWaitingView{
+    
+    CGFloat currentViewWidth = CGRectGetWidth(self.frame);
+    CGFloat currentViewHeight = CGRectGetHeight(self.frame);
+    CGFloat currentContentHeight = self.channelContentView.contentSize.height;
+    
+    if(currentContentHeight > (currentViewHeight + 10.f)){
+        [self.channelContentView scrollRectToVisible:CGRectMake(0.f, (currentContentHeight - currentViewHeight), currentViewWidth, currentViewHeight) animated:YES];
+    }
+}
+
+
+#pragma mark - ENABLE & DISABLE Interaction
+
+/// Восстанавливает реакцию только с текстфилдов, и кнопок
+- (void)enableUserInteraction{
+    
+    // Включить взаимодействие с кнопками
+    for (HURSSChannelButton *channelButton in [self.channelContentView subviews]) {
+        if([channelButton isKindOfClass:[HURSSChannelButton class]]){
+            channelButton.userInteractionEnabled = YES;
+        }
+    }
+    // Включить взаимодействие с текстовыми полями
+    for (HURSSChannelTextField *channelTextField in [self.channelContentView subviews]) {
+        if([channelTextField isKindOfClass:[HURSSChannelTextField class]]){
+            channelTextField.userInteractionEnabled = YES;
+        }
+    }
+}
+
+/// Дизейблит пользовательское взаимодействие (если один из текст филдов в фокусе - дизейблит только кнопки)
+- (void)disableUserInteraction{
+    
+    // Проверяет, в фокусе ли  хотя-бы одно из текстовых полей
+    BOOL hasTextFieldResponder = NO;
+    for (HURSSChannelTextField *channelTextField in [self.channelContentView subviews]) {
+        
+        if([channelTextField isKindOfClass:[UITextField class]]){
+            if([channelTextField isFirstResponder]){
+                hasTextFieldResponder = YES;
+            }
+        }
+    }
+    
+    // Выключает взаимодействие с кнопками
+    for (HURSSChannelButton *channelButton in [self.channelContentView subviews]) {
+        if([channelButton isKindOfClass:[HURSSChannelButton class]]){
+            channelButton.userInteractionEnabled = NO;
+        }
+    }
+    
+    // Не дизейблить текст филды, если у одного из низ ответчик
+    if(! hasTextFieldResponder){
+        // Выключает взаимодействие с текстовыми полями
+        for (HURSSChannelTextField *channelTextField in [self.channelContentView subviews]) {
+            if([channelTextField isKindOfClass:[HURSSChannelTextField class]]){
+                channelTextField.userInteractionEnabled = NO;
+            }
+        }
+    }
 }
 
 

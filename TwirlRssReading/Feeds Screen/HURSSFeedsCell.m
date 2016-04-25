@@ -87,10 +87,10 @@
     
     // Вписать вьюшку в контент вью
     [backView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.contentView.mas_leading).with.offset(20.f);
-        make.trailing.equalTo(self.contentView.mas_trailing).with.offset(-20.f);
-        make.top.equalTo(self.contentView.mas_top).with.offset(10.f);
-        make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-10.f);
+        make.leading.equalTo(self.contentView.mas_leading).with.offset(HU_RSS_FEEDS_TABLE_VIEW_MARGIN);
+        make.trailing.equalTo(self.contentView.mas_trailing).with.offset(-HU_RSS_FEEDS_TABLE_VIEW_MARGIN);
+        make.top.equalTo(self.contentView.mas_top).with.offset(HU_RSS_FEEDS_TABLE_VIEW_MARGIN);
+        make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-HU_RSS_FEEDS_TABLE_VIEW_MARGIN);
     }];
     return backView;
 }
@@ -110,7 +110,7 @@
     
     // Задать правила вьюшки
     [feedTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(self.backView.mas_width).with.offset(-40.f);
+        make.width.equalTo(self.backView.mas_width).with.offset(- (2.f * HU_RSS_FEEDS_CELL_CONTENT_MARGIN));
         make.centerX.equalTo(self.backView.mas_centerX);
         make.top.equalTo(self.backView.mas_top).with.offset(12.f);
         
@@ -152,7 +152,7 @@
     // Задать правила вьюшки (к низу сепаратора привязать)
     [feedAuthorLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.backView.mas_width).with.multipliedBy(0.85f);
-        make.leading.equalTo(self.backView.mas_leading).with.offset(20.f);
+        make.leading.equalTo(self.backView.mas_leading).with.offset(HU_RSS_FEEDS_CELL_CONTENT_MARGIN);
         make.height.mas_offset(30.f);
         make.top.equalTo(self.separatorView.mas_bottom).with.offset(4.f);
     }];
@@ -211,7 +211,7 @@
     
     [self.feedDateLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.backView.mas_width).with.multipliedBy(0.6f);
-        make.trailing.equalTo(self.backView.mas_trailing).with.offset(-20.f);
+        make.trailing.equalTo(self.backView.mas_trailing).with.offset(-HU_RSS_FEEDS_CELL_CONTENT_MARGIN);
         make.height.mas_offset(16.f);
         make.top.equalTo(self.feedAuthorLabel.mas_bottom).with.offset(-4.f);
     }];
@@ -222,7 +222,7 @@
     
     [self.feedDateLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.backView.mas_width).with.multipliedBy(0.6f);
-        make.trailing.equalTo(self.backView.mas_trailing).with.offset(-20.f);
+        make.trailing.equalTo(self.backView.mas_trailing).with.offset(-HU_RSS_FEEDS_CELL_CONTENT_MARGIN);
         make.height.mas_offset(16.f);
         make.top.equalTo(self.separatorView.mas_bottom).with.offset(4.f);
     }];
@@ -306,7 +306,7 @@
         
         [UIView animateWithDuration:animationDuration delay:0.f usingSpringWithDamping:0.3f initialSpringVelocity:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
             
-            self.backView.transform = CGAffineTransformScale(self.backView.transform, 0.9f, 0.9f);
+            self.backView.transform = CGAffineTransformScale(self.backView.transform, 0.96f, 0.96f);
             self.backView.backgroundColor = [[HURSSTwirlStyle sharedStyle] channelButtonBackColor];
             self.backView.alpha = 0.88f;
             

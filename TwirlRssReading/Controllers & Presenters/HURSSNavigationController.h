@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HURSSNavigationController : UINavigationController <UIViewControllerTransitioningDelegate>
+/**
+    @class HURSSNavigationController
+    @author HuktoDev
+    @updated 25.04.2016
+    @abstract Навигационный контроллер приложения, содерит некоторую навигационную логику (но в основном она содержится в роутере HURSSTwirlRouter)
+ */
+@interface HURSSNavigationController : UINavigationController <UIViewControllerTransitioningDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate>
 
 @end

@@ -8,15 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "HURSSCoreDataFeedsStore.h"
-
-#import "HURSSFeedInfo.h"
-#import "HURSSFeedItem.h"
-#import "HURSSChannel.h"
-
-
-@class HURSSFeedsCache;
-
+/**
+    @constant kHURSSContentWidth
+        Ключ для настройки ширины контента в feedParseProperties (позволяет подготавливать контен под подходящую ширину)
+ */
+extern NSString* const kHURSSContentWidth;
 
 /**
     @typedef HURSSFeedItemBlock
@@ -76,7 +72,7 @@ typedef void(^HURSSFeedsCacheRecievingBlock)(HURSSChannel* feedsChannel, HURSSFe
 
 @required
 - (BOOL)haveCachedFeedsForChannel:(HURSSChannel*)feedsChannel;
-- (void)getCachedFeedsForChannel:(HURSSChannel*)feedsChannel withCallback:(void (^)(HURSSChannel*, HURSSFeedInfo*, NSArray<HURSSFeedItem*>*))cachedInfoCallback;
+- (void)getCachedFeedsForChannel:(HURSSChannel*)feedsChannel withCallback:(HURSSFeedsCacheRecievingBlock)cachedInfoCallback;
 
 @optional
 - (void)cancelCachedFeedsRecieving;
@@ -167,7 +163,7 @@ typedef void(^HURSSFeedsCacheRecievingBlock)(HURSSChannel* feedsChannel, HURSSFe
 // Часть интерфейса для получения новостей локально
 
 - (BOOL)haveCachedFeedsForChannel:(HURSSChannel*)feedsChannel;
-- (void)getCachedFeedsForChannel:(HURSSFeedsCacheRecievingBlock)cachedInfoCallback;
+- (void)getCachedFeedsForChannel:(HURSSChannel*)feedsChannel withCallback:(HURSSFeedsCacheRecievingBlock)cachedInfoCallback;
 - (void)cancelCachedFeedsRecieving;
 
 

@@ -8,15 +8,6 @@
 
 #import <CoreData/CoreData.h>
 
-#import "HURSSChannel.h"
-#import "HURSSFeedInfo.h"
-#import "HURSSFeedItem.h"
-
-#import "HURSSManagedFeedInfo.h"
-#import "HURSSManagedFeedItem.h"
-
-@class HURSSManagedFeedInfo;
-@class HURSSManagedFeedItem;
 
 /**
     @class HURSSManagedChannel

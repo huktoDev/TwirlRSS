@@ -20,6 +20,14 @@
  */
 @interface HURSSChannelButton : UIButton
 
+
+#pragma mark - Construction
+// Создание кнопки
+
++ (instancetype)channelButtonWithRootView:(HUSelectRSSChannelView*)rootView withStyler:(id<HURSSChannelViewStylizationInterface>)viewStyler;
+
+
+
 #pragma mark - Touch Event
 /// Назначить обработчик нажатия (уже кнопка сама определяет, когда его обрабатывать (тач даун или тач аут))
 - (void)setTouchHandler:(SEL)actionHandler toTarget:(id)actionTarget;
