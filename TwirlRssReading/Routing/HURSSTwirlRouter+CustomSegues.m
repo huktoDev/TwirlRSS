@@ -8,7 +8,7 @@
 
 #import "HURSSTwirlRouter+CustomSegues.h"
 
-#import "AppDelegate.h"
+#import "HURSSAppDelegate.h"
 #import "HUSplashViewController.h"
 #import "HURSSNavigationController.h"
 #import "HUSelectRSSChannelPresenter.h"
@@ -28,7 +28,7 @@
  
     @param appDelegate      Делегат приложения проекта
  */
-- (void)overrideInitialScreenCreationByAppDelegate:(AppDelegate*)appDelegate{
+- (void)overrideInitialScreenCreationByAppDelegate:(HURSSAppDelegate*)appDelegate{
     
     UIViewController *intialViewController = [_splashScreenController new];
     

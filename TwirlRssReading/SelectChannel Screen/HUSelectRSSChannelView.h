@@ -263,6 +263,8 @@ typedef NS_ENUM(NSUInteger, HURSSChannelTextFieldType) {
 - (void)enableUserInteraction;
 - (void)disableUserInteraction;
 
+- (void)enableUIAfterTime:(NSTimeInterval)waitingTime;
+
 
 
 

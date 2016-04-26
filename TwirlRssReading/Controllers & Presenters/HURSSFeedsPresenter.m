@@ -57,7 +57,7 @@
 }
 
 
-#pragma mark -Dependencies
+#pragma mark - Dependencies
 
 /// Инжектировать объект приложения (для обработки ссылок)
 - (void)injectDependencies{

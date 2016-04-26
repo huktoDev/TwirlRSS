@@ -778,8 +778,16 @@
     }
 }
 
+/// Вернуть взаимодействие через время (лучше в использовании, так как новый дизейбл отменяет запрос на деблокировку)
+- (void)enableUIAfterTime:(NSTimeInterval)waitingTime{
+    
+    [self performSelector:@selector(enableUserInteraction) withObject:nil afterDelay:waitingTime];
+}
+
 /// Дизейблит пользовательское взаимодействие (если один из текст филдов в фокусе - дизейблит только кнопки)
 - (void)disableUserInteraction{
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableUserInteraction) object:nil];
     
     // Проверяет, в фокусе ли  хотя-бы одно из текстовых полей
     BOOL hasTextFieldResponder = NO;

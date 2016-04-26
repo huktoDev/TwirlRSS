@@ -7,7 +7,7 @@
 //
 
 #import "HURSSTwirlRouter.h"
-@class AppDelegate;
+@class HURSSAppDelegate;
 
 /**
     @constant HURSSTwirlBaseNavigationSegue
@@ -43,7 +43,7 @@ extern NSString* const HURSSTwirlFeedDetailsSegue;
 #pragma mark - Programmatically override INITIAL APP Point
 // Переопределение стартовой точки приложения (чтобы в делегате рут-контроллер задавался программно)
 
-- (void)overrideInitialScreenCreationByAppDelegate:(AppDelegate*)appDelegate;
+- (void)overrideInitialScreenCreationByAppDelegate:(HURSSAppDelegate*)appDelegate;
 
 
 #pragma mark - PERFORM Segues

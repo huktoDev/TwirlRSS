@@ -88,13 +88,31 @@
     _feedsReciever = [HURSSFeedsReciever sharedReciever];
 }
 
+
+#pragma mark - HURSSChannelTextChangedDelegate
+
+/**
+    @abstract Обработчик изменений текста в любом из текст филдов
+    @discussion
+    Когда в текстовых  полях меняется текст - нужно соответствующим образом вычислять текущее состояние, и запускать изменения на UI.
+ 
+   <h4> Имеются следующие состояния : </h4>
+    <ol type="1">
+        <li> Пользователь еще не ввел валидный UR-канала (не отображать никаких дополнительных полей и кнопок)</li>
+        <li> Пользователь ввел достаточно валидный URL (показать поле для ввода названия канала) </li>
+        <li> Пользователь ввел достаточно длинное название канала, и такого канала еще нет (показать кнопку "Добавить") </li>
+        <li> Пользователь ввел название существующего в сохраненных канала (показывать кнопки "Изменить" и "Удалить") </li>
+    </ol>
+ 
+    @param newText          Новый текст в текстовом поле
+    @param channelTextField       Текстовое поле, в котором произошло изменение 
+    @param channelFieldType        Тип текстового поля
+ */
 - (void)didTextChanged:(NSString*)newText forTextField:(HURSSChannelTextField*)channelTextField withFieldType:(HURSSChannelTextFieldType)channelFieldType{
     
+    // Дизейблить UI на время анимаций
     [self.selectChannelView disableUserInteraction];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        [self.selectChannelView enableUserInteraction];
-    });
+    [self.selectChannelView enableUIAfterTime:1.f];
     
     if(channelFieldType == HURSSChannelEnterURLFieldType){
         
@@ -126,7 +144,6 @@
         // Обновить UI определенным состоянием
         [self.selectChannelView updateUIWhenChannelChangeState:currentChannelState];
     }
-
 }
 
 
@@ -144,10 +161,7 @@
 - (void)obtainChannelsButtonPressed:(UIButton*)channelsButton{
     
     [self.selectChannelView disableUserInteraction];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        [self.selectChannelView enableUserInteraction];
-    });
+    [self.selectChannelView enableUIAfterTime:0.6f];
     
     // Загрузить список каналов, и получить массив названий каналов
     _reservedChannels = [_channelStore loadStoredChannels];
@@ -173,10 +187,7 @@
 - (void)addChannelButtonPressed:(UIButton*)addButton{
     
     [self.selectChannelView disableUserInteraction];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        [self.selectChannelView enableUserInteraction];
-    });
+    [self.selectChannelView enableUIAfterTime:0.6f];
     
     // Сформировать новый объект канала (по введенным данным)
     NSString *newChannelAlias = [self.selectChannelView getChannelAlias];
@@ -215,10 +226,7 @@
 - (void)deleteChannelButtonPressed:(UIButton*)deleteButton{
     
     [self.selectChannelView disableUserInteraction];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        [self.selectChannelView enableUserInteraction];
-    });
+    [self.selectChannelView enableUIAfterTime:0.6f];
     
     // Сформировать канал, который над удалить
     NSString *currentChannelAlias = [self.selectChannelView getChannelAlias];
@@ -374,10 +382,7 @@
 - (void)didSelectedChannelWithIndex:(NSUInteger)indexChannel{
     
     [self.selectChannelView disableUserInteraction];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        [self.selectChannelView enableUserInteraction];
-    });
+    [self.selectChannelView enableUIAfterTime:1.f];
     
     // Получить модель канала по индексу, установить информацию в UI
     HURSSChannel *selectedChannel = _reservedChannels[indexChannel];
